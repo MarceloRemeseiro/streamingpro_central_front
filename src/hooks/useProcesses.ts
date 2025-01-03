@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { AuthService } from '@/services/auth';
 import { Process } from '@/types/restreamer';
 import { InputProcess, OutputProcess, InputType } from '@/types/processTypes';
@@ -7,6 +7,9 @@ export const useProcesses = () => {
   const [inputs, setInputs] = useState<InputProcess[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const pollingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const auth = useRef(AuthService.getInstance());
+  const isInitialLoadDone = useRef(false);
 
   const parseInputAddress = (address: string): { type: InputType; streamName: string } => {
     const srtMatch = address.match(/\{srt,name=([^,}]+)/);
@@ -18,11 +21,10 @@ export const useProcesses = () => {
       return { type: 'rtmp', streamName: rtmpMatch[1] };
     }
 
-    // Por defecto, asumimos RTMP si no podemos determinar el tipo
     return { type: 'rtmp', streamName: 'unknown' };
   };
 
-  const processData = (data: Process[]) => {
+  const processData = useCallback((data: Process[]) => {
     const inputProcesses: { [key: string]: InputProcess } = {};
     const outputProcesses: OutputProcess[] = [];
 
@@ -58,33 +60,105 @@ export const useProcesses = () => {
     });
 
     return Object.values(inputProcesses);
-  };
+  }, []);
 
-  const fetchProcesses = async () => {
-    setIsLoading(true);
-    setError(null);
-    
+  const updateStates = useCallback((data: Process[]) => {
+    setInputs(prevInputs => {
+      const updatedInputs = prevInputs.map(prevInput => {
+        // Buscamos el proceso correspondiente en los nuevos datos
+        const newProcess = data.find(p => p.id === prevInput.id);
+        if (!newProcess) return prevInput;
+
+        // Solo actualizamos el estado y mantenemos el resto de la información
+        const updatedInput = {
+          ...prevInput,
+          state: newProcess.state
+        };
+
+        // Actualizamos los estados de los outputs
+        updatedInput.outputs = prevInput.outputs.map(prevOutput => {
+          const newOutput = data.find(p => p.id === prevOutput.id);
+          if (!newOutput) return prevOutput;
+
+          return {
+            ...prevOutput,
+            state: newOutput.state
+          };
+        });
+
+        return updatedInput;
+      });
+
+      // Solo actualizamos si hay cambios en los estados
+      const hasStateChanges = updatedInputs.some((updatedInput, index) => {
+        const prevInput = prevInputs[index];
+        const stateChanged = updatedInput.state?.exec !== prevInput.state?.exec;
+        const outputsChanged = updatedInput.outputs.some((output, outputIndex) => 
+          output.state?.exec !== prevInput.outputs[outputIndex]?.state?.exec
+        );
+        return stateChanged || outputsChanged;
+      });
+
+      return hasStateChanges ? updatedInputs : prevInputs;
+    });
+  }, []);
+
+  const fetchInitialData = useCallback(async () => {
     try {
-      const auth = AuthService.getInstance();
-      const data = await auth.request<Process[]>('GET', '/api/v3/process');
+      const data = await auth.current.request<Process[]>('GET', '/api/v3/process');
       const processedData = processData(data);
       setInputs(processedData);
+      setError(null);
+      isInitialLoadDone.current = true;
     } catch (err) {
       console.error('Error al obtener procesos:', err);
       setError('No se pudieron cargar los procesos');
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [processData]);
+
+  const pollStates = useCallback(async () => {
+    if (!isInitialLoadDone.current) return;
+
+    try {
+      const data = await auth.current.request<Process[]>('GET', '/api/v3/process');
+      updateStates(data);
+      setError(null);
+    } catch (err) {
+      console.error('Error al actualizar estados:', err);
+    }
+  }, [updateStates]);
 
   useEffect(() => {
-    fetchProcesses();
-  }, []);
+    fetchInitialData();
+
+    const startPolling = () => {
+      pollingTimeoutRef.current = setTimeout(async () => {
+        await pollStates();
+        startPolling();
+      }, 5000);
+    };
+
+    startPolling();
+
+    return () => {
+      if (pollingTimeoutRef.current) {
+        clearTimeout(pollingTimeoutRef.current);
+        pollingTimeoutRef.current = null;
+      }
+    };
+  }, [fetchInitialData, pollStates]);
+
+  const refresh = useCallback(async () => {
+    setIsLoading(true);
+    await fetchInitialData();
+  }, [fetchInitialData]);
 
   return {
     inputs,
     isLoading,
     error,
-    refresh: fetchProcesses,
+    refresh
   };
 }; 
