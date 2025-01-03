@@ -122,6 +122,12 @@ const InputCard = memo(({ input }: { input: InputProcess }) => {
 export const ProcessList = () => {
   const { inputs, isLoading, error, refresh } = useProcesses();
 
+  const sortedInputs = [...inputs].sort((a, b) => {
+    const nameA = a.metadata?.['restreamer-ui']?.meta?.name || 'Input sin nombre';
+    const nameB = b.metadata?.['restreamer-ui']?.meta?.name || 'Input sin nombre';
+    return nameA.localeCompare(nameB);
+  });
+
   if (isLoading) {
     return (
       <div className="flex justify-center items-center p-8">
@@ -154,7 +160,7 @@ export const ProcessList = () => {
 
   return (
     <div className="grid gap-6 md:grid-cols-2">
-      {inputs.map((input) => (
+      {sortedInputs.map((input) => (
         <InputCard key={input.id} input={input} />
       ))}
     </div>
