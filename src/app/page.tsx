@@ -1,42 +1,40 @@
 'use client';
 
-import { useEffect } from 'react';
-import { Login } from '@/components/Login';
-import { ProcessList } from '@/components/ProcessList';
-import { useAuthState } from '@/hooks/useAuthState';
+import { ProcessList } from "@/components/ProcessList";
+import { useState } from "react";
+import CreateProcessModal from "@/components/CreateProcessModal";
+import { PlusIcon } from "@heroicons/react/24/outline";
 
 export default function Home() {
-  const { isAuthenticated, login, logout } = useAuthState();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
 
-  useEffect(() => {
-    if (isAuthenticated) {
-    }
-  }, [isAuthenticated]);
-
-  if (!isAuthenticated) {
-    return <Login onLoginSuccess={login} />;
-  }
+  const handleProcessCreated = () => {
+    setIsModalOpen(false);
+    setRefreshKey(prev => prev + 1); // Esto forzará la actualización de ProcessList
+  };
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-2xl font-bold">Dashboard</h1>
-          <button
-            onClick={logout}
-            className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-          >
-            Cerrar Sesión
-          </button>
-        </div>
-        
-        <div className="space-y-6">
-          <div className="bg-card-background rounded-lg shadow-lg p-6">
-            <h2 className="text-xl font-semibold mb-4">Procesos Activos</h2>
-            <ProcessList />
-          </div>
-        </div>
+    <main className="container mx-auto py-8 px-4">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
+          Procesos
+        </h1>
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+        >
+          <PlusIcon className="h-5 w-5 mr-2" />
+          Crear Proceso
+        </button>
       </div>
-    </div>
+
+      <ProcessList key={refreshKey} />
+
+      <CreateProcessModal
+        isOpen={isModalOpen}
+        onClose={handleProcessCreated}
+      />
+    </main>
   );
 }

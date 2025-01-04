@@ -16,14 +16,6 @@ export default function SRTConnection({ input }: SRTConnectionProps) {
   const url = `srt://${baseUrl}`;
   const oneLine = `${url}:${port}?mode=caller&streamid=${streamId},mode:publish`;
 
-  const fields = [
-    { label: "URL", value: url },
-    { label: "Puerto", value: port },
-    { label: "Mode", value: "Caller" },
-    { label: "Stream ID", value: `${streamId},mode:publish` },
-    { label: "One-Line", value: oneLine }
-  ];
-
   return (
     <div className="mt-2 p-3 bg-white dark:bg-gray-800 rounded-lg shadow">
       <div className="flex justify-between items-center mb-2">
@@ -44,22 +36,61 @@ export default function SRTConnection({ input }: SRTConnectionProps) {
 
       {!isCollapsed && (
         <div className="space-y-2 text-xs">
-          {fields.map(({ label, value }) => (
-            <div
-              key={label}
-              className="flex items-start justify-between p-1 bg-gray-50 dark:bg-gray-700 rounded"
-            >
+          <div className="flex items-start justify-between p-1 bg-gray-50 dark:bg-gray-700 rounded">
+            <div className="min-w-0 flex-1 mr-2">
+              <span className="font-medium text-gray-500 dark:text-gray-400 block mb-1">
+                URL
+              </span>
+              <p className="text-gray-900 dark:text-white break-all">{url}</p>
+            </div>
+            <div className="flex-shrink-0">
+              <CopyButton text={url} />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2 p-1 bg-gray-50 dark:bg-gray-700 rounded">
+            <div className="flex items-start justify-between">
               <div className="min-w-0 flex-1 mr-2">
                 <span className="font-medium text-gray-500 dark:text-gray-400 block mb-1">
-                  {label}
+                  Port
                 </span>
-                <p className="text-gray-900 dark:text-white break-all">{value}</p>
+                <p className="text-gray-900 dark:text-white break-all">{port}</p>
               </div>
               <div className="flex-shrink-0">
-                <CopyButton text={value.toString()} />
+                <CopyButton text={port} />
               </div>
             </div>
-          ))}
+            <div>
+              <span className="font-medium text-gray-500 dark:text-gray-400 block mb-1">
+                Mode
+              </span>
+              <p className="text-gray-900 dark:text-white">Caller</p>
+            </div>
+          </div>
+
+          <div className="flex items-start justify-between p-1 bg-gray-50 dark:bg-gray-700 rounded">
+            <div className="min-w-0 flex-1 mr-2">
+              <span className="font-medium text-gray-500 dark:text-gray-400 block mb-1">
+                Stream ID
+              </span>
+              <p className="text-gray-900 dark:text-white break-all">{streamId}</p>
+            </div>
+            <div className="flex-shrink-0">
+              <CopyButton text={streamId} />
+            </div>
+          </div>
+
+          <div className="flex items-start justify-between p-1 bg-gray-50 dark:bg-gray-700 rounded">
+            <div className="min-w-0 flex-1 mr-2">
+              <span className="font-medium text-gray-500 dark:text-gray-400 block mb-1">
+                One-Line
+              </span>
+              <p className="text-gray-900 dark:text-white break-all">{oneLine}</p>
+            </div>
+            <div className="flex-shrink-0">
+              <CopyButton text={oneLine} />
+            </div>
+          </div>
         </div>
       )}
     </div>

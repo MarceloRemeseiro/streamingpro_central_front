@@ -12,7 +12,11 @@ import { processService } from "@/services/process";
 const resolutions: Resolution[] = ["1920x1080", "1280x720"];
 const fpsList: FPS[] = [23.98, 24, 25, 29.97, 30, 59.94, 60];
 
-export default function CreateProcessForm() {
+interface CreateProcessFormProps {
+  onSuccess?: () => void;
+}
+
+export default function CreateProcessForm({ onSuccess }: CreateProcessFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState<CreateProcessInput>({
@@ -27,7 +31,6 @@ export default function CreateProcessForm() {
     setFormData((prev) => ({
       ...prev,
       type,
-      latency: type === "srt" ? 20000 : undefined,
     }));
   };
 
@@ -38,31 +41,17 @@ export default function CreateProcessForm() {
 
     try {
       await processService.createProcess(formData);
-      // Limpiar el formulario después de crear exitosamente
-      setFormData({
-        type: "rtmp",
-        name: "",
-        description: "",
-        resolution: "1920x1080",
-        fps: 59.94,
-      });
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "Error al crear el proceso"
-      );
+      onSuccess?.();
+    } catch (error) {
+      console.error("Error creating process:", error);
+      setError(error instanceof Error ? error.message : "Error al crear el proceso");
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl mx-auto p-6">
-      <div>
-        <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">
-          Crear Nuevo Proceso
-        </h2>
-      </div>
-
+    <form onSubmit={handleSubmit} className="space-y-6">
       {error && (
         <div className="bg-red-50 dark:bg-red-900/10 p-4 rounded-md">
           <p className="text-red-600 dark:text-red-400">{error}</p>
@@ -196,34 +185,6 @@ export default function CreateProcessForm() {
             ))}
           </select>
         </div>
-
-        {formData.type === "srt" && (
-          <div>
-            <label
-              htmlFor="latency"
-              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-            >
-              Latencia (ms)
-            </label>
-            <input
-              type="number"
-              id="latency"
-              value={formData.latency}
-              onChange={(e) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  latency: Number(e.target.value),
-                }))
-              }
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md
-                       bg-white dark:bg-gray-800 text-gray-900 dark:text-white
-                       focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
-              min="20"
-              max="60000"
-              required
-            />
-          </div>
-        )}
 
         <div>
           <button
