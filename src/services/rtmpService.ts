@@ -235,7 +235,7 @@ class RTMPService {
       };
 
 
-      const response = await fetch('/api/v3/process', {
+      const response = await fetch('/api/process', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

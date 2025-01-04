@@ -1,5 +1,5 @@
-import { FC, useEffect, useRef, useState, memo } from 'react';
-import Hls from 'hls.js';
+import { FC, useEffect, useRef, useState, memo } from "react";
+import Hls from "hls.js";
 
 interface VideoPlayerProps {
   url: string;
@@ -23,7 +23,7 @@ const VideoPlayer: FC<VideoPlayerProps> = ({ url, isRunning }) => {
       const hls = new Hls({
         enableWorker: true,
         lowLatencyMode: true,
-        backBufferLength: 90
+        backBufferLength: 90,
       });
 
       hls.attachMedia(video);
@@ -42,15 +42,15 @@ const VideoPlayer: FC<VideoPlayerProps> = ({ url, isRunning }) => {
           setIsLoading(false);
           switch (data.type) {
             case Hls.ErrorTypes.NETWORK_ERROR:
-              console.log('Error de red, intentando reconectar...');
+              console.log("Error de red, intentando reconectar...");
               hls.startLoad();
               break;
             case Hls.ErrorTypes.MEDIA_ERROR:
-              console.log('Error de media, intentando recuperar...');
+              console.log("Error de media, intentando recuperar...");
               hls.recoverMediaError();
               break;
             default:
-              console.log('Error fatal, destruyendo instancia...');
+              console.log("Error fatal, destruyendo instancia...");
               hls.destroy();
               break;
           }
@@ -85,22 +85,25 @@ const VideoPlayer: FC<VideoPlayerProps> = ({ url, isRunning }) => {
   }, [url, isRunning]);
 
   const containerStyle = {
-    position: 'relative',
-    width: '100%',
-    paddingBottom: '56.25%', // 16:9 aspect ratio (9/16 * 100)
+    position: "relative",
+    width: "100%",
+    paddingBottom: "56.25%", // 16:9 aspect ratio (9/16 * 100)
   } as const;
 
   const contentStyle = {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
   } as const;
 
   if (!isRunning) {
     return (
-      <div style={containerStyle} className="bg-gray-800 rounded-tr-lg rounded-tl-lg overflow-hidden">
+      <div
+        style={containerStyle}
+        className="bg-gray-800 rounded-tr-lg rounded-tl-lg overflow-hidden"
+      >
         <div style={contentStyle} className="flex items-center justify-center">
           <p className="text-gray-400">Stream no disponible</p>
         </div>
@@ -110,15 +113,12 @@ const VideoPlayer: FC<VideoPlayerProps> = ({ url, isRunning }) => {
 
   return (
     <div style={containerStyle} className="bg-black overflow-hidden">
-      <video
-        ref={videoRef}
-        style={contentStyle}
-        controls
-        playsInline
-        muted
-      />
+      <video ref={videoRef} style={contentStyle} controls playsInline muted />
       {isLoading && (
-        <div style={contentStyle} className="flex items-center justify-center bg-black/80">
+        <div
+          style={contentStyle}
+          className="flex items-center justify-center bg-black/80"
+        >
           <div className="flex flex-col items-center gap-2">
             <div className="w-8 h-8 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
             <p className="text-sm text-gray-300">Conectando al stream...</p>
@@ -129,4 +129,4 @@ const VideoPlayer: FC<VideoPlayerProps> = ({ url, isRunning }) => {
   );
 };
 
-export default memo(VideoPlayer); 
+export default memo(VideoPlayer);

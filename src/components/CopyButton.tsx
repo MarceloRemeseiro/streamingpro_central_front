@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useState } from "react";
 
 interface CopyButtonProps {
   text: string;
@@ -13,7 +13,7 @@ const CopyButton: FC<CopyButtonProps> = ({ text }) => {
       setShowTooltip(true);
       setTimeout(() => setShowTooltip(false), 2000);
     } catch (err) {
-      console.error('Error al copiar:', err);
+      console.error("Error al copiar:", err);
     }
   };
 
@@ -48,4 +48,4 @@ const CopyButton: FC<CopyButtonProps> = ({ text }) => {
   );
 };
 
-export default CopyButton; 
+export default CopyButton;

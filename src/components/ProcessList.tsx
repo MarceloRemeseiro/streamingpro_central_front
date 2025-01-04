@@ -106,9 +106,7 @@ const InputCard = memo(({ input }: { input: InputProcess }) => {
           >
             {input.state?.exec || "Desconocido"}
           </span>
-          {input.state?.exec === "running" && (
-            <PacketLossStats input={input} />
-          )}
+          {input.state?.exec === "running" && <PacketLossStats input={input} />}
         </div>
       </div>
 
