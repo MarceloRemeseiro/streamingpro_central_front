@@ -27,10 +27,10 @@ const OutputDefault: FC<OutputDefaultProps> = ({ streamId }) => {
       label: "HLS",
       url: `https://${baseUrl}/memfs/${cleanStreamId}.m3u8`,
     },
-    {
+   /*  {
       label: "HTML",
       url: `https://${baseUrl}/${cleanStreamId}.html`,
-    },
+    }, */
   ];
 
   return (

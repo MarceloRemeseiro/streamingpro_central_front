@@ -11,7 +11,11 @@ export default function Home() {
 
   const handleProcessCreated = () => {
     setIsModalOpen(false);
-    setRefreshKey(prev => prev + 1); // Esto forzará la actualización de ProcessList
+    setRefreshKey(prev => prev + 1);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
   };
 
   return (
@@ -33,7 +37,8 @@ export default function Home() {
 
       <CreateProcessModal
         isOpen={isModalOpen}
-        onClose={handleProcessCreated}
+        onClose={handleModalClose}
+        onSuccess={handleProcessCreated}
       />
     </main>
   );

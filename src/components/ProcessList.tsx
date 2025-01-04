@@ -12,7 +12,8 @@ import SRTOutput from "./SRTOutput";
 import StreamStats from "./StreamStats";
 import PacketLossStats from "./PacketLossStats";
 import DeleteProcessModal from "./DeleteProcessModal";
-import { TrashIcon } from "@heroicons/react/24/outline";
+import EditProcessModal from "./EditProcessModal";
+import { TrashIcon, PencilIcon } from "@heroicons/react/24/outline";
 
 const getInputTypeStyles = (type: InputProcess["inputType"]) => {
   switch (type) {
@@ -71,7 +72,13 @@ const OutputItem = memo(({ output }: { output: OutputProcess }) => (
   </div>
 ));
 
-const InputCard = memo(({ input, onDeleteClick }: { input: InputProcess; onDeleteClick: (input: InputProcess) => void }) => {
+const InputCard = memo(({ input, onDeleteClick, onProcessUpdated }: { 
+  input: InputProcess; 
+  onDeleteClick: (input: InputProcess) => void;
+  onProcessUpdated: () => void;
+}) => {
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  
   const getHlsUrl = () => {
     const streamName = input.streamName.replace(".stream", "");
     return `http://${process.env.NEXT_PUBLIC_RESTREAMER_BASE_URL}/memfs/${streamName}.m3u8`;
@@ -91,6 +98,12 @@ const InputCard = memo(({ input, onDeleteClick }: { input: InputProcess; onDelet
               {input.metadata?.["restreamer-ui"]?.meta?.name ||
                 "Input sin nombre"}
             </h3>
+            <button
+              onClick={() => setIsEditModalOpen(true)}
+              className="p-1 text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300"
+            >
+              <PencilIcon className="h-4 w-4" />
+            </button>
           </div>
           <p className="text-sm text-gray-600 dark:text-gray-400">
             {input.metadata?.["restreamer-ui"]?.meta?.description ||
@@ -163,6 +176,13 @@ const InputCard = memo(({ input, onDeleteClick }: { input: InputProcess; onDelet
           </p>
         )}
       </div>
+
+      <EditProcessModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        process={input}
+        onProcessUpdated={onProcessUpdated}
+      />
     </div>
   );
 });
@@ -188,10 +208,14 @@ const ProcessList = () => {
       }
 
       setProcessToDelete(null);
-      refresh(); // Actualizar la lista después de eliminar
+      refresh();
     } catch (error) {
       console.error("Error deleting process:", error);
     }
+  };
+
+  const handleProcessUpdated = () => {
+    refresh();
   };
 
   const sortedInputs = [...inputs].sort((a, b) => {
@@ -236,7 +260,12 @@ const ProcessList = () => {
     <>
       <div className="grid gap-6 md:grid-cols-2">
         {sortedInputs.map((input) => (
-          <InputCard key={input.id} input={input} onDeleteClick={handleDeleteClick} />
+          <InputCard 
+            key={input.id} 
+            input={input} 
+            onDeleteClick={handleDeleteClick}
+            onProcessUpdated={handleProcessUpdated}
+          />
         ))}
       </div>
 

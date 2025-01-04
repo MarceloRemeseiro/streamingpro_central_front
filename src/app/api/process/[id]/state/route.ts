@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { AuthService } from '@/services/auth';
+import { withAuth } from '@/utils/authUtils';
 
 export async function GET(
   request: NextRequest,
@@ -7,55 +7,23 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    const authService = AuthService.getInstance();
     const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_BASE_URL;
 
-    // Intentamos hacer login primero
-    try {
-      const loginResponse = await fetch(`http://${baseUrl}:8080/api/login`, {
-        method: 'POST',
+    return await withAuth(async (token) => {
+      const processResponse = await fetch(`http://${baseUrl}:8080/api/v3/process/${id}/state`, {
         headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          username: process.env.NEXT_PUBLIC_RESTREAMER_USERNAME,
-          password: process.env.NEXT_PUBLIC_RESTREAMER_PASSWORD
-        })
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
       });
 
-      if (!loginResponse.ok) {
-        throw new Error('Error en la autenticación');
+      if (!processResponse.ok) {
+        throw new Error('Error obteniendo el estado del proceso');
       }
 
-      const { access_token } = await loginResponse.json();
-      if (!access_token) {
-        throw new Error('No se recibió el token de acceso');
-      }
-
-      authService.setAccessToken(access_token);
-    } catch (error) {
-      console.error('Error de autenticación:', error);
-      return NextResponse.json({ error: 'Error de autenticación' }, { status: 401 });
-    }
-
-    const token = authService.getAccessToken();
-    if (!token) {
-      return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
-    }
-
-    const processResponse = await fetch(`http://${baseUrl}:8080/api/v3/process/${id}/state`, {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      }
+      const data = await processResponse.json();
+      return NextResponse.json(data);
     });
-
-    if (!processResponse.ok) {
-      throw new Error('Error obteniendo el estado del proceso');
-    }
-
-    const data = await processResponse.json();
-    return NextResponse.json(data);
   } catch (error) {
     console.error('Error:', error);
     return NextResponse.json(

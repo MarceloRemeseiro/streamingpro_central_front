@@ -6,11 +6,13 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 interface CreateProcessModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onSuccess: () => void;
 }
 
 export default function CreateProcessModal({
   isOpen,
   onClose,
+  onSuccess,
 }: CreateProcessModalProps) {
   return (
     <Transition appear show={isOpen} as={Fragment}>
@@ -53,7 +55,7 @@ export default function CreateProcessModal({
                     <XMarkIcon className="h-6 w-6" />
                   </button>
                 </div>
-                <CreateProcessForm onSuccess={onClose} />
+                <CreateProcessForm onSuccess={onSuccess} />
               </Dialog.Panel>
             </Transition.Child>
           </div>
