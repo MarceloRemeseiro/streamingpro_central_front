@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { AuthService } from '@/services/auth';
 import { Process } from '@/types/restreamer';
-import { InputProcess, OutputProcess, InputType } from '@/types/processTypes';
+import { InputProcess, OutputProcess, InputType, ProcessState } from '@/types/processTypes';
 
 export const useProcesses = () => {
   const [inputs, setInputs] = useState<InputProcess[]>([]);
@@ -35,12 +35,20 @@ export const useProcesses = () => {
         const inputAddress = process.config.input[0].address;
         const { type, streamName } = parseInputAddress(inputAddress);
 
-        inputProcesses[streamId] = {
-          ...process,
+        const inputProcess: InputProcess = {
+          id: process.id,
+          type: process.type,
+          reference: process.reference,
+          created_at: process.created_at,
+          state: process.state as ProcessState,
+          metadata: process.metadata,
+          config: process.config,
           outputs: [],
           inputType: type,
           streamName,
-        };
+        } as InputProcess;
+
+        inputProcesses[streamId] = inputProcess;
       }
     });
 
@@ -49,9 +57,15 @@ export const useProcesses = () => {
       if (process.id.includes(':egress:')) {
         const parentId = process.reference;
         const outputProcess: OutputProcess = {
-          ...process,
+          id: process.id,
+          type: process.type,
+          reference: process.reference,
+          created_at: process.created_at,
+          state: process.state as ProcessState,
+          metadata: process.metadata,
+          config: process.config,
           parentId,
-        };
+        } as OutputProcess;
         
         if (inputProcesses[parentId]) {
           inputProcesses[parentId].outputs.push(outputProcess);
@@ -70,9 +84,9 @@ export const useProcesses = () => {
         if (!newProcess) return prevInput;
 
         // Solo actualizamos el estado y mantenemos el resto de la información
-        const updatedInput = {
+        const updatedInput: InputProcess = {
           ...prevInput,
-          state: newProcess.state
+          state: newProcess.state as ProcessState
         };
 
         // Actualizamos los estados de los outputs
@@ -82,8 +96,8 @@ export const useProcesses = () => {
 
           return {
             ...prevOutput,
-            state: newOutput.state
-          };
+            state: newOutput.state as ProcessState
+          } as OutputProcess;
         });
 
         return updatedInput;
