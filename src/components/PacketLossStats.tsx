@@ -11,7 +11,7 @@ export default function PacketLossStats({ input }: PacketLossStatsProps) {
 
   return (
     <div className="flex flex-col items-end">
-      <span className="text-[10px] font-medium text-gray-400">Loss</span>
+      <span className="text-[10px] font-medium text-gray-400">Packet Loss</span>
       <p
         className={`text-xs font-medium leading-none ${
           parseFloat(lossPercentage) > 1
