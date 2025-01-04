@@ -1,7 +1,9 @@
+'use client';
+
+import { memo, useState } from "react";
 import { useProcesses } from "@/hooks/useProcesses";
 import { OutputProcess, InputProcess } from "@/types/processTypes";
 import VideoPlayer from "./VideoPlayer";
-import { memo } from "react";
 import RTMPConnection from "./RTMPConnection";
 import SRTConnection from "./SRTConnection";
 import OutputDefault from "./OutputDefault";
@@ -9,6 +11,8 @@ import RTMPOutput from "./RTMPOutput";
 import SRTOutput from "./SRTOutput";
 import StreamStats from "./StreamStats";
 import PacketLossStats from "./PacketLossStats";
+import DeleteProcessModal from "./DeleteProcessModal";
+import { TrashIcon } from "@heroicons/react/24/outline";
 
 const getInputTypeStyles = (type: InputProcess["inputType"]) => {
   switch (type) {
@@ -67,7 +71,7 @@ const OutputItem = memo(({ output }: { output: OutputProcess }) => (
   </div>
 ));
 
-const InputCard = memo(({ input }: { input: InputProcess }) => {
+const InputCard = memo(({ input, onDeleteClick }: { input: InputProcess; onDeleteClick: (input: InputProcess) => void }) => {
   const getHlsUrl = () => {
     const streamName = input.streamName.replace(".stream", "");
     return `http://${process.env.NEXT_PUBLIC_RESTREAMER_BASE_URL}/memfs/${streamName}.m3u8`;
@@ -106,7 +110,16 @@ const InputCard = memo(({ input }: { input: InputProcess }) => {
           >
             {input.state?.exec || "Desconocido"}
           </span>
-          {input.state?.exec === "running" && <PacketLossStats input={input} />}
+          {input.state?.exec === "running" ? (
+            <PacketLossStats input={input} />
+          ) : (
+            <button
+              onClick={() => onDeleteClick(input)}
+              className="p-2 text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-500"
+            >
+              <TrashIcon className="h-5 w-5" />
+            </button>
+          )}
         </div>
       </div>
 
@@ -154,8 +167,32 @@ const InputCard = memo(({ input }: { input: InputProcess }) => {
   );
 });
 
-export const ProcessList = () => {
+const ProcessList = () => {
   const { inputs, isLoading, error, refresh } = useProcesses();
+  const [processToDelete, setProcessToDelete] = useState<InputProcess | null>(null);
+
+  const handleDeleteClick = (input: InputProcess) => {
+    setProcessToDelete(input);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!processToDelete) return;
+
+    try {
+      const response = await fetch(`/api/process/${processToDelete.id}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        throw new Error("Error al eliminar el proceso");
+      }
+
+      setProcessToDelete(null);
+      refresh(); // Actualizar la lista después de eliminar
+    } catch (error) {
+      console.error("Error deleting process:", error);
+    }
+  };
 
   const sortedInputs = [...inputs].sort((a, b) => {
     const nameA =
@@ -196,10 +233,22 @@ export const ProcessList = () => {
   }
 
   return (
-    <div className="grid gap-6 md:grid-cols-2">
-      {sortedInputs.map((input) => (
-        <InputCard key={input.id} input={input} />
-      ))}
-    </div>
+    <>
+      <div className="grid gap-6 md:grid-cols-2">
+        {sortedInputs.map((input) => (
+          <InputCard key={input.id} input={input} onDeleteClick={handleDeleteClick} />
+        ))}
+      </div>
+
+      <DeleteProcessModal
+        isOpen={!!processToDelete}
+        onClose={() => setProcessToDelete(null)}
+        onConfirm={handleDeleteConfirm}
+        processName={processToDelete?.metadata?.["restreamer-ui"]?.meta?.name || ""}
+      />
+    </>
   );
 };
+
+export { ProcessList };
+
