@@ -5,6 +5,8 @@ import { memo } from "react";
 import RTMPConnection from "./RTMPConnection";
 import SRTConnection from "./SRTConnection";
 import OutputDefault from "./OutputDefault";
+import RTMPOutput from "./RTMPOutput";
+import SRTOutput from "./SRTOutput";
 
 const getInputTypeStyles = (type: InputProcess["inputType"]) => {
   switch (type) {
@@ -119,12 +121,22 @@ const InputCard = memo(({ input }: { input: InputProcess }) => {
         {input.outputs.length > 0 ? (
           <div className="space-y-3">
             <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">
-              Outputs ({input.outputs.length})
+              Outputs configurados ({input.outputs.length})
             </h4>
-            <div className="space-y-2">
-              {input.outputs.map((output) => (
-                <OutputItem key={output.id} output={output} />
-              ))}
+            <div className="space-y-3">
+              {input.outputs.map((output) => {
+                const address = output.config?.output?.[0]?.address || '';
+                const isRTMP = address.startsWith('rtmp://');
+                const isSRT = address.startsWith('srt://');
+
+                if (isRTMP) {
+                  return <RTMPOutput key={output.id} output={output} />;
+                }
+                if (isSRT) {
+                  return <SRTOutput key={output.id} output={output} />;
+                }
+                return null;
+              })}
             </div>
           </div>
         ) : (
