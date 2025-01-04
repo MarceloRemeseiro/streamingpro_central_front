@@ -37,7 +37,7 @@ export default function SRTConnection({ input }: SRTConnectionProps) {
   const streamId =
     urlParams.get("streamid")?.replace(",mode:request", "") || input.streamName;
 
-  const oneLine = `srt://${url}:${port}?type=caller&streamid=${streamId}&latency=${latency},mode:publish`;
+  const oneLine = `${url}:${port}?type=caller&streamid=${streamId}&latency=${latency},mode:publish`;
 
   const mainFields = [
     { label: "URL", value: url },
