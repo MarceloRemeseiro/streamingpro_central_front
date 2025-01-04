@@ -120,8 +120,8 @@ const InputCard = memo(({ input }: { input: InputProcess }) => {
       <div className="mt-4">
         {input.outputs.length > 0 ? (
           <div className="space-y-3">
-            <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">
-              Outputs configurados ({input.outputs.length})
+            <h4 className="text-vase font-bold text-gray-700 dark:text-gray-300">
+              Custom Outputs ({input.outputs.length})
             </h4>
             <div className="space-y-3">
               {input.outputs.map((output) => {
