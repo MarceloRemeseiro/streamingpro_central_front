@@ -32,7 +32,7 @@ export default function SRTConnection({ input }: SRTConnectionProps) {
   const urlParams = new URLSearchParams(srtUrl.split("?")[1]);
 
   const url = `srt://${process.env.NEXT_PUBLIC_RESTREAMER_BASE_URL || ""}`;
-  const port = srtUrl.split(":")[2]?.split("?")[0] || "30000";
+  const port = process.env.NEXT_PUBLIC_RESTREAMER_PORT || '6000';
   const latency = urlParams.get("latency") || "20000";
   const streamId =
     urlParams.get("streamid")?.replace(",mode:request", "") || input.streamName;

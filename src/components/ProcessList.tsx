@@ -4,6 +4,7 @@ import VideoPlayer from "./VideoPlayer";
 import { memo } from "react";
 import RTMPConnection from "./RTMPConnection";
 import SRTConnection from "./SRTConnection";
+import OutputDefault from "./OutputDefault";
 
 const getInputTypeStyles = (type: InputProcess["inputType"]) => {
   switch (type) {
@@ -111,6 +112,8 @@ const InputCard = memo(({ input }: { input: InputProcess }) => {
 
       {input.inputType === "rtmp" && <RTMPConnection input={input} />}
       {input.inputType === "srt" && <SRTConnection input={input} />}
+
+      <OutputDefault streamId={input.streamName} />
 
       <div className="mt-4">
         {input.outputs.length > 0 ? (
