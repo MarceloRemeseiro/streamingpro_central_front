@@ -28,9 +28,10 @@ export interface Process {
   type: string;
   reference: string;
   created_at: number;
-  state: {
+  state?: {
     exec?: string;
     order?: string;
+    [key: string]: any;
   };
   metadata?: ProcessMetadata;
   config: ProcessConfig;

@@ -65,7 +65,7 @@ const VideoPlayer: FC<VideoPlayerProps> = ({ url, isRunning }) => {
       // Aumentamos el delay a 5 segundos para asegurar que el stream HLS esté disponible
       const timer = setTimeout(() => {
         initPlayer();
-      }, 5000);
+      }, 8000);
 
       return () => {
         clearTimeout(timer);

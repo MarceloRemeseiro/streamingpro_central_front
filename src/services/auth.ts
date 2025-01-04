@@ -137,4 +137,33 @@ export class AuthService {
   public getAccessToken(): string | null {
     return this.accessToken;
   }
+
+  public setAccessToken(token: string): void {
+    this.accessToken = token;
+  }
+}
+
+export async function getAuthToken(): Promise<string | null> {
+  try {
+    const response = await fetch('/api/v3/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        username: process.env.NEXT_PUBLIC_RESTREAMER_USERNAME,
+        password: process.env.NEXT_PUBLIC_RESTREAMER_PASSWORD
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error('Authentication failed');
+    }
+
+    const data = await response.json();
+    return data.token;
+  } catch (error) {
+    console.error('Error getting auth token:', error);
+    return null;
+  }
 } 

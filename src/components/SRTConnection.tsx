@@ -11,13 +11,18 @@ interface VideoSource {
   height?: number;
   fps?: number;
   codec?: string;
-  url?: string;
+  address?: string;
+}
+
+interface ProcessState {
+  progress?: {
+    inputs: VideoSource[];
+  };
 }
 
 export default function SRTConnection({ input }: SRTConnectionProps) {
-  const videoSource =
-    (input.metadata?.["restreamer-ui"]?.sources?.[0]
-      ?.streams?.[0] as VideoSource) || {};
+  const state = input.state as ProcessState;
+  const videoSource = state?.progress?.inputs?.[0] || {} as VideoSource;
 
   // Extraer datos del video
   const resolution =
@@ -28,7 +33,7 @@ export default function SRTConnection({ input }: SRTConnectionProps) {
   const codec = videoSource?.codec?.toUpperCase() || "N/A";
 
   // Extraer datos de la URL SRT
-  const srtUrl = videoSource?.url || "";
+  const srtUrl = videoSource?.address || "";
   const urlParams = new URLSearchParams(srtUrl.split("?")[1]);
 
   const url = `srt://${process.env.NEXT_PUBLIC_RESTREAMER_BASE_URL || ""}`;

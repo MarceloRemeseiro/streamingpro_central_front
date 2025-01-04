@@ -137,7 +137,7 @@ export const useProcesses = () => {
       pollingTimeoutRef.current = setTimeout(async () => {
         await pollStates();
         startPolling();
-      }, 5000);
+      }, 10000);
     };
 
     startPolling();
