@@ -7,10 +7,6 @@ interface SRTConnectionProps {
 
 interface VideoSource {
   type: string;
-  width?: number;
-  height?: number;
-  fps?: number;
-  codec?: string;
   address?: string;
 }
 
@@ -24,37 +20,22 @@ export default function SRTConnection({ input }: SRTConnectionProps) {
   const state = input.state as ProcessState;
   const videoSource = state?.progress?.inputs?.[0] || {} as VideoSource;
 
-  // Extraer datos del video
-  const resolution =
-    videoSource.width && videoSource.height
-      ? `${videoSource.width}x${videoSource.height}`
-      : "N/A";
-  const fps = videoSource?.fps || "N/A";
-  const codec = videoSource?.codec?.toUpperCase() || "N/A";
-
   // Extraer datos de la URL SRT
   const srtUrl = videoSource?.address || "";
-  const urlParams = new URLSearchParams(srtUrl.split("?")[1]);
 
   const url = `srt://${process.env.NEXT_PUBLIC_RESTREAMER_BASE_URL || ""}`;
   const port = process.env.NEXT_PUBLIC_RESTREAMER_PORT || '6000';
-  const latency = urlParams.get("latency") || "20000";
-  const streamId =
-    urlParams.get("streamid")?.replace(",mode:request", "") || input.streamName;
+  const streamId = input.streamName;
 
-  const oneLine = `${url}:${port}?mode=caller&latency=${latency}&streamid=${streamId},mode:publish`;
+  const oneLine = `${url}:${port}?mode=caller&streamid=${streamId},mode:publish`;
 
   const mainFields = [
-    { label: "URL", value: url },
-  ];
+      { label: "URL", value: url },
+];
 
-  const detailFields = [
-    { label: "Resolución", value: resolution },
-    { label: "FPS", value: fps },
-    { label: "Codec", value: codec },
+const detailFields = [
     { label: "Puerto", value: port },
     { label: "Mode", value: "Caller" },
-    { label: "Latency", value: `${latency}ms` },
   ];
 
   const bottomFields = [
@@ -87,7 +68,7 @@ export default function SRTConnection({ input }: SRTConnectionProps) {
         ))}
 
         <div className="p-3 bg-gray-50 dark:bg-gray-700 rounded">
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-2 gap-4">
             {detailFields.map(({ label, value }) => (
               <div key={label}>
                 <span className="text-sm font-medium text-gray-500 dark:text-gray-400 block mb-1">

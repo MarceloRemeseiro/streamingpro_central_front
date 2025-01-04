@@ -10,7 +10,6 @@ export async function POST(request: Request) {
     }
 
     const payload = await request.json() as CreateProcessPayload;
-    console.log('Received payload:', JSON.stringify(payload, null, 2));
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_RESTREAMER_BASE_URL}/api/v3/process`, {
       method: 'POST',

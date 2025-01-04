@@ -100,7 +100,7 @@ const VideoPlayer: FC<VideoPlayerProps> = ({ url, isRunning }) => {
 
   if (!isRunning) {
     return (
-      <div style={containerStyle} className="bg-black/50 rounded-lg overflow-hidden">
+      <div style={containerStyle} className="bg-gray-800 rounded-tr-lg rounded-tl-lg overflow-hidden">
         <div style={contentStyle} className="flex items-center justify-center">
           <p className="text-gray-400">Stream no disponible</p>
         </div>
@@ -109,7 +109,7 @@ const VideoPlayer: FC<VideoPlayerProps> = ({ url, isRunning }) => {
   }
 
   return (
-    <div style={containerStyle} className="bg-black rounded-lg overflow-hidden">
+    <div style={containerStyle} className="bg-black overflow-hidden">
       <video
         ref={videoRef}
         style={contentStyle}

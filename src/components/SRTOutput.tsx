@@ -8,7 +8,6 @@ interface SRTOutputProps {
 const SRTOutput: FC<SRTOutputProps> = ({ output }) => {
   const name = output.metadata?.['restreamer-ui']?.name || 'Output sin nombre';
   const address = output.config?.output?.[0]?.address || '';
-console.log(address);
 
   // Extraer información del address SRT
   const url = `srt:${address.split(':')[1].split('?')[0]}` || '';

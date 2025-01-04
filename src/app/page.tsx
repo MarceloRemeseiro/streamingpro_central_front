@@ -10,7 +10,6 @@ export default function Home() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      console.log('Sesión restaurada');
     }
   }, [isAuthenticated]);
 

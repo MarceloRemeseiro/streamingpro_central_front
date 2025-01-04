@@ -7,6 +7,8 @@ import SRTConnection from "./SRTConnection";
 import OutputDefault from "./OutputDefault";
 import RTMPOutput from "./RTMPOutput";
 import SRTOutput from "./SRTOutput";
+import StreamStats from "./StreamStats";
+import PacketLossStats from "./PacketLossStats";
 
 const getInputTypeStyles = (type: InputProcess["inputType"]) => {
   switch (type) {
@@ -91,26 +93,31 @@ const InputCard = memo(({ input }: { input: InputProcess }) => {
               "Sin descripción"}
           </p>
         </div>
-        <span
-          className={`
-          px-2 py-1 text-xs rounded-full
-          ${
-            input.state?.exec === "running"
-              ? "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400"
-              : "bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400"
-          }
-        `}
-        >
-          {input.state?.exec || "Desconocido"}
-        </span>
+        <div className="flex flex-col items-end gap-2">
+          <span
+            className={`
+            px-2 py-1 text-xs rounded-full
+            ${
+              input.state?.exec === "running"
+                ? "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400"
+                : "bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400"
+            }
+          `}
+          >
+            {input.state?.exec || "Desconocido"}
+          </span>
+          {input.state?.exec === "running" && (
+            <PacketLossStats input={input} />
+          )}
+        </div>
       </div>
 
-      <div className="mb-4">
-        <VideoPlayer
-          url={getHlsUrl()}
-          isRunning={input.state?.exec === "running"}
-        />
-      </div>
+      <VideoPlayer
+        url={getHlsUrl()}
+        isRunning={input.state?.exec === "running"}
+      />
+
+      <StreamStats input={input} />
 
       {input.inputType === "rtmp" && <RTMPConnection input={input} />}
       {input.inputType === "srt" && <SRTConnection input={input} />}
@@ -125,9 +132,9 @@ const InputCard = memo(({ input }: { input: InputProcess }) => {
             </h4>
             <div className="space-y-3">
               {input.outputs.map((output) => {
-                const address = output.config?.output?.[0]?.address || '';
-                const isRTMP = address.startsWith('rtmp://');
-                const isSRT = address.startsWith('srt://');
+                const address = output.config?.output?.[0]?.address || "";
+                const isRTMP = address.startsWith("rtmp://");
+                const isSRT = address.startsWith("srt://");
 
                 if (isRTMP) {
                   return <RTMPOutput key={output.id} output={output} />;

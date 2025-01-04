@@ -234,7 +234,6 @@ class RTMPService {
         metadata
       };
 
-      console.log('Sending RTMP payload:', JSON.stringify(payload, null, 2));
 
       const response = await fetch('/api/v3/process', {
         method: 'POST',
