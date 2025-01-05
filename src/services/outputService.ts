@@ -42,16 +42,16 @@ export class OutputService {
     return OutputService.instance;
   }
 
-  private createRTMPConfig(config: RTMPOutputConfig) {
-    const outputId = generateUUID();
+  private createRTMPConfig(config: RTMPOutputConfig, existingId?: string) {
+    const outputId = existingId || `restreamer-ui:egress:rtmp:${generateUUID()}`;
     const cleanStreamId = config.streamId.split('.')[0];
     
     return {
-      id: `restreamer-ui:egress:rtmp:${outputId}`,
+      id: outputId,
       type: "ffmpeg",
       reference: cleanStreamId,
       config: {
-        id: `restreamer-ui:egress:rtmp:${outputId}`,
+        id: outputId,
         type: "ffmpeg",
         reference: cleanStreamId,
         input: [
@@ -250,8 +250,8 @@ export class OutputService {
     };
   }
 
-  private createSRTConfig(config: SRTOutputConfig) {
-    const outputId = generateUUID();
+  private createSRTConfig(config: SRTOutputConfig, existingId?: string) {
+    const outputId = existingId || `restreamer-ui:egress:srt:${generateUUID()}`;
     const srtParams = new URLSearchParams();
     srtParams.append('mode', 'caller');
     srtParams.append('transtype', 'live');
@@ -263,11 +263,11 @@ export class OutputService {
     const address = `srt://${config.url}:${config.port}?${srtParams.toString()}`;
 
     return {
-      id: `restreamer-ui:egress:srt:${outputId}`,
+      id: outputId,
       type: "ffmpeg",
       reference: cleanStreamId,
       config: {
-        id: `restreamer-ui:egress:srt:${outputId}`,
+        id: outputId,
         type: "ffmpeg",
         reference: cleanStreamId,
         input: [
@@ -509,23 +509,65 @@ export class OutputService {
     }
   }
 
-  public async updateOutput(id: string, config: { type: 'rtmp' | 'srt', config: any }) {
-    const response = await fetch(`/api/process/output/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        id,
-        type: config.type,
-        config: config.config
-      })
-    });
+  async updateRTMPOutput(id: string, config: RTMPOutputConfig): Promise<void> {
+    try {
+      console.log('Updating RTMP Output with ID:', id);
+      console.log('Config received:', config);
 
-    if (!response.ok) {
-      throw new Error('Error al actualizar el output');
+      const processConfig = this.createRTMPConfig(config, id);
+      console.log('Process config created:', processConfig);
+
+      const payload = {
+        config: processConfig.config,
+        metadata: processConfig.metadata["restreamer-ui"]
+      };
+      console.log('Payload to send:', payload);
+
+      const response = await fetch(`/api/process/output/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        const text = await response.text();
+        console.error('Server response:', text);
+        throw new Error(text || 'Error updating RTMP output');
+      }
+    } catch (error) {
+      console.error('Update RTMP Output Error:', error);
+      throw error;
     }
-
-    return await response.json();
   }
-} 
+
+  async updateSRTOutput(id: string, config: SRTOutputConfig): Promise<void> {
+    try {
+      const processConfig = this.createSRTConfig(config, id);
+      const payload = {
+        config: processConfig.config,
+        metadata: processConfig.metadata["restreamer-ui"]
+      };
+
+      const response = await fetch(`/api/process/output/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        const text = await response.text();
+        console.error('Server response:', text);
+        throw new Error(text || 'Error updating SRT output');
+      }
+    } catch (error) {
+      console.error('Update SRT Output Error:', error);
+      throw error;
+    }
+  }
+}
+
+export const outputService = OutputService.getInstance(); 

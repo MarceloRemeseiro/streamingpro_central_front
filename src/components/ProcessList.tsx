@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { memo, useState } from "react";
 import { useProcesses } from "@/hooks/useProcesses";
@@ -46,49 +46,52 @@ const getInputTypeLabel = (type: InputProcess["inputType"]) => {
   }
 };
 
+const InputCard = memo(
+  ({
+    input,
+    onDeleteClick,
+    onProcessUpdated,
+  }: {
+    input: InputProcess;
+    onDeleteClick: (input: InputProcess) => void;
+    onProcessUpdated: () => void;
+  }) => {
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
+    const getHlsUrl = () => {
+      const streamName = input.streamName.replace(".stream", "");
+      return `http://${process.env.NEXT_PUBLIC_RESTREAMER_BASE_URL}/memfs/${streamName}.m3u8`;
+    };
 
-const InputCard = memo(({ input, onDeleteClick, onProcessUpdated }: { 
-  input: InputProcess; 
-  onDeleteClick: (input: InputProcess) => void;
-  onProcessUpdated: () => void;
-}) => {
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  
-  const getHlsUrl = () => {
-    const streamName = input.streamName.replace(".stream", "");
-    return `http://${process.env.NEXT_PUBLIC_RESTREAMER_BASE_URL}/memfs/${streamName}.m3u8`;
-  };
-
-  return (
-    <div
-      className={`p-6 rounded-lg shadow-sm border ${getInputTypeStyles(
-        input.inputType
-      )}`}
-    >
-      <div className="flex justify-between items-start mb-4">
-        <div>
-          <div className="flex items-center gap-2 mb-2">
-            {getInputTypeLabel(input.inputType)}
-            <h3 className="font-medium">
-              {input.metadata?.["restreamer-ui"]?.meta?.name ||
-                "Input sin nombre"}
-            </h3>
-            <button
-              onClick={() => setIsEditModalOpen(true)}
-              className="p-1 text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300"
-            >
-              <PencilIcon className="h-4 w-4" />
-            </button>
+    return (
+      <div
+        className={`p-6 rounded-lg shadow-sm border ${getInputTypeStyles(
+          input.inputType
+        )}`}
+      >
+        <div className="flex justify-between items-start mb-4">
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              {getInputTypeLabel(input.inputType)}
+              <h3 className="font-medium">
+                {input.metadata?.["restreamer-ui"]?.meta?.name ||
+                  "Input sin nombre"}
+              </h3>
+              <button
+                onClick={() => setIsEditModalOpen(true)}
+                className="p-1 text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300"
+              >
+                <PencilIcon className="h-4 w-4" />
+              </button>
+            </div>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              {input.metadata?.["restreamer-ui"]?.meta?.description ||
+                "Sin descripción"}
+            </p>
           </div>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
-            {input.metadata?.["restreamer-ui"]?.meta?.description ||
-              "Sin descripción"}
-          </p>
-        </div>
-        <div className="flex flex-col items-end gap-2">
-          <span
-            className={`
+          <div className="flex flex-col items-end gap-2">
+            <span
+              className={`
             px-2 py-1 text-xs rounded-full
             ${
               input.state?.exec === "running"
@@ -96,80 +99,100 @@ const InputCard = memo(({ input, onDeleteClick, onProcessUpdated }: {
                 : "bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400"
             }
           `}
-          >
-            {input.state?.exec || "Desconocido"}
-          </span>
-          {input.state?.exec === "running" ? (
-            <PacketLossStats input={input} />
-          ) : (
-            <button
-              onClick={() => onDeleteClick(input)}
-              className="p-2 text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-500"
             >
-              <TrashIcon className="h-5 w-5" />
-            </button>
+              {input.state?.exec || "Desconocido"}
+            </span>
+            {input.state?.exec === "running" ? (
+              <PacketLossStats input={input} />
+            ) : (
+              <button
+                onClick={() => onDeleteClick(input)}
+                className="p-2 text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-500"
+              >
+                <TrashIcon className="h-5 w-5" />
+              </button>
+            )}
+          </div>
+        </div>
+
+        <VideoPlayer
+          url={getHlsUrl()}
+          isRunning={input.state?.exec === "running"}
+        />
+
+        <StreamStats input={input} />
+
+        {input.inputType === "rtmp" && <RTMPConnection input={input} />}
+        {input.inputType === "srt" && <SRTConnection input={input} />}
+
+        <OutputDefault streamId={input.streamName} />
+
+        <CustomOutputs
+          streamId={input.streamName}
+          onOutputCreated={onProcessUpdated}
+        />
+
+        <div className="mt-4">
+          {input.outputs.length > 0 ? (
+            <div className="space-y-3">
+              <h4 className="text-vase font-bold text-gray-700 dark:text-gray-300">
+                Custom Outputs ({input.outputs.length})
+              </h4>
+              <div className="space-y-3">
+                {input.outputs.map((output) => {
+                  const address = output.config?.output?.[0]?.address || "";
+                  const isRTMP = address.startsWith("rtmp://");
+                  const isSRT = address.startsWith("srt://");
+
+                  if (isRTMP) {
+                    return (
+                      <RTMPOutput
+                        key={output.id}
+                        output={output}
+                        onDeleted={onProcessUpdated}
+                        onUpdated={onProcessUpdated}
+                      />
+                    );
+                  }
+                  if (isSRT) {
+                    return (
+                      <SRTOutput
+                        key={output.id}
+                        output={output}
+                        onDeleted={onProcessUpdated}
+                        onUpdated={onProcessUpdated}
+                      />
+                    );
+                  }
+                  return null;
+                })}
+              </div>
+            </div>
+          ) : (
+            <p className="text-base text-gray-500 dark:text-gray-400">
+              No hay outputs configurados
+            </p>
           )}
         </div>
+
+        <EditProcessModal
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+          process={input}
+          onProcessUpdated={onProcessUpdated}
+        />
       </div>
+    );
+  }
+);
 
-      <VideoPlayer
-        url={getHlsUrl()}
-        isRunning={input.state?.exec === "running"}
-      />
-
-      <StreamStats input={input} />
-
-      {input.inputType === "rtmp" && <RTMPConnection input={input} />}
-      {input.inputType === "srt" && <SRTConnection input={input} />}
-
-      <OutputDefault streamId={input.streamName} />
-
-      <CustomOutputs streamId={input.streamName} onOutputCreated={onProcessUpdated} />
-
-      <div className="mt-4">
-        {input.outputs.length > 0 ? (
-          <div className="space-y-3">
-            <h4 className="text-vase font-bold text-gray-700 dark:text-gray-300">
-              Custom Outputs ({input.outputs.length})
-            </h4>
-            <div className="space-y-3">
-              {input.outputs.map((output) => {
-                const address = output.config?.output?.[0]?.address || "";
-                const isRTMP = address.startsWith("rtmp://");
-                const isSRT = address.startsWith("srt://");
-
-                if (isRTMP) {
-                  return <RTMPOutput key={output.id} output={output} onDeleted={onProcessUpdated} />;
-                }
-                if (isSRT) {
-                  return <SRTOutput key={output.id} output={output} onDeleted={onProcessUpdated} />;
-                }
-                return null;
-              })}
-            </div>
-          </div>
-        ) : (
-          <p className="text-base text-gray-500 dark:text-gray-400">
-            No hay outputs configurados
-          </p>
-        )}
-      </div>
-
-      <EditProcessModal
-        isOpen={isEditModalOpen}
-        onClose={() => setIsEditModalOpen(false)}
-        process={input}
-        onProcessUpdated={onProcessUpdated}
-      />
-    </div>
-  );
-});
-
-InputCard.displayName = 'InputCard';
+InputCard.displayName = "InputCard";
 
 const ProcessList = () => {
   const { inputs, isLoading, error, refresh } = useProcesses();
-  const [processToDelete, setProcessToDelete] = useState<InputProcess | null>(null);
+  const [processToDelete, setProcessToDelete] = useState<InputProcess | null>(
+    null
+  );
 
   const handleDeleteClick = (input: InputProcess) => {
     setProcessToDelete(input);
@@ -199,7 +222,7 @@ const ProcessList = () => {
     refresh().then(() => {
       window.scrollTo({
         top: scrollPosition,
-        behavior: 'instant'
+        behavior: "instant",
       });
     });
   };
@@ -246,9 +269,9 @@ const ProcessList = () => {
     <>
       <div className="grid gap-6 md:grid-cols-2">
         {sortedInputs.map((input) => (
-          <InputCard 
-            key={input.id} 
-            input={input} 
+          <InputCard
+            key={input.id}
+            input={input}
             onDeleteClick={handleDeleteClick}
             onProcessUpdated={handleProcessUpdated}
           />
@@ -259,11 +282,12 @@ const ProcessList = () => {
         isOpen={!!processToDelete}
         onClose={() => setProcessToDelete(null)}
         onConfirm={handleDeleteConfirm}
-        processName={processToDelete?.metadata?.["restreamer-ui"]?.meta?.name || ""}
+        processName={
+          processToDelete?.metadata?.["restreamer-ui"]?.meta?.name || ""
+        }
       />
     </>
   );
 };
 
 export { ProcessList };
-

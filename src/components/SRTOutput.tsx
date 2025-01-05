@@ -2,16 +2,19 @@ import { FC, useState } from "react";
 import { OutputProcess } from "@/types/processTypes";
 import ProcessSwitch from "./ProcessSwitch";
 import { processCommandService } from "@/services/processCommandService";
-import { TrashIcon } from "@heroicons/react/24/outline";
+import { TrashIcon, PencilIcon } from "@heroicons/react/24/outline";
 import DeleteProcessModal from "./DeleteProcessModal";
+import EditSRTOutputModal from "./EditSRTOutputModal";
 
 interface SRTOutputProps {
   output: OutputProcess;
   onDeleted?: () => void;
+  onUpdated?: () => void;
 }
 
-const SRTOutput: FC<SRTOutputProps> = ({ output, onDeleted }) => {
+const SRTOutput: FC<SRTOutputProps> = ({ output, onDeleted, onUpdated }) => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const name = output.metadata?.["restreamer-ui"]?.name || "Output sin nombre";
   const address = output.config?.output?.[0]?.address || "";
@@ -104,7 +107,13 @@ const SRTOutput: FC<SRTOutputProps> = ({ output, onDeleted }) => {
         </div>
 
         {output.state?.exec !== 'running' && (
-          <div className="flex justify-end mt-2">
+          <div className="flex justify-end mt-2 space-x-2">
+            <button
+              onClick={() => setIsEditModalOpen(true)}
+              className="p-1 text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300"
+            >
+              <PencilIcon className="h-5 w-5" />
+            </button>
             <button
               onClick={() => setIsDeleteModalOpen(true)}
               className="p-1 text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300"
@@ -120,6 +129,16 @@ const SRTOutput: FC<SRTOutputProps> = ({ output, onDeleted }) => {
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={handleDelete}
         processName={name}
+      />
+
+      <EditSRTOutputModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        output={output}
+        onUpdated={() => {
+          setIsEditModalOpen(false);
+          onUpdated?.();
+        }}
       />
     </>
   );

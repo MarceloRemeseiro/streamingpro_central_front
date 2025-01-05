@@ -129,7 +129,7 @@ class RTMPService {
         process: {
           autostart: true,
           delay: 15,
-          low_delay: true,
+          low_delay: false,
           reconnect: true,
           staleTimeout: 30
         },

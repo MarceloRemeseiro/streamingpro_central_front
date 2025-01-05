@@ -2,17 +2,20 @@ import { FC, useState } from "react";
 import { OutputProcess } from "@/types/processTypes";
 import ProcessSwitch from "./ProcessSwitch";
 import { processCommandService } from "@/services/processCommandService";
-import { TrashIcon } from "@heroicons/react/24/outline";
+import { TrashIcon, PencilIcon } from "@heroicons/react/24/outline";
 import DeleteProcessModal from "./DeleteProcessModal";
+import EditRTMPOutputModal from "./EditRTMPOutputModal";
 
 interface RTMPOutputProps {
   output: OutputProcess;
   onDeleted?: () => void;
+  onUpdated?: () => void;
 }
 
-const RTMPOutput: FC<RTMPOutputProps> = ({ output, onDeleted }) => {
+const RTMPOutput: FC<RTMPOutputProps> = ({ output, onDeleted, onUpdated }) => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  console.log(output);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
   const name = output.metadata?.["restreamer-ui"]?.name || "Output sin nombre";
   const address = output.config?.output?.[0]?.address || "";
   const streamKey = output.config?.output?.[0]?.options?.[13] || "";
@@ -78,7 +81,13 @@ const RTMPOutput: FC<RTMPOutputProps> = ({ output, onDeleted }) => {
         </div>
 
         {output.state?.exec !== 'running' && (
-          <div className="flex justify-end mt-2">
+          <div className="flex justify-end mt-2 space-x-2">
+            <button
+              onClick={() => setIsEditModalOpen(true)}
+              className="p-1 text-purple-500 hover:text-purple-600 dark:text-purple-400 dark:hover:text-purple-300"
+            >
+              <PencilIcon className="h-5 w-5" />
+            </button>
             <button
               onClick={() => setIsDeleteModalOpen(true)}
               className="p-1 text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300"
@@ -94,6 +103,16 @@ const RTMPOutput: FC<RTMPOutputProps> = ({ output, onDeleted }) => {
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={handleDelete}
         processName={name}
+      />
+
+      <EditRTMPOutputModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        output={output}
+        onUpdated={() => {
+          setIsEditModalOpen(false);
+          onUpdated?.();
+        }}
       />
     </>
   );
