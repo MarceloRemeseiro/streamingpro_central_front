@@ -49,7 +49,7 @@ const DeleteProcessModal = ({ isOpen, onClose, onConfirm, processName }: DeleteP
                     </Dialog.Title>
                     <div className="mt-2">
                       <p className="text-sm text-gray-500 dark:text-gray-400">
-                        ¿Estás seguro que deseas eliminar el input {processName || "sin nombre"}? Esta acción no se puede deshacer.
+                        ¿Estás seguro que deseas eliminar {processName || "sin nombre"}? Esta acción no se puede deshacer.
                       </p>
                     </div>
                   </div>

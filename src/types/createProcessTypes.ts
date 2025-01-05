@@ -6,9 +6,6 @@ export interface CreateProcessInput {
   type: ProcessType;
   name: string;
   description?: string;
-  resolution?: Resolution;
-  fps?: FPS;
-  latency?: number;
 }
 
 export interface ProcessInputConfig {

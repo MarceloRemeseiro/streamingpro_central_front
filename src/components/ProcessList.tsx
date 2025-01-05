@@ -4,9 +4,10 @@ import { memo, useState } from "react";
 import { useProcesses } from "@/hooks/useProcesses";
 import { InputProcess } from "@/types/processTypes";
 import VideoPlayer from "./VideoPlayer";
+import OutputDefault from "./OutputDefault";
 import RTMPConnection from "./RTMPConnection";
 import SRTConnection from "./SRTConnection";
-import OutputDefault from "./OutputDefault";
+import CustomOutputs from "./CustomOutputs";
 import RTMPOutput from "./RTMPOutput";
 import SRTOutput from "./SRTOutput";
 import StreamStats from "./StreamStats";
@@ -123,6 +124,8 @@ const InputCard = memo(({ input, onDeleteClick, onProcessUpdated }: {
 
       <OutputDefault streamId={input.streamName} />
 
+      <CustomOutputs streamId={input.streamName} onOutputCreated={onProcessUpdated} />
+
       <div className="mt-4">
         {input.outputs.length > 0 ? (
           <div className="space-y-3">
@@ -136,10 +139,10 @@ const InputCard = memo(({ input, onDeleteClick, onProcessUpdated }: {
                 const isSRT = address.startsWith("srt://");
 
                 if (isRTMP) {
-                  return <RTMPOutput key={output.id} output={output} />;
+                  return <RTMPOutput key={output.id} output={output} onDeleted={onProcessUpdated} />;
                 }
                 if (isSRT) {
-                  return <SRTOutput key={output.id} output={output} />;
+                  return <SRTOutput key={output.id} output={output} onDeleted={onProcessUpdated} />;
                 }
                 return null;
               })}
@@ -192,7 +195,13 @@ const ProcessList = () => {
   };
 
   const handleProcessUpdated = () => {
-    refresh();
+    const scrollPosition = window.scrollY;
+    refresh().then(() => {
+      window.scrollTo({
+        top: scrollPosition,
+        behavior: 'instant'
+      });
+    });
   };
 
   const sortedInputs = [...inputs].sort((a, b) => {

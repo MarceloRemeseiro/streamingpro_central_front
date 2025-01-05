@@ -3,14 +3,10 @@
 import { useState } from "react";
 import {
   CreateProcessInput,
-  ProcessType,
-  Resolution,
-  FPS,
+  ProcessType
 } from "@/types/createProcessTypes";
 import { processService } from "@/services/process";
 
-const resolutions: Resolution[] = ["1920x1080", "1280x720"];
-const fpsList: FPS[] = [23.98, 24, 25, 29.97, 30, 59.94, 60];
 
 interface CreateProcessFormProps {
   onSuccess?: () => void;
@@ -23,8 +19,6 @@ export default function CreateProcessForm({ onSuccess }: CreateProcessFormProps)
     type: "rtmp",
     name: "",
     description: "",
-    resolution: "1920x1080",
-    fps: 59.94,
   });
 
   const handleTypeChange = (type: ProcessType) => {
@@ -130,7 +124,7 @@ export default function CreateProcessForm({ onSuccess }: CreateProcessFormProps)
           />
         </div>
 
-        <div>
+        {/* <div>
           <label
             htmlFor="resolution"
             className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
@@ -156,8 +150,8 @@ export default function CreateProcessForm({ onSuccess }: CreateProcessFormProps)
               </option>
             ))}
           </select>
-        </div>
-
+        </div> */}
+{/* 
         <div>
           <label
             htmlFor="fps"
@@ -184,7 +178,7 @@ export default function CreateProcessForm({ onSuccess }: CreateProcessFormProps)
               </option>
             ))}
           </select>
-        </div>
+        </div> */}
 
         <div>
           <button
