@@ -23,6 +23,24 @@ export interface ProcessConfig {
   }>;
 }
 
+export interface ProcessStateExtras {
+  runtime_seconds?: number;
+  reconnect_seconds?: number;
+  last_logline?: string;
+  progress?: {
+    frame?: number;
+    packet?: number;
+    fps?: number;
+    time?: number;
+    bitrate_kbit?: number;
+    speed?: number;
+    drop?: number;
+    dup?: number;
+  };
+  memory_bytes?: number;
+  cpu_usage?: number;
+}
+
 export interface Process {
   id: string;
   type: string;
@@ -31,8 +49,7 @@ export interface Process {
   state?: {
     exec?: string;
     order?: string;
-    [key: string]: any;
-  };
+  } & ProcessStateExtras;
   metadata?: ProcessMetadata;
   config: ProcessConfig;
 }

@@ -8,7 +8,7 @@ class RTMPService {
     this.baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_BASE_URL || '';
   }
 
-  private createProcessConfig(input: CreateProcessInput) {
+  private createProcessConfig() {
     const streamId = uuidv4();
     const config: ProcessConfig = {
       id: `restreamer-ui:ingest:${streamId}`,
@@ -226,7 +226,7 @@ class RTMPService {
 
   async createProcess(input: CreateProcessInput): Promise<string> {
     try {
-      const config = this.createProcessConfig(input);
+      const config = this.createProcessConfig();
       const metadata = this.createProcessMetadata(input);
 
       const payload = {

@@ -22,8 +22,6 @@ export const useStreamStats = (input: InputProcess) => {
   const [stats, setStats] = useState<StreamStats>(initialStats);
 
   useEffect(() => {
-    let intervalId: NodeJS.Timeout;
-
     const updateStats = async () => {
       try {
         if (input.state?.exec !== 'running') {
@@ -84,7 +82,7 @@ export const useStreamStats = (input: InputProcess) => {
     };
 
     updateStats();
-    intervalId = setInterval(updateStats, 2000);
+    const intervalId: NodeJS.Timeout = setInterval(updateStats, 2000);
 
     return () => {
       if (intervalId) {

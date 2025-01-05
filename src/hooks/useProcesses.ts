@@ -26,7 +26,6 @@ export const useProcesses = () => {
 
   const processData = useCallback((data: Process[]) => {
     const inputProcesses: { [key: string]: InputProcess } = {};
-    const outputProcesses: OutputProcess[] = [];
 
     // Primero identificamos todos los inputs
     data.forEach(process => {

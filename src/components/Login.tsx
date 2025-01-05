@@ -15,7 +15,7 @@ export const Login = ({ onLoginSuccess }: LoginProps) => {
 
   useEffect(() => {
     if (error) setError(null);
-  }, [credentials]);
+  }, [credentials, error]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

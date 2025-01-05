@@ -1,6 +1,5 @@
 import { FC } from "react";
 import { OutputProcess } from "@/types/processTypes";
-import CopyButton from "./CopyButton";
 
 interface RTMPOutputProps {
   output: OutputProcess;

@@ -1,25 +1,3 @@
-import { Process as BaseProcess } from './restreamer';
-
-interface RestreamerUI {
-  meta?: {
-    name?: string;
-    description?: string;
-  };
-  name?: string;
-  sources?: Array<{
-    streams: Array<{
-      type: string;
-      width?: number;
-      height?: number;
-      fps?: 23.98 | 24 | 25 | 29.97 | 30 | 59.94 | 60;
-      codec?: string;
-      url?: string;
-      bitrate_kbps?: number;
-      format?: string;
-    }>;
-  }>;
-}
-
 export interface VideoInput {
   id: string;
   address: string;
@@ -50,7 +28,7 @@ export interface VideoInput {
 
 export interface Progress {
   inputs: VideoInput[];
-  outputs: any[];
+  outputs: VideoInput[];
   frame: number;
   packet: number;
   fps: number;

@@ -83,23 +83,12 @@ export class RestreamerService {
     return inputs;
   }
 
-  public async createInput(data: {
-    name: string;
-    description: string;
-    inputAddress: string;
-  }): Promise<void> {
+  public async createInput(): Promise<void> {
     // TODO: Implementar la creación de inputs
     throw new Error('Método no implementado');
   }
 
-  public async createOutput(
-    streamId: string,
-    data: {
-      name: string;
-      address: string;
-      streamKey?: string;
-    }
-  ): Promise<void> {
+  public async createOutput(): Promise<void> {
     // TODO: Implementar la creación de outputs
     throw new Error('Método no implementado');
   }

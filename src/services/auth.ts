@@ -10,6 +10,8 @@ interface ApiError {
   config?: {
     _retry?: boolean;
     headers?: Record<string, string>;
+    url?: string;
+    method?: string;
   };
 }
 
@@ -21,7 +23,7 @@ export class AuthService {
   private axiosInstance;
 
   private constructor() {
-    this.axiosInstance = axios.create({
+    const config = {
       baseURL: authConfig.apiUrl,
       headers: {
         'Accept': 'application/json',
@@ -29,7 +31,9 @@ export class AuthService {
       httpsAgent: new https.Agent({
         rejectUnauthorized: false,
       }),
-    } as any);
+    };
+
+    this.axiosInstance = axios.create(config);
 
     this.axiosInstance.interceptors.response.use(
       (response) => response,
@@ -38,11 +42,14 @@ export class AuthService {
         if (error.response?.status === 401 && !config._retry) {
           config._retry = true;
           await this.refreshAccessToken();
-          config.headers = {
-            ...config.headers,
-            Authorization: `Bearer ${this.accessToken}`,
-          };
-          return this.axiosInstance(config as any);
+          if (config.headers) {
+            config.headers.Authorization = `Bearer ${this.accessToken}`;
+          }
+          return this.axiosInstance.request({
+            ...config,
+            url: config.url || '',
+            method: config.method || 'get'
+          });
         }
         return Promise.reject(error);
       }

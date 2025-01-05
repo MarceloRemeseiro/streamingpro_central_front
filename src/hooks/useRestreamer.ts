@@ -20,49 +20,38 @@ export const useRestreamer = () => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [restreamerService]);
 
   useEffect(() => {
     fetchProcesses();
   }, [fetchProcesses]);
 
-  const createInput = useCallback(async (data: {
-    name: string;
-    description: string;
-    inputAddress: string;
-  }) => {
+  const createInput = useCallback(async () => {
     try {
-      await restreamerService.createInput(data);
-      await fetchProcesses(); // Actualizar la lista después de crear
+      await restreamerService.createInput();
+      await fetchProcesses();
     } catch (err) {
       throw err instanceof Error ? err : new Error('Error al crear el input');
     }
-  }, [fetchProcesses]);
+  }, [fetchProcesses, restreamerService]);
 
-  const createOutput = useCallback(async (
-    streamId: string,
-    data: {
-      name: string;
-      address: string;
-      streamKey?: string;
-    }
-  ) => {
+  const createOutput = useCallback(async () => {
     try {
-      await restreamerService.createOutput(streamId, data);
-      await fetchProcesses(); // Actualizar la lista después de crear
+      await restreamerService.createOutput();
+      await fetchProcesses();
     } catch (err) {
       throw err instanceof Error ? err : new Error('Error al crear el output');
     }
-  }, [fetchProcesses]);
+  }, [fetchProcesses, restreamerService]);
 
   const deleteProcess = useCallback(async (processId: string) => {
     try {
       await restreamerService.deleteProcess(processId);
-      await fetchProcesses(); // Actualizar la lista después de eliminar
+      await fetchProcesses();
     } catch (err) {
       throw err instanceof Error ? err : new Error('Error al eliminar el proceso');
     }
-  }, [fetchProcesses]);
+  }, [fetchProcesses, restreamerService]);
 
   return {
     processes,
