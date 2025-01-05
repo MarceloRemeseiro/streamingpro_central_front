@@ -12,7 +12,7 @@ interface RTMPOutputProps {
 
 const RTMPOutput: FC<RTMPOutputProps> = ({ output, onDeleted }) => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  
+  console.log(output);
   const name = output.metadata?.["restreamer-ui"]?.name || "Output sin nombre";
   const address = output.config?.output?.[0]?.address || "";
   const streamKey = output.config?.output?.[0]?.options?.[13] || "";

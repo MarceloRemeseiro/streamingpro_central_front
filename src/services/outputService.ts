@@ -1,5 +1,13 @@
 import { AuthService } from './auth';
 
+function generateUUID() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    const r = Math.random() * 16 | 0;
+    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+
 interface RTMPOutputConfig {
   type: 'rtmp';
   streamId: string;
@@ -35,8 +43,9 @@ export class OutputService {
   }
 
   private createRTMPConfig(config: RTMPOutputConfig) {
-    const outputId = crypto.randomUUID();
+    const outputId = generateUUID();
     const cleanStreamId = config.streamId.split('.')[0];
+    
     return {
       id: `restreamer-ui:egress:rtmp:${outputId}`,
       type: "ffmpeg",
@@ -94,7 +103,6 @@ export class OutputService {
       },
       metadata: {
         "restreamer-ui": {
-          name: config.name,
           control: {
             limits: {
               cpu_usage: 0,
@@ -110,22 +118,148 @@ export class OutputService {
             source: {
               source: "hls+memfs"
             }
-          }
+          },
+          name: config.name,
+          outputs: [
+            {
+              address: config.url,
+              options: [
+                "-f",
+                "flv",
+                "-rtmp_enhanced_codecs",
+                "hvc1,av01,vp09",
+                "-rtmp_playpath",
+                config.streamKey,
+                "-rtmp_flashver",
+                "FMLE/3.0"
+              ]
+            }
+          ],
+          profiles: [
+            {
+              audio: {
+                decoder: {
+                  coder: "default",
+                  mapping: {
+                    filter: [],
+                    global: [],
+                    local: []
+                  },
+                  settings: {}
+                },
+                encoder: {
+                  coder: "copy",
+                  mapping: {
+                    filter: [],
+                    global: [],
+                    local: [
+                      "-codec:a",
+                      "copy"
+                    ]
+                  },
+                  settings: {}
+                },
+                filter: {
+                  graph: "",
+                  settings: {}
+                },
+                source: 0,
+                stream: 1
+              },
+              custom: {
+                selected: false,
+                stream: -1
+              },
+              video: {
+                decoder: {
+                  coder: "default",
+                  mapping: {
+                    filter: [],
+                    global: [],
+                    local: []
+                  },
+                  settings: {}
+                },
+                encoder: {
+                  coder: "copy",
+                  mapping: {
+                    filter: [],
+                    global: [],
+                    local: [
+                      "-codec:v",
+                      "copy"
+                    ]
+                  },
+                  settings: {}
+                },
+                filter: {
+                  graph: "",
+                  settings: {}
+                },
+                source: 0,
+                stream: 0
+              }
+            }
+          ],
+          settings: {
+            address: config.url.replace('rtmp://', ''),
+            options: {
+              rtmp_app: "",
+              rtmp_conn: "",
+              rtmp_flashver: "FMLE/3.0",
+              rtmp_flush_interval: "10",
+              rtmp_pageurl: "",
+              rtmp_playpath: config.streamKey,
+              rtmp_swfhash: "",
+              rtmp_swfsize: "",
+              rtmp_tcurl: ""
+            },
+            protocol: "rtmp://"
+          },
+          streams: [
+            {
+              channels: 0,
+              codec: "h264",
+              height: 1080,
+              index: 0,
+              layout: "",
+              pix_fmt: "",
+              sampling_hz: 0,
+              stream: 0,
+              type: "video",
+              url: "",
+              width: 1920
+            },
+            {
+              channels: 2,
+              codec: "aac",
+              height: 0,
+              index: 0,
+              layout: "stereo",
+              pix_fmt: "",
+              sampling_hz: 48000,
+              stream: 1,
+              type: "audio",
+              url: "",
+              width: 0
+            }
+          ],
+          version: "1.14.0"
         }
       }
     };
   }
 
   private createSRTConfig(config: SRTOutputConfig) {
-    const outputId = crypto.randomUUID();
+    const outputId = generateUUID();
     const srtParams = new URLSearchParams();
-    srtParams.append('latency', config.latency);
-    srtParams.append('transtype', 'live');
     srtParams.append('mode', 'caller');
+    srtParams.append('transtype', 'live');
+    srtParams.append('latency', config.latency);
     if (config.srtStreamId) srtParams.append('streamid', config.srtStreamId);
     if (config.passphrase) srtParams.append('passphrase', config.passphrase);
+    
     const cleanStreamId = config.streamId.split('.')[0];
-
     const address = `srt://${config.url}:${config.port}?${srtParams.toString()}`;
 
     return {
@@ -181,7 +315,6 @@ export class OutputService {
       },
       metadata: {
         "restreamer-ui": {
-          name: config.name,
           control: {
             limits: {
               cpu_usage: 0,
@@ -197,37 +330,200 @@ export class OutputService {
             source: {
               source: "hls+memfs"
             }
-          }
+          },
+          name: config.name,
+          outputs: [
+            {
+              address: address,
+              options: [
+                "-bsf:v",
+                "dump_extra",
+                "-f",
+                "mpegts"
+              ]
+            }
+          ],
+          profiles: [
+            {
+              audio: {
+                decoder: {
+                  coder: "default",
+                  mapping: {
+                    filter: [],
+                    global: [],
+                    local: []
+                  },
+                  settings: {}
+                },
+                encoder: {
+                  coder: "copy",
+                  mapping: {
+                    filter: [],
+                    global: [],
+                    local: [
+                      "-codec:a",
+                      "copy"
+                    ]
+                  },
+                  settings: {}
+                },
+                filter: {
+                  graph: "",
+                  settings: {}
+                },
+                source: 0,
+                stream: 1
+              },
+              custom: {
+                selected: false,
+                stream: -1
+              },
+              video: {
+                decoder: {
+                  coder: "default",
+                  mapping: {
+                    filter: [],
+                    global: [],
+                    local: []
+                  },
+                  settings: {}
+                },
+                encoder: {
+                  coder: "copy",
+                  mapping: {
+                    filter: [],
+                    global: [],
+                    local: [
+                      "-codec:v",
+                      "copy"
+                    ]
+                  },
+                  settings: {}
+                },
+                filter: {
+                  graph: "",
+                  settings: {}
+                },
+                source: 0,
+                stream: 0
+              }
+            }
+          ],
+          settings: {
+            address: config.url+":"+config.port,
+            protocol: "srt://",
+            params: {
+              mode: "caller",
+              transtype: "live",
+              latency: config.latency,
+              streamid: config.srtStreamId || "",
+              passphrase: config.passphrase || "",
+              connect_timeout: "3000",
+              enforced_encryption: false,
+              ffs: "25600",
+              inputbw: "0",
+              iptos: "0xB8",
+              ipttl: "64",
+              kmpreannounce: "-1",
+              kmrefreshrate: "-1",
+              listen_timeout: "0",
+              lossmaxttl: "0",
+              maxbw: "0",
+              mss: "1500",
+              nakreport: true,
+              oheadbw: "25",
+              payload_size: "-1",
+              pbkeylen: "16",
+              rcvbuf: "0",
+              send_buffer_size: "0",
+              smoother: "live",
+              sndbuf: "0",
+              timeout: "3000000",
+              tlpktdrop: true
+            }
+          },
+          streams: [
+            {
+              channels: 0,
+              codec: "h264",
+              height: 1080,
+              index: 0,
+              layout: "",
+              pix_fmt: "",
+              sampling_hz: 0,
+              stream: 0,
+              type: "video",
+              url: "",
+              width: 1920
+            },
+            {
+              channels: 2,
+              codec: "aac",
+              height: 0,
+              index: 0,
+              layout: "stereo",
+              pix_fmt: "",
+              sampling_hz: 48000,
+              stream: 1,
+              type: "audio",
+              url: "",
+              width: 0
+            }
+          ],
+          version: "1.14.0"
         }
       }
     };
   }
 
-  public async createOutput(config: RTMPOutputConfig | SRTOutputConfig) {
-    const processConfig = config.type === 'rtmp' 
-      ? this.createRTMPConfig(config)
-      : this.createSRTConfig(config);
+  async createOutput(output: RTMPOutputConfig | SRTOutputConfig): Promise<string> {
+    try {
+      const processConfig = output.type === 'rtmp' 
+        ? this.createRTMPConfig(output)
+        : this.createSRTConfig(output);
 
-    const payload = {
-      config: {
-        id: processConfig.id,
-        type: processConfig.type,
-        reference: processConfig.reference,
-        config: processConfig.config
-      },
-      metadata: processConfig.metadata
-    };
+      const payload = {
+        config: processConfig.config,
+        metadata: processConfig.metadata["restreamer-ui"]
+      };
 
-    const response = await fetch('/api/process/output', {
-      method: 'POST',
+      const response = await fetch('/api/process/output', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        const text = await response.text();
+        console.error('Server response:', text);
+        throw new Error(text || 'Error creating output');
+      }
+
+      const data = await response.json();
+      return data.id;
+    } catch (error) {
+      console.error('Create Output Error:', error);
+      throw error;
+    }
+  }
+
+  public async updateOutput(id: string, config: { type: 'rtmp' | 'srt', config: any }) {
+    const response = await fetch(`/api/process/output/${id}`, {
+      method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(payload)
+      body: JSON.stringify({
+        id,
+        type: config.type,
+        config: config.config
+      })
     });
 
     if (!response.ok) {
-      throw new Error('Error al crear el output');
+      throw new Error('Error al actualizar el output');
     }
 
     return await response.json();

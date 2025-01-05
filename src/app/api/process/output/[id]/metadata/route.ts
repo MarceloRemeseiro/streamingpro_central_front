@@ -1,45 +1,20 @@
 import { NextResponse } from 'next/server';
 import { withAuth } from '@/utils/authUtils';
 
-export async function POST(request: Request) {
+export async function PUT(request: Request, { params }: { params: { id: string } }) {
     try {
         const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_BASE_URL;
         const payload = await request.json();
 
         return await withAuth(async (token) => {
             try {
-                // Crear el proceso de output
-                const processResponse = await fetch(`http://${baseUrl}:8080/api/v3/process`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify(payload.config)
-                });
-
-                const processResponseText = await processResponse.text();
-                console.log('Process Response:', processResponseText);
-
-                if (!processResponse.ok) {
-                    let errorMessage = 'Error creating output process';
-                    try {
-                        const errorData = JSON.parse(processResponseText);
-                        errorMessage = errorData.message || errorMessage;
-                    } catch (e) {
-                        errorMessage = processResponseText || errorMessage;
-                    }
-                    throw new Error(errorMessage);
-                }
-
-                // Crear los metadatos
-                const metadataResponse = await fetch(`http://${baseUrl}:8080/api/v3/process/${payload.config.id}/metadata/restreamer-ui`, {
+                const metadataResponse = await fetch(`http://${baseUrl}:8080/api/v3/process/${params.id}/metadata/restreamer-ui`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`
                     },
-                    body: JSON.stringify(payload.metadata)
+                    body: JSON.stringify(payload["restreamer-ui"])
                 });
 
                 const metadataResponseText = await metadataResponse.text();
@@ -56,7 +31,7 @@ export async function POST(request: Request) {
                     throw new Error(errorMessage);
                 }
 
-                return NextResponse.json({ id: payload.config.id });
+                return NextResponse.json({ success: true });
             } catch (error) {
                 console.error('API Error:', error);
                 return NextResponse.json(
