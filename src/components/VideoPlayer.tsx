@@ -1,12 +1,14 @@
 import { FC, useEffect, useRef, useState, memo } from "react";
 import Hls from "hls.js";
+import { classNames } from "@/utils/classNames";
 
 interface VideoPlayerProps {
   url: string;
   isRunning: boolean;
+  className?: string;
 }
 
-const VideoPlayer: FC<VideoPlayerProps> = ({ url, isRunning }) => {
+const VideoPlayer: FC<VideoPlayerProps> = ({ url, isRunning, className }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const hlsRef = useRef<Hls | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -102,7 +104,10 @@ const VideoPlayer: FC<VideoPlayerProps> = ({ url, isRunning }) => {
     return (
       <div
         style={containerStyle}
-        className="bg-gray-800 rounded-tr-lg rounded-tl-lg overflow-hidden"
+        className={classNames(
+          "bg-gray-800 rounded-tr-lg rounded-tl-lg overflow-hidden",
+          className
+        )}
       >
         <div style={contentStyle} className="flex items-center justify-center">
           <p className="text-gray-400">Stream no disponible</p>
@@ -112,7 +117,10 @@ const VideoPlayer: FC<VideoPlayerProps> = ({ url, isRunning }) => {
   }
 
   return (
-    <div style={containerStyle} className="bg-black overflow-hidden">
+    <div 
+      style={containerStyle} 
+      className={classNames("bg-black overflow-hidden", className)}
+    >
       <video ref={videoRef} style={contentStyle} controls playsInline muted />
       {isLoading && (
         <div

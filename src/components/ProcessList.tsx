@@ -1,6 +1,7 @@
 "use client";
 
 import { memo, useState } from "react";
+import Link from "next/link";
 import { useProcesses } from "@/hooks/useProcesses";
 import { InputProcess } from "@/types/processTypes";
 import VideoPlayer from "./VideoPlayer";
@@ -73,10 +74,13 @@ const InputCard = memo(
           <div>
             <div className="flex items-center gap-2 mb-2">
               {getInputTypeLabel(input.inputType)}
-              <h3 className="font-medium">
+              <Link 
+                href={`/input/${input.id}`}
+                className="font-medium hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+              >
                 {input.metadata?.["restreamer-ui"]?.meta?.name ||
                   "Input sin nombre"}
-              </h3>
+              </Link>
               <button
                 onClick={() => setIsEditModalOpen(true)}
                 className="p-1 text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300"
