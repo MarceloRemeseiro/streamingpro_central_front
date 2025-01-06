@@ -1,24 +1,25 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { withAuth } from '@/utils/authUtils';
 
-export async function PUT(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+export async function PUT(request: NextRequest) {
   try {
+    const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_BASE_URL;
     const body = await request.json();
     const { name } = body;
+    const id = request.nextUrl.pathname.split('/')[4]; // /api/process/output/[id]/metadata
 
     if (!name) {
       return new NextResponse('Name is required', { status: 400 });
     }
 
+    if (!id) {
+      return new NextResponse('ID is required', { status: 400 });
+    }
+
     return await withAuth(async (token) => {
       try {
-        const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_BASE_URL;
-        
         // Primero obtenemos los metadatos actuales
-        const getMetadataResponse = await fetch(`http://${baseUrl}:8080/api/v3/process/${params.id}/metadata/restreamer-ui`, {
+        const getMetadataResponse = await fetch(`http://${baseUrl}:8080/api/v3/process/${id}/metadata/restreamer-ui`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -36,7 +37,7 @@ export async function PUT(
           name
         };
 
-        const updateResponse = await fetch(`http://${baseUrl}:8080/api/v3/process/${params.id}/metadata/restreamer-ui`, {
+        const updateResponse = await fetch(`http://${baseUrl}:8080/api/v3/process/${id}/metadata/restreamer-ui`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
