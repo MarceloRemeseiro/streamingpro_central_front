@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import CreateProcessForm from "@/components/CreateProcessForm";
@@ -11,7 +10,6 @@ import DeleteProcessModal from "@/components/DeleteProcessModal";
 import { InputProcess } from "@/types/processTypes";
 
 export default function CreatePage() {
-  const router = useRouter();
   const { inputs, isLoading, error, refresh } = useProcesses();
   const [processToDelete, setProcessToDelete] = useState<InputProcess | null>(
     null

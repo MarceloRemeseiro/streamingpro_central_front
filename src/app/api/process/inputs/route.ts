@@ -1,6 +1,27 @@
 import { NextResponse } from 'next/server';
 import { withAuth } from '@/utils/authUtils';
 
+interface ProcessMetadata {
+  'restreamer-ui'?: {
+    meta?: {
+      name?: string;
+    };
+  };
+}
+
+interface Process {
+  id: string;
+  type: string;
+  reference: string;
+  metadata?: ProcessMetadata;
+}
+
+interface InputProcess {
+  id: string;
+  name: string;
+  streamId: string;
+}
+
 export async function GET() {
   try {
     return await withAuth(async (token) => {
@@ -19,11 +40,11 @@ export async function GET() {
       const processes = await response.json();
       
       // Filtrar solo los inputs
-      const inputs = processes.filter((process: any) => 
+      const inputs = processes.filter((process: Process) => 
         process.type === 'ffmpeg' && 
         process.id.includes(':ingest:') && 
         !process.id.includes('_snapshot')
-      ).map((process: any) => ({
+      ).map((process: Process): InputProcess => ({
         id: process.id,
         name: process.metadata?.['restreamer-ui']?.meta?.name || 'Sin nombre',
         streamId: process.reference

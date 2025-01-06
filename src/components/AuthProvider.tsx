@@ -20,6 +20,12 @@ function clearAuthCookie() {
   document.cookie = 'auth_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT; secure; samesite=strict';
 }
 
+interface ApiError {
+  response?: {
+    status: number;
+  };
+}
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -79,8 +85,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                   checkTimeout.current = setTimeout(checkAuth, 60000); // Verificar cada minuto
                 }
                 break; // Si la petición es exitosa, salimos del bucle
-              } catch (error: any) {
-                if (error?.response?.status === 401 && attempts > 1) {
+              } catch (error: unknown) {
+                const apiError = error as ApiError;
+                if (apiError?.response?.status === 401 && attempts > 1) {
                   await new Promise(resolve => setTimeout(resolve, 1000)); // Esperar 1 segundo entre intentos
                   attempts--;
                   continue;
@@ -88,10 +95,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 throw error; // Si no es 401 o es el último intento, propagamos el error
               }
             }
-          } catch (error: any) {
+          } catch (error: unknown) {
             console.error('Error al verificar token:', error);
             // Solo manejar errores de autenticación
-            if (error?.response?.status === 401) {
+            const apiError = error as ApiError;
+            if (apiError?.response?.status === 401) {
               clearAuthCookie();
               auth.setAccessToken('');
               

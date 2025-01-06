@@ -1,13 +1,12 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { InputProcess } from "@/types/processTypes";
 import VideoPlayer from "@/components/VideoPlayer";
 import OutputDefault from "@/components/OutputDefault";
 import RTMPConnection from "@/components/RTMPConnection";
 import SRTConnection from "@/components/SRTConnection";
 import CustomOutputs from "@/components/CustomOutputs";
-import StreamStats from "@/components/StreamStats";
 import PacketLossStats from "@/components/PacketLossStats";
 import Link from "next/link";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
@@ -22,9 +21,8 @@ export default function InputDetail({ id }: InputDetailProps) {
   const [input, setInput] = useState<InputProcess | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const pollingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const fetchInput = async () => {
+  const fetchInput = useCallback(async () => {
     try {
       const response = await fetch(`/api/process/${id}/input`);
       if (!response.ok) {
@@ -39,27 +37,13 @@ export default function InputDetail({ id }: InputDetailProps) {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [id]);
 
   useEffect(() => {
     fetchInput();
-
-    // Iniciar polling cada 10 segundos
-    const startPolling = () => {
-      pollingTimeoutRef.current = setTimeout(async () => {
-        await fetchInput();
-        startPolling();
-      }, 10000);
-    };
-
-    startPolling();
-
-    return () => {
-      if (pollingTimeoutRef.current) {
-        clearTimeout(pollingTimeoutRef.current);
-      }
-    };
-  }, [id]);
+    const interval = setInterval(fetchInput, 1000);
+    return () => clearInterval(interval);
+  }, [fetchInput]);
 
   const handleProcessUpdated = async () => {
     await fetchInput();

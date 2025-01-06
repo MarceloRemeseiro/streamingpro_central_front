@@ -1,6 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { withAuth } from '@/utils/authUtils';
 
+interface Process {
+  id: string;
+  reference: string;
+}
+
+interface ProcessWithOutputs extends Process {
+  id: string;
+  reference: string;
+  outputs?: Process[];
+}
+
 export async function GET(request: NextRequest) {
   try {
     const id = request.url.split('/').pop()?.split('?')[0];
@@ -114,7 +125,7 @@ export async function DELETE(request: NextRequest) {
       const processes = await processesResponse.json();
       
       // Obtenemos el streamId del proceso que vamos a borrar
-      const processToDelete = processes.find((process: any) => process.id === id);
+      const processToDelete = processes.find((process: ProcessWithOutputs) => process.id === id);
       if (!processToDelete) {
         throw new Error('Proceso no encontrado');
       }
@@ -122,7 +133,7 @@ export async function DELETE(request: NextRequest) {
       const streamId = processToDelete.reference;
       
       // Encontrar todos los outputs asociados al input que vamos a borrar
-      const outputsToDelete = processes.filter((process: any) => {
+      const outputsToDelete = processes.filter((process: ProcessWithOutputs) => {
         return process.id.includes(':egress:') && process.reference === streamId;
       });
       

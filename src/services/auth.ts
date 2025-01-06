@@ -59,7 +59,7 @@ export class AuthService {
               url: config.url || '',
               method: config.method || 'get'
             });
-          } catch (refreshError) {
+          } catch {
             this.clearTokens();
             throw error;
           }
@@ -129,7 +129,7 @@ export class AuthService {
         
         this.accessToken = response.data.access_token;
         this.refreshToken = response.data.refresh_token;
-      } catch (error) {
+      } catch {
         this.clearTokens();
         await this.login();
       } finally {
