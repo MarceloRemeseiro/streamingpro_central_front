@@ -52,7 +52,7 @@ export default function Home() {
 
   return (
     <main className="container mx-auto py-8 px-4">
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-center mb-2">
         <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
           SINCROS STREAMER
         </h1>

@@ -111,7 +111,7 @@ const InputCard = memo(
             ) : (
               <button
                 onClick={() => onDeleteClick(input)}
-                className="p-2 text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-500"
+                className="p-1 text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-500"
               >
                 <TrashIcon className="h-5 w-5" />
               </button>
@@ -122,9 +122,9 @@ const InputCard = memo(
         <VideoPlayer
           url={getHlsUrl()}
           isRunning={input.state?.exec === "running"}
+          stats={input}
         />
 
-        <StreamStats input={input} />
 
         {input.inputType === "rtmp" && <RTMPConnection input={input} />}
         {input.inputType === "srt" && <SRTConnection input={input} />}

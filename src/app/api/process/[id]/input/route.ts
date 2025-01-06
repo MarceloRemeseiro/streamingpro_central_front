@@ -21,9 +21,9 @@ export async function GET(
 ) {
   try {
     const encodedId = request.nextUrl.pathname.split('/')[3]; // /api/process/[id]/input
-    const id = decodeURIComponent(encodedId);
+    const processId = decodeURIComponent(encodedId);
 
-    if (!id) {
+    if (!processId) {
       return new NextResponse('ID is required', { status: 400 });
     }
 
@@ -47,7 +47,7 @@ export async function GET(
         const processes = await processResponse.json() as Process[];
 
         // Encontrar el input proceso
-        const inputProcess = processes.find(process => process.id === id);
+        const inputProcess = processes.find(process => process.id === processId);
 
         if (!inputProcess) {
           return new NextResponse('Input not found', { status: 404 });

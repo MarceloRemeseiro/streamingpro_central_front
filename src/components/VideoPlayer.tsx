@@ -1,14 +1,17 @@
 import { FC, useEffect, useRef, useState, memo } from "react";
 import Hls from "hls.js";
 import { classNames } from "@/utils/classNames";
+import StreamStats from "./StreamStats";
+import { InputProcess } from "@/types/processTypes";
 
 interface VideoPlayerProps {
   url: string;
   isRunning: boolean;
+  stats: InputProcess;
   className?: string;
 }
 
-const VideoPlayer: FC<VideoPlayerProps> = ({ url, isRunning, className }) => {
+const VideoPlayer: FC<VideoPlayerProps> = ({ url, isRunning, className,stats }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const hlsRef = useRef<Hls | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -89,7 +92,7 @@ const VideoPlayer: FC<VideoPlayerProps> = ({ url, isRunning, className }) => {
   const containerStyle = {
     position: "relative",
     width: "100%",
-    paddingBottom: "56.25%", // 16:9 aspect ratio (9/16 * 100)
+    paddingBottom: "calc(56.25% + 2.5rem)", // Ajustamos el espacio para stats
   } as const;
 
   const contentStyle = {
@@ -97,7 +100,7 @@ const VideoPlayer: FC<VideoPlayerProps> = ({ url, isRunning, className }) => {
     top: 0,
     left: 0,
     width: "100%",
-    height: "100%",
+    height: "calc(100% - 2.5rem)", // Ajustamos para que coincida con el padding
   } as const;
 
   if (!isRunning) {
@@ -105,12 +108,15 @@ const VideoPlayer: FC<VideoPlayerProps> = ({ url, isRunning, className }) => {
       <div
         style={containerStyle}
         className={classNames(
-          "bg-gray-800 rounded-tr-lg rounded-tl-lg overflow-hidden",
+          "bg-gray-800 rounded-t-lg rounded-t-lg overflow-hidden rounded-b-lg",
           className
         )}
       >
         <div style={contentStyle} className="flex items-center justify-center">
           <p className="text-gray-400">Stream no disponible</p>
+        </div>
+        <div className="absolute bottom-0 left-0 right-0 bg-gray-800 rounded-b-lg">
+          <StreamStats input={stats} />
         </div>
       </div>
     );
@@ -119,9 +125,9 @@ const VideoPlayer: FC<VideoPlayerProps> = ({ url, isRunning, className }) => {
   return (
     <div 
       style={containerStyle} 
-      className={classNames("bg-black overflow-hidden", className)}
+      className={classNames("bg-transparent overflow-hidden relative", className)}
     >
-      <video ref={videoRef} style={contentStyle} controls playsInline muted />
+      <video ref={videoRef} style={contentStyle} controls playsInline muted/>
       {isLoading && (
         <div
           style={contentStyle}
@@ -133,6 +139,9 @@ const VideoPlayer: FC<VideoPlayerProps> = ({ url, isRunning, className }) => {
           </div>
         </div>
       )}
+      <div className="absolute bottom-0 left-0 right-0 bg-gray-800 rounded-b-lg">
+        <StreamStats input={stats} />
+      </div>
     </div>
   );
 };
