@@ -11,6 +11,7 @@ export async function GET(request: NextRequest) {
     const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_BASE_URL;
 
     return await withAuth(async (token) => {
+      // Obtener el estado del proceso
       const processResponse = await fetch(`http://${baseUrl}:8080/api/v3/process/${id}/state`, {
         method: 'GET',
         headers: {
@@ -25,7 +26,16 @@ export async function GET(request: NextRequest) {
       }
 
       const data = await processResponse.json();
-      return NextResponse.json(data);
+
+      // Convertir el estado al formato esperado
+      const state = {
+        state: {
+          exec: data.exec || 'unknown',
+          progress: data.progress || 0
+        }
+      };
+
+      return NextResponse.json(state);
     });
   } catch (error) {
     console.error('Error fetching process:', error);

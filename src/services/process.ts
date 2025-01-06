@@ -18,12 +18,26 @@ class ProcessService {
       throw error;
     }
   }
+
+  async getProcessState(id: string): Promise<'running' | 'failed' | 'finished' | string> {
+    try {
+      const process = await getProcess(id);
+      return process.state?.exec || 'unknown';
+    } catch (error) {
+      console.error('Error getting process state:', error);
+      return 'failed';
+    }
+  }
 }
 
 export const processService = new ProcessService();
 
 export const getProcess = async (id: string): Promise<InputProcess> => {
-  const response = await fetch(`/api/process/${id}`, {
+  // Determinar si estamos en el cliente o en el servidor
+  const isServer = typeof window === 'undefined';
+  const baseUrl = isServer ? 'http://localhost:3000' : '';
+  
+  const response = await fetch(`${baseUrl}/api/process/${id}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -34,5 +48,6 @@ export const getProcess = async (id: string): Promise<InputProcess> => {
     throw new Error(`Error al obtener el proceso: ${response.statusText}`);
   }
 
-  return response.json();
+  const data = await response.json();
+  return data;
 }; 

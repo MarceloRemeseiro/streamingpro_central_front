@@ -3,16 +3,94 @@
 @tailwind utilities;
 
 :root {
+  /* Colores base */
   --background: #f9fafb;
   --foreground: #111827;
   --card-background: #ffffff;
+
+  /* Colores de texto */
+  --text-primary: #111827;
+  --text-light: #ffffff;
+  --text-muted: #6b7280;
+
+  /* Colores primarios */
+  --primary: #4f46e5;
+  --primary-light: #6366f1;
+  --primary-dark: #4338ca;
+  --primary-hover: #4f46e5;
+
+  /* Colores secundarios */
+  --secondary: #6b7280;
+  --secondary-light: #9ca3af;
+  --secondary-dark: #4b5563;
+
+  /* Colores de estado */
+  --success: #22c55e;
+  --success-light: #bbf7d0;
+  --success-dark: #15803d;
+
+  /* Colores de error */
+  --error: #ef4444;
+  --error-light: #fee2e2;
+  --error-dark: #b91c1c;
+
+  /* Colores para protocolos */
+  --srt-background: #dbeafe;
+  --srt-border: #bfdbfe;
+  --srt-text: #1e40af;
+  --rtmp-background: #f3e8ff;
+  --rtmp-border: #e9d5ff;
+  --rtmp-text: #6b21a8;
+
+  /* Colores para modo claro específicos */
+  --hover-link: #4f46e5;
+  --border-color: #e5e7eb;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
+    /* Colores base */
     --background: #111827;
     --foreground: #f9fafb;
     --card-background: #1f2937;
+
+    /* Colores de texto */
+    --text-primary: #f9fafb;
+    --text-light: #ffffff;
+    --text-muted: #9ca3af;
+
+    /* Colores primarios */
+    --primary: #6366f1;
+    --primary-light: #818cf8;
+    --primary-dark: #4f46e5;
+    --primary-hover: #818cf8;
+
+    /* Colores secundarios */
+    --secondary: #9ca3af;
+    --secondary-light: #d1d5db;
+    --secondary-dark: #6b7280;
+
+    /* Colores de estado */
+    --success: #22c55e;
+    --success-light: #064e3b;
+    --success-dark: #34d399;
+
+    /* Colores de error */
+    --error: #ef4444;
+    --error-light: #450a0a;
+    --error-dark: #f87171;
+
+    /* Colores para protocolos */
+    --srt-background: rgba(37, 99, 235, 0.2);
+    --srt-border: #1e40af;
+    --srt-text: #93c5fd;
+    --rtmp-background: rgba(147, 51, 234, 0.2);
+    --rtmp-border: #6b21a8;
+    --rtmp-text: #e9d5ff;
+
+    /* Colores para modo oscuro específicos */
+    --hover-link: #818cf8;
+    --border-color: #374151;
   }
 }
 
