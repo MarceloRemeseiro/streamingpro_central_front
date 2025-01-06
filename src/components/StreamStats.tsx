@@ -9,33 +9,33 @@ export default function StreamStats({ input }: StreamStatsProps) {
   const stats = useStreamStats(input);
 
   return (
-    <div className="grid grid-cols-4 bg-gray-800 pb-2 pt-1 rounded-b-lg justify-items-center text-xs">
-      <div className=" ">
-        <span className="font-medium text-gray-500 dark:text-gray-400">
+    <div className="grid grid-cols-4 bg-card-background pb-2 pt-1 rounded-b-lg justify-items-center text-xs">
+      <div>
+        <span className="font-medium text-text-muted">
           Resolución
         </span>
-        <p className="text-white ">{stats.resolution}</p>
+        <p className="text-text-light">{stats.resolution}</p>
       </div>
 
-      <div className=" ">
-        <span className=" font-medium text-gray-500 dark:text-gray-400">
+      <div>
+        <span className="font-medium text-text-muted">
           FPS
         </span>
-        <p className="text-white ">{stats.fps}</p>
+        <p className="text-text-light">{stats.fps}</p>
       </div>
 
-      <div className=" ">
-        <span className=" font-medium text-gray-500 dark:text-gray-400">
+      <div>
+        <span className="font-medium text-text-muted">
           Codec
         </span>
-        <p className="text-white ">{stats.codec}</p>
+        <p className="text-text-light">{stats.codec}</p>
       </div>
 
-      <div className=" ">
-        <span className=" font-medium text-gray-500 dark:text-gray-400">
+      <div>
+        <span className="font-medium text-text-muted">
           Bitrate
         </span>
-        <p className="text-white ">{stats.bitrate}</p>
+        <p className="text-text-light">{stats.bitrate}</p>
       </div>
     </div>
   );

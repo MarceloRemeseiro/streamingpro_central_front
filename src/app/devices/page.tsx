@@ -35,18 +35,18 @@ const StatusIndicator = ({ deviceId }: { deviceId: string }) => {
   const getStatusColor = () => {
     switch (status) {
       case 'ONLINE':
-        return 'bg-green-500 dark:bg-green-400';
+        return 'bg-success dark:bg-success';
       case 'NO REPRODUCIENDO':
-        return 'bg-yellow-500 dark:bg-yellow-400';
+        return 'bg-warning dark:bg-warning';
       default:
-        return 'bg-red-500 dark:bg-red-400';
+        return 'bg-error dark:bg-error';
     }
   };
 
   return (
     <div className="flex items-center gap-2">
       <div className={`w-3 h-3 rounded-full ${getStatusColor()}`}></div>
-      <span className="text-gray-900 dark:text-gray-100">{status}</span>
+      <span className="text-text-primary dark:text-text-light">{status}</span>
     </div>
   );
 };
@@ -182,76 +182,76 @@ export default function DevicesPage() {
       <div className="flex items-center gap-4 mb-4">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
+          className="inline-flex items-center gap-2 text-text-muted hover:text-text-primary dark:text-text-muted dark:hover:text-text-light transition-colors"
         >
           <ArrowLeftIcon className="h-5 w-5" />
           <span>Volver</span>
         </Link>
       </div>
-        <h1 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">
+        <h1 className="text-2xl font-semibold text-text-primary dark:text-text-light mb-2">
           Dispositivos
         </h1>
 
       {devices.length === 0 ? (
-        <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-8 text-center">
-          <p className="text-gray-500 dark:text-gray-400">No hay dispositivos conectados</p>
+        <div className="bg-info-background dark:bg-card-background/50 rounded-lg p-8 text-center">
+          <p className="text-text-muted dark:text-text-muted">No hay dispositivos conectados</p>
         </div>
       ) : (
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+        <div className="bg-card-background dark:bg-card-background rounded-lg shadow overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-              <thead className="bg-gray-50 dark:bg-gray-700/50">
+            <table className="min-w-full divide-y divide-border dark:divide-border">
+              <thead className="bg-info-background dark:bg-card-background/50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-text-muted dark:text-text-muted uppercase tracking-wider">
                     Device ID
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-text-muted dark:text-text-muted uppercase tracking-wider">
                     IP Local
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-text-muted dark:text-text-muted uppercase tracking-wider">
                     IP Pública
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-text-muted dark:text-text-muted uppercase tracking-wider">
                     SRT Asignado
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-text-muted dark:text-text-muted uppercase tracking-wider">
                     Estado
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-text-muted dark:text-text-muted uppercase tracking-wider">
                     Acciones
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+              <tbody className="bg-card-background dark:bg-card-background divide-y divide-border dark:divide-border">
                 {devices.map((device) => (
-                  <tr key={device.device_id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                  <tr key={device.device_id} className="dark:hover:bg-card-background/50 transition-colors">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center gap-2">
                         <div>
-                          <div className="text-sm font-medium text-gray-900 dark:text-white">
+                          <div className="text-sm font-medium text-text-primary dark:text-text-light">
                             {device.display_name || device.device_id}
                           </div>
-                          <div className="text-xs text-gray-500 dark:text-gray-400">
+                          <div className="text-xs text-text-muted dark:text-text-muted">
                             {device.device_id}
                           </div>
                         </div>
                         <button
                           onClick={() => handleEditName(device)}
-                          className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+                          className="text-text-muted hover:text-text-primary dark:hover:text-text-light transition-colors"
                         >
                           ✏️
                         </button>
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-text-primary dark:text-text-light">
                       {device.local_ip}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-text-primary dark:text-text-light">
                       {device.public_ip}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <select
-                        className="block w-full bg-gray-800 dark:bg-gray-700 text-white rounded-md border-0 py-1.5 pl-3 pr-10 focus:ring-2 focus:ring-indigo-600 dark:focus:ring-indigo-400 sm:text-sm sm:leading-6"
+                        className="block w-full border border-border bg-card-background dark:bg-card-background text-text-primary dark:text-text-light rounded-md py-1.5 pl-3 pr-10 focus:ring-2 focus:ring-primary dark:focus:ring-primary sm:text-sm sm:leading-6"
                         value={device.assigned_srt || ""}
                         onChange={(e) =>
                           handleSrtSelection(device.device_id, e.target.value)
@@ -271,7 +271,7 @@ export default function DevicesPage() {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <button
                         onClick={() => handleDeleteDevice(device.device_id)}
-                        className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-red-600 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 dark:focus:ring-offset-gray-800 transition-colors"
+                        className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-text-light bg-error hover:bg-error-hover dark:bg-error dark:hover:bg-error-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-error dark:focus:ring-offset-card-background transition-colors"
                       >
                         Eliminar
                       </button>

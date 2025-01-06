@@ -54,15 +54,15 @@ const SRTOutput: FC<SRTOutputProps> = ({ output, onDeleted, onUpdated }) => {
 
   return (
     <>
-      <div className="p-3 bg-blue-100/60 dark:bg-blue-900/30 rounded-lg border border-blue-300 dark:border-blue-700">
+      <div className="p-3 bg-protocol-srt-output-background rounded-lg border border-protocol-srt-output-border">
         <div className="flex justify-between items-center mb-2">
           <div className="flex items-center gap-2">
-            <h4 className="text-sm font-medium text-blue-900 dark:text-blue-100">
+            <h4 className="text-sm font-medium text-protocol-srt-output-text">
               {name}
             </h4>
             <button
               onClick={() => setIsEditTitleModalOpen(true)}
-              className="p-1 text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300"
+              className="p-1 text-protocol-srt-output-secondary hover:text-protocol-srt-output-hover"
             >
               <PencilIcon className="h-4 w-4" />
             </button>
@@ -77,49 +77,49 @@ const SRTOutput: FC<SRTOutputProps> = ({ output, onDeleted, onUpdated }) => {
 
         <div className="grid grid-cols-2 gap-2 text-xs">
           <div>
-            <span className="font-medium text-blue-700 dark:text-blue-300">
+            <span className="font-medium text-protocol-srt-output-secondary">
               URL
             </span>
-            <p className="text-blue-900 dark:text-blue-100 break-all">{url}</p>
+            <p className="text-protocol-srt-output-text break-all">{url}</p>
           </div>
           <div>
-            <span className="font-medium text-blue-700 dark:text-blue-300">
+            <span className="font-medium text-protocol-srt-output-secondary">
               Puerto
             </span>
-            <p className="text-blue-900 dark:text-blue-100">{port}</p>
+            <p className="text-protocol-srt-output-text">{port}</p>
           </div>
           <div>
-            <span className="font-medium text-blue-700 dark:text-blue-300">
+            <span className="font-medium text-protocol-srt-output-secondary">
               Stream ID
             </span>
-            <p className="text-blue-900 dark:text-blue-100 break-all">
+            <p className="text-protocol-srt-output-text break-all">
               {streamId}
             </p>
           </div>
           <div>
-            <span className="font-medium text-blue-700 dark:text-blue-300">
+            <span className="font-medium text-protocol-srt-output-secondary">
               Latency
             </span>
-            <p className="text-blue-900 dark:text-blue-100">{latency}ms</p>
+            <p className="text-protocol-srt-output-text">{latency}ms</p>
           </div>
           <div>
-            <span className="font-medium text-blue-700 dark:text-blue-300">
+            <span className="font-medium text-protocol-srt-output-secondary">
               Mode
             </span>
-            <p className="text-blue-900 dark:text-blue-100">{mode}</p>
+            <p className="text-protocol-srt-output-text">{mode}</p>
           </div>
           <div>
-            <span className="font-medium text-blue-700 dark:text-blue-300">
+            <span className="font-medium text-protocol-srt-output-secondary">
               Passphrase
             </span>
-            <p className="text-blue-900 dark:text-blue-100">{passphrase}</p>
+            <p className="text-protocol-srt-output-text">{passphrase}</p>
           </div>
         </div>
 
         <div className="flex justify-end mt-2 space-x-2">
           <button
             onClick={() => setIsEditModalOpen(true)}
-            className="p-1 text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300"
+            className="p-1 text-protocol-srt-output-secondary hover:text-protocol-srt-output-hover"
             title="Editar configuración"
           >
             <Cog6ToothIcon className="h-5 w-5" />
@@ -127,7 +127,7 @@ const SRTOutput: FC<SRTOutputProps> = ({ output, onDeleted, onUpdated }) => {
           {output.state?.exec !== 'running' && (
             <button
               onClick={() => setIsDeleteModalOpen(true)}
-              className="p-1 text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300"
+              className="p-1 text-error hover:text-error-dark"
             >
               <TrashIcon className="h-5 w-5" />
             </button>

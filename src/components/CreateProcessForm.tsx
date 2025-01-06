@@ -47,14 +47,14 @@ export default function CreateProcessForm({ onSuccess }: CreateProcessFormProps)
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {error && (
-        <div className="bg-red-50 dark:bg-red-900/10 p-4 rounded-md">
-          <p className="text-red-600 dark:text-red-400">{error}</p>
+        <div className="bg-error-light p-4 rounded-md">
+          <p className="text-error">{error}</p>
         </div>
       )}
 
       <div className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <label className="block text-sm font-medium text-text-muted mb-2">
             Tipo de Conexión
           </label>
           <div className="flex gap-4">
@@ -63,8 +63,8 @@ export default function CreateProcessForm({ onSuccess }: CreateProcessFormProps)
               onClick={() => handleTypeChange("rtmp")}
               className={`px-4 py-2 rounded-md ${
                 formData.type === "rtmp"
-                  ? "bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-300"
-                  : "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
+                  ? "bg-protocol-rtmp-background text-protocol-rtmp-text"
+                  : "bg-info-background text-text-muted"
               }`}
             >
               RTMP
@@ -74,8 +74,8 @@ export default function CreateProcessForm({ onSuccess }: CreateProcessFormProps)
               onClick={() => handleTypeChange("srt")}
               className={`px-4 py-2 rounded-md ${
                 formData.type === "srt"
-                  ? "bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300"
-                  : "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
+                  ? "bg-protocol-srt-background text-protocol-srt-text"
+                  : "bg-info-background text-text-muted"
               }`}
             >
               SRT
@@ -86,7 +86,7 @@ export default function CreateProcessForm({ onSuccess }: CreateProcessFormProps)
         <div>
           <label
             htmlFor="name"
-            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            className="block text-sm font-medium text-text-muted mb-2"
           >
             Nombre
           </label>
@@ -97,9 +97,9 @@ export default function CreateProcessForm({ onSuccess }: CreateProcessFormProps)
             onChange={(e) =>
               setFormData((prev) => ({ ...prev, name: e.target.value }))
             }
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md 
-                     bg-white dark:bg-gray-800 text-gray-900 dark:text-white
-                     focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
+            className="w-full px-3 py-2 border border-border rounded-md 
+                     bg-card-background text-text-primary
+                     focus:ring-2 focus:ring-primary"
             required
           />
         </div>
@@ -107,7 +107,7 @@ export default function CreateProcessForm({ onSuccess }: CreateProcessFormProps)
         <div>
           <label
             htmlFor="description"
-            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            className="block text-sm font-medium text-text-muted mb-2"
           >
             Descripción
           </label>
@@ -118,77 +118,21 @@ export default function CreateProcessForm({ onSuccess }: CreateProcessFormProps)
             onChange={(e) =>
               setFormData((prev) => ({ ...prev, description: e.target.value }))
             }
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md 
-                     bg-white dark:bg-gray-800 text-gray-900 dark:text-white
-                     focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
+            className="w-full px-3 py-2 border border-border rounded-md 
+                     bg-card-background text-text-primary
+                     focus:ring-2 focus:ring-primary"
           />
         </div>
-
-        {/* <div>
-          <label
-            htmlFor="resolution"
-            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-          >
-            Resolución
-          </label>
-          <select
-            id="resolution"
-            value={formData.resolution}
-            onChange={(e) =>
-              setFormData((prev) => ({
-                ...prev,
-                resolution: e.target.value as Resolution,
-              }))
-            }
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md
-                     bg-white dark:bg-gray-800 text-gray-900 dark:text-white
-                     focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
-          >
-            {resolutions.map((res) => (
-              <option key={res} value={res}>
-                {res}
-              </option>
-            ))}
-          </select>
-        </div> */}
-{/* 
-        <div>
-          <label
-            htmlFor="fps"
-            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-          >
-            FPS
-          </label>
-          <select
-            id="fps"
-            value={formData.fps}
-            onChange={(e) =>
-              setFormData((prev) => ({
-                ...prev,
-                fps: Number(e.target.value) as FPS,
-              }))
-            }
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md
-                     bg-white dark:bg-gray-800 text-gray-900 dark:text-white
-                     focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
-          >
-            {fpsList.map((fps) => (
-              <option key={fps} value={fps}>
-                {fps} FPS
-              </option>
-            ))}
-          </select>
-        </div> */}
 
         <div>
           <button
             type="submit"
             disabled={isLoading}
-            className={`w-full px-4 py-2 rounded-md text-white
+            className={`w-full px-4 py-2 rounded-md text-text-light
                      ${
                        isLoading
-                         ? "bg-gray-400 dark:bg-gray-600 cursor-not-allowed"
-                         : "bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700"
+                         ? "bg-primary-light cursor-not-allowed"
+                         : "bg-primary hover:bg-primary-hover"
                      }`}
           >
             {isLoading ? "Creando..." : "Crear Proceso"}

@@ -15,7 +15,7 @@ const CustomOutputs: FC<CustomOutputsProps> = ({ streamId, onOutputCreated }) =>
       <div className="flex justify-center mb-4">
         <button
           onClick={() => setIsModalOpen(true)}
-          className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors"
+          className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-text-light bg-primary hover:bg-primary-hover rounded-md transition-colors"
         >
           <PlusIcon className="h-5 w-5 mr-2" />
           Agregar Output

@@ -59,17 +59,17 @@ const ProcessSwitch: FC<ProcessSwitchProps> = ({ processId, state, lastLogLine, 
   };
 
   const getStateStyles = () => {
-    if (!isMovedRight) return 'bg-gray-300 dark:bg-gray-600';
-    if (isLoading) return 'bg-orange-400 dark:bg-orange-600';
-    if (isConnecting()) return 'bg-orange-400 dark:bg-orange-600';
+    if (!isMovedRight) return 'bg-switch-off';
+    if (isLoading) return 'bg-switch-connecting';
+    if (isConnecting()) return 'bg-switch-connecting';
     
     switch (state) {
       case 'running':
-        return 'bg-green-500 dark:bg-green-600';
+        return 'bg-switch-running';
       case 'failed':
-        return 'bg-red-500 dark:bg-red-600';
+        return 'bg-switch-failed';
       default:
-        return 'bg-gray-300 dark:bg-gray-600';
+        return 'bg-switch-off';
     }
   };
 

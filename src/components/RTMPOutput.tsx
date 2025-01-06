@@ -45,15 +45,15 @@ const RTMPOutput: FC<RTMPOutputProps> = ({ output, onDeleted, onUpdated }) => {
 
   return (
     <>
-      <div className="p-3 bg-purple-100/60 dark:bg-purple-900/30 rounded-lg border border-purple-300 dark:border-purple-700">
+      <div className="p-3 bg-protocol-rtmp-output-background rounded-lg border border-protocol-rtmp-output-border">
         <div className="flex justify-between items-center mb-2">
           <div className="flex items-center gap-2">
-            <h4 className="text-sm font-medium text-purple-900 dark:text-purple-100">
+            <h4 className="text-sm font-medium text-protocol-rtmp-output-text">
               {name}
             </h4>
             <button
               onClick={() => setIsEditTitleModalOpen(true)}
-              className="p-1 text-purple-500 hover:text-purple-600 dark:text-purple-400 dark:hover:text-purple-300"
+              className="p-1 text-protocol-rtmp-output-secondary hover:text-protocol-rtmp-output-hover"
             >
               <PencilIcon className="h-4 w-4" />
             </button>
@@ -69,10 +69,10 @@ const RTMPOutput: FC<RTMPOutputProps> = ({ output, onDeleted, onUpdated }) => {
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <div className="min-w-0 flex-1 mr-2">
-              <span className="text-xs font-medium text-purple-700 dark:text-purple-300">
+              <span className="text-xs font-medium text-protocol-rtmp-output-secondary">
                 URL
               </span>
-              <p className="text-purple-900 dark:text-purple-100 break-all text-xs">
+              <p className="text-protocol-rtmp-output-text break-all text-xs">
                 {address}
               </p>
             </div>
@@ -80,10 +80,10 @@ const RTMPOutput: FC<RTMPOutputProps> = ({ output, onDeleted, onUpdated }) => {
 
           <div className="flex items-center justify-between">
             <div className="min-w-0 flex-1 mr-2">
-              <span className="text-xs font-medium text-purple-700 dark:text-purple-300">
+              <span className="text-xs font-medium text-protocol-rtmp-output-secondary">
                 Stream Key
               </span>
-              <p className="text-purple-900 dark:text-purple-100 break-all text-xs">
+              <p className="text-protocol-rtmp-output-text break-all text-xs">
                 {streamKey}
               </p>
             </div>
@@ -93,7 +93,7 @@ const RTMPOutput: FC<RTMPOutputProps> = ({ output, onDeleted, onUpdated }) => {
         <div className="flex justify-end mt-2 space-x-2">
           <button
             onClick={() => setIsEditModalOpen(true)}
-            className="p-1 text-purple-500 hover:text-purple-600 dark:text-purple-400 dark:hover:text-purple-300"
+            className="p-1 text-protocol-rtmp-output-secondary hover:text-protocol-rtmp-output-hover"
             title="Editar configuración"
           >
             <Cog6ToothIcon className="h-5 w-5" />
@@ -101,7 +101,7 @@ const RTMPOutput: FC<RTMPOutputProps> = ({ output, onDeleted, onUpdated }) => {
           {output.state?.exec !== 'running' && (
             <button
               onClick={() => setIsDeleteModalOpen(true)}
-              className="p-1 text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300"
+              className="p-1 text-error hover:text-error-dark"
             >
               <TrashIcon className="h-5 w-5" />
             </button>

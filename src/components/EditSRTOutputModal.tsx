@@ -72,14 +72,14 @@ const EditSRTOutputModal: FC<EditSRTOutputModalProps> = ({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-gray-900 dark:text-gray-100">
+      <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-text-primary">
         Editar Output SRT
       </Dialog.Title>
 
       <form onSubmit={handleSubmit} className="mt-4">
         <div className="space-y-4">
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label htmlFor="name" className="block text-sm font-medium text-text-muted">
               Nombre
             </label>
             <input
@@ -87,15 +87,15 @@ const EditSRTOutputModal: FC<EditSRTOutputModalProps> = ({
               id="name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md 
-              bg-white dark:bg-gray-800 text-gray-900 dark:text-white
-              focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"                   
+              className="w-full px-3 py-2 border border-border rounded-md 
+              bg-card-background text-text-primary
+              focus:ring-2 focus:ring-protocol-srt-border"                   
               disabled
             />
           </div>
 
           <div>
-            <label htmlFor="url" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label htmlFor="url" className="block text-sm font-medium text-text-muted">
               URL
             </label>
             <input
@@ -103,14 +103,15 @@ const EditSRTOutputModal: FC<EditSRTOutputModalProps> = ({
               id="url"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md 
-              bg-white dark:bg-gray-800 text-gray-900 dark:text-white
-              focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"                   required
+              className="w-full px-3 py-2 border border-border rounded-md 
+              bg-card-background text-text-primary
+              focus:ring-2 focus:ring-protocol-srt-border"                   
+              required
             />
           </div>
 
           <div>
-            <label htmlFor="port" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label htmlFor="port" className="block text-sm font-medium text-text-muted">
               Puerto
             </label>
             <input
@@ -118,14 +119,15 @@ const EditSRTOutputModal: FC<EditSRTOutputModalProps> = ({
               id="port"
               value={port}
               onChange={(e) => setPort(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md 
-              bg-white dark:bg-gray-800 text-gray-900 dark:text-white
-              focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"                   required
+              className="w-full px-3 py-2 border border-border rounded-md 
+              bg-card-background text-text-primary
+              focus:ring-2 focus:ring-protocol-srt-border"                   
+              required
             />
           </div>
 
           <div>
-            <label htmlFor="latency" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label htmlFor="latency" className="block text-sm font-medium text-text-muted">
               Latencia
             </label>
             <input
@@ -133,14 +135,15 @@ const EditSRTOutputModal: FC<EditSRTOutputModalProps> = ({
               id="latency"
               value={latency}
               onChange={(e) => setLatency(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md 
-              bg-white dark:bg-gray-800 text-gray-900 dark:text-white
-              focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"                   required
+              className="w-full px-3 py-2 border border-border rounded-md 
+              bg-card-background text-text-primary
+              focus:ring-2 focus:ring-protocol-srt-border"                   
+              required
             />
           </div>
 
           <div>
-            <label htmlFor="streamId" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label htmlFor="streamId" className="block text-sm font-medium text-text-muted">
               Stream ID (opcional)
             </label>
             <input
@@ -148,13 +151,14 @@ const EditSRTOutputModal: FC<EditSRTOutputModalProps> = ({
               id="streamId"
               value={srtStreamId}
               onChange={(e) => setSrtStreamId(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md 
-              bg-white dark:bg-gray-800 text-gray-900 dark:text-white
-              focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"                 />
+              className="w-full px-3 py-2 border border-border rounded-md 
+              bg-card-background text-text-primary
+              focus:ring-2 focus:ring-protocol-srt-border"                 
+            />
           </div>
 
           <div>
-            <label htmlFor="passphrase" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label htmlFor="passphrase" className="block text-sm font-medium text-text-muted">
               Passphrase (opcional)
             </label>
             <input
@@ -162,14 +166,15 @@ const EditSRTOutputModal: FC<EditSRTOutputModalProps> = ({
               id="passphrase"
               value={passphrase}
               onChange={(e) => setPassphrase(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md 
-              bg-white dark:bg-gray-800 text-gray-900 dark:text-white
-              focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"                 />
+              className="w-full px-3 py-2 border border-border rounded-md 
+              bg-card-background text-text-primary
+              focus:ring-2 focus:ring-protocol-srt-border"                 
+            />
           </div>
         </div>
 
         {error && (
-          <div className="mt-4 text-sm text-red-600 dark:text-red-400">
+          <div className="mt-4 text-sm text-error">
             {error}
           </div>
         )}
@@ -178,15 +183,15 @@ const EditSRTOutputModal: FC<EditSRTOutputModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+            className="rounded-md border border-border bg-card-background px-4 py-2 text-sm font-medium text-text-primary shadow-sm hover:bg-info-background focus:outline-none focus:ring-2 focus:ring-protocol-srt-border focus:ring-offset-2"
           >
             Cancelar
           </button>
           <button
             type="submit"
             disabled={isLoading}
-            className="inline-flex justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 dark:bg-blue-500 dark:hover:bg-blue-600"
-          >
+            className="inline-flex justify-center rounded-lg border border-transparent bg-primary px-4 py-2 text-sm font-medium text-text-light hover:bg-primary-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
             {isLoading ? 'Guardando...' : 'Guardar'}
           </button>
         </div>

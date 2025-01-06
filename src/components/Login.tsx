@@ -49,8 +49,8 @@ export const Login = ({ onLoginSuccess }: LoginProps) => {
       <div className="w-full max-w-md">
         <div className="bg-card-background rounded-xl shadow-lg p-8">
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold tracking-tight">Streaming Pro</h2>
-            <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+            <h2 className="text-3xl font-bold tracking-tight text-text-primary">Streaming Pro</h2>
+            <p className="mt-2 text-sm text-text-muted">
               Accede a tu cuenta para gestionar tus streams
             </p>
           </div>
@@ -74,7 +74,7 @@ export const Login = ({ onLoginSuccess }: LoginProps) => {
                     }))
                   }
                   required
-                  className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 px-3 text-text-primary ring-1 ring-inset ring-auth-input-border placeholder:text-text-muted focus:ring-2 focus:ring-inset focus:ring-auth-input-focus sm:text-sm sm:leading-6"
                   placeholder="Usuario"
                   disabled={isLoading}
                 />
@@ -96,14 +96,14 @@ export const Login = ({ onLoginSuccess }: LoginProps) => {
                     }))
                   }
                   required
-                  className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 px-3 text-text-primary ring-1 ring-inset ring-auth-input-border placeholder:text-text-muted focus:ring-2 focus:ring-inset focus:ring-auth-input-focus sm:text-sm sm:leading-6"
                   placeholder="Contraseña"
                   disabled={isLoading}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600"
+                  className="absolute inset-y-0 right-0 flex items-center pr-3 text-text-muted hover:text-text-primary"
                 >
                   {showPassword ? (
                     <EyeSlashIcon className="h-5 w-5" />
@@ -121,19 +121,19 @@ export const Login = ({ onLoginSuccess }: LoginProps) => {
               }
               className={`
                 w-full flex justify-center items-center rounded-md px-4 py-2
-                text-sm font-semibold text-white shadow-sm
+                text-sm font-semibold text-text-light shadow-sm
                 transition-colors duration-150
                 ${
                   isLoading || !credentials.username || !credentials.password
-                    ? "bg-indigo-400 cursor-not-allowed"
-                    : "bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    ? "bg-auth-button-disabled cursor-not-allowed"
+                    : "bg-auth-button-enabled hover:bg-auth-button-hover focus:outline-none focus:ring-2 focus:ring-auth-input-focus focus:ring-offset-2"
                 }
               `}
             >
               {isLoading ? (
                 <>
                   <svg
-                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-text-light"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
@@ -160,7 +160,7 @@ export const Login = ({ onLoginSuccess }: LoginProps) => {
             </button>
 
             {error && (
-              <div className="mt-2 text-sm text-center text-red-600 bg-red-50 dark:bg-red-900/10 p-2 rounded-md">
+              <div className="mt-2 text-sm text-center text-error bg-error-light p-2 rounded-md">
                 {error}
               </div>
             )}

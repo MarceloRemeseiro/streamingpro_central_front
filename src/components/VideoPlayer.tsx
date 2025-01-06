@@ -125,14 +125,14 @@ const VideoPlayer: FC<VideoPlayerProps> = ({ url, isRunning, className, stats })
       <div
         style={containerStyle}
         className={classNames(
-          "bg-gray-800 rounded-t-lg rounded-t-lg overflow-hidden rounded-b-lg",
+          "bg-card-background rounded-lg overflow-hidden",
           className
         )}
       >
         <div style={contentStyle} className="flex items-center justify-center">
-          <p className="text-gray-400">Stream no disponible</p>
+          <p className="text-text-muted">Stream no disponible</p>
         </div>
-        <div className="absolute bottom-0 left-0 right-0 bg-gray-800 rounded-b-lg">
+        <div className="absolute bottom-0 left-0 right-0 bg-card-background rounded-b-lg">
           <StreamStats input={stats} />
         </div>
       </div>
@@ -174,12 +174,12 @@ const VideoPlayer: FC<VideoPlayerProps> = ({ url, isRunning, className, stats })
           className="flex items-center justify-center bg-black/80"
         >
           <div className="flex flex-col items-center gap-2">
-            <div className="w-8 h-8 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
-            <p className="text-sm text-gray-300">Conectando al stream...</p>
+            <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+            <p className="text-sm text-text-light">Conectando al stream...</p>
           </div>
         </div>
       )}
-      <div className="absolute bottom-0 left-0 right-0 bg-gray-800 rounded-b-lg">
+      <div className="absolute bottom-0 left-0 right-0 bg-card-background rounded-b-lg">
         <StreamStats input={stats} />
       </div>
     </div>

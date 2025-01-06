@@ -19,11 +19,11 @@ import { TrashIcon, PencilIcon } from "@heroicons/react/24/outline";
 const getInputTypeStyles = (type: InputProcess["inputType"]) => {
   switch (type) {
     case "srt":
-      return "bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800";
+      return "bg-protocol-srt-background border-protocol-srt-border";
     case "rtmp":
-      return "bg-purple-50 dark:bg-purple-900/20 border-purple-200 dark:border-purple-800";
+      return "bg-protocol-rtmp-background border-protocol-rtmp-border";
     default:
-      return "bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700";
+      return "bg-card-background border-border-color";
   }
 };
 
@@ -31,13 +31,13 @@ const getInputTypeLabel = (type: InputProcess["inputType"]) => {
   switch (type) {
     case "srt":
       return (
-        <span className="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300">
+        <span className="px-2 py-1 text-xs font-medium rounded-full bg-protocol-srt-background text-protocol-srt-text">
           SRT
         </span>
       );
     case "rtmp":
       return (
-        <span className="px-2 py-1 text-xs font-medium rounded-full bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-300">
+        <span className="px-2 py-1 text-xs font-medium rounded-full bg-protocol-rtmp-background text-protocol-rtmp-text">
           RTMP
         </span>
       );
@@ -75,19 +75,19 @@ const InputCard = memo(
               {getInputTypeLabel(input.inputType)}
               <Link 
                 href={`/input/${input.id}`}
-                className="font-medium hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+                className="font-medium hover:text-hover-link transition-colors"
               >
                 {input.metadata?.["restreamer-ui"]?.meta?.name ||
                   "Input sin nombre"}
               </Link>
               <button
                 onClick={() => setIsEditModalOpen(true)}
-                className="p-1 text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300"
+                className="p-1 text-secondary hover:text-secondary-dark"
               >
                 <PencilIcon className="h-4 w-4" />
               </button>
             </div>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+            <p className="text-sm text-text-muted">
               {input.metadata?.["restreamer-ui"]?.meta?.description ||
                 "Sin descripción"}
             </p>
@@ -98,8 +98,8 @@ const InputCard = memo(
             px-2 py-1 text-xs rounded-full
             ${
               input.state?.exec === "running"
-                ? "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400"
-                : "bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400"
+                ? "bg-success-light text-success-dark"
+                : "bg-error-light text-error-dark"
             }
           `}
             >
@@ -110,7 +110,7 @@ const InputCard = memo(
             ) : (
               <button
                 onClick={() => onDeleteClick(input)}
-                className="p-1 text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-500"
+                className="p-1 text-error hover:text-error-dark"
               >
                 <TrashIcon className="h-5 w-5" />
               </button>
@@ -123,7 +123,6 @@ const InputCard = memo(
           isRunning={input.state?.exec === "running"}
           stats={input}
         />
-
 
         {input.inputType === "rtmp" && <RTMPConnection input={input} />}
         {input.inputType === "srt" && <SRTConnection input={input} />}
@@ -138,7 +137,7 @@ const InputCard = memo(
         <div className="mt-4">
           {input.outputs.length > 0 ? (
             <div className="space-y-3">
-              <h4 className="text-vase font-bold text-gray-700 dark:text-gray-300">
+              <h4 className="text-base font-bold text-text-primary">
                 Custom Outputs ({input.outputs.length})
               </h4>
               <div className="space-y-3">
@@ -178,7 +177,7 @@ const InputCard = memo(
               </div>
             </div>
           ) : (
-            <p className="text-base text-gray-500 dark:text-gray-400">
+            <p className="text-base text-text-muted">
               No hay outputs configurados
             </p>
           )}
@@ -247,18 +246,18 @@ const ProcessList = () => {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center p-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="bg-red-50 dark:bg-red-900/10 p-4 rounded-md">
-        <p className="text-red-600 dark:text-red-400">{error}</p>
+      <div className="bg-error-light p-4 rounded-md">
+        <p className="text-error">{error}</p>
         <button
           onClick={refresh}
-          className="mt-2 text-sm text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300"
+          className="mt-2 text-sm text-error hover:text-error-dark"
         >
           Intentar de nuevo
         </button>
@@ -268,7 +267,7 @@ const ProcessList = () => {
 
   if (inputs.length === 0) {
     return (
-      <div className="text-center p-8 text-gray-500 dark:text-gray-400">
+      <div className="text-center p-8 text-text-muted">
         No hay inputs activos
       </div>
     );

@@ -9,11 +9,11 @@ import Link from "next/link";
 const getInputTypeStyles = (type: InputProcess["inputType"]) => {
   switch (type) {
     case "srt":
-      return "bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800";
+      return "bg-protocol-srt-background border-protocol-srt-border";
     case "rtmp":
-      return "bg-purple-50 dark:bg-purple-900/20 border-purple-200 dark:border-purple-800";
+      return "bg-protocol-rtmp-background border-protocol-rtmp-border";
     default:
-      return "bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700";
+      return "bg-card-background border-border-color";
   }
 };
 
@@ -21,13 +21,13 @@ const getInputTypeLabel = (type: InputProcess["inputType"]) => {
   switch (type) {
     case "srt":
       return (
-        <span className="px-1.5 py-0.5 text-xs font-medium rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300">
+        <span className="px-1.5 py-0.5 text-xs font-medium rounded-full bg-protocol-srt-background text-protocol-srt-text">
           SRT
         </span>
       );
     case "rtmp":
       return (
-        <span className="px-1.5 py-0.5 text-xs font-medium rounded-full bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-300">
+        <span className="px-1.5 py-0.5 text-xs font-medium rounded-full bg-protocol-rtmp-background text-protocol-rtmp-text">
           RTMP
         </span>
       );
@@ -53,26 +53,26 @@ export default function ProcessPill({ process, onDelete, onProcessUpdated }: Pro
             {getInputTypeLabel(process.inputType)}
             <Link 
               href={`/input/${process.id}`}
-              className="font-medium text-sm text-gray-900 hover:text-indigo-600 dark:text-white dark:hover:text-indigo-400 truncate transition-colors"
+              className="font-medium text-sm text-text-primary hover:text-hover-link truncate transition-colors"
             >
               {process.metadata?.["restreamer-ui"]?.meta?.name || "Input sin nombre"}
             </Link>
           </div>
-          <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-1 mt-0.5">
+          <p className="text-xs text-text-muted line-clamp-1 mt-0.5">
             {process.metadata?.["restreamer-ui"]?.meta?.description || "Sin descripción"}
           </p>
         </div>
         <div className="flex items-center gap-1 ml-2">
           <button
             onClick={() => setIsEditModalOpen(true)}
-            className="p-0.5 text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300"
+            className="p-0.5 text-secondary hover:text-secondary-dark"
           >
             <PencilIcon className="h-3.5 w-3.5" />
           </button>
           {process.state?.exec !== "running" && (
             <button
               onClick={() => onDelete(process)}
-              className="p-0.5 text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-500"
+              className="p-0.5 text-error hover:text-error-dark"
             >
               <TrashIcon className="h-3.5 w-3.5" />
             </button>
@@ -86,8 +86,8 @@ export default function ProcessPill({ process, onDelete, onProcessUpdated }: Pro
             inline-flex items-center px-1.5 py-0.5 text-xs font-medium rounded-full
             ${
               process.state?.exec === "running"
-                ? "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400"
-                : "bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400"
+                ? "bg-success-light text-success-dark"
+                : "bg-error-light text-error-dark"
             }
           `}
         >

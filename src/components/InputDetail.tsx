@@ -68,7 +68,7 @@ export default function InputDetail({ id }: InputDetailProps) {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
       </div>
     );
   }
@@ -76,7 +76,7 @@ export default function InputDetail({ id }: InputDetailProps) {
   if (error || !input) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <div className="text-red-600 dark:text-red-400">
+        <div className="text-error">
           {error || "Input no encontrado"}
         </div>
       </div>
@@ -95,7 +95,7 @@ export default function InputDetail({ id }: InputDetailProps) {
         <div className="flex items-center gap-2">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
+            className="inline-flex items-center gap-2 text-nav-text hover:text-nav-hover transition-colors"
           >
             <ArrowLeftIcon className="h-5 w-5" />
             <span>Volver</span>
@@ -103,7 +103,7 @@ export default function InputDetail({ id }: InputDetailProps) {
         </div>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+            <h1 className="text-2xl font-bold text-text-primary">
               {input.metadata?.["restreamer-ui"]?.meta?.name || "Input sin nombre"}
             </h1>
             <span
@@ -111,8 +111,8 @@ export default function InputDetail({ id }: InputDetailProps) {
                 px-3 py-1 text-sm rounded-full
                 ${
                   input.state?.exec === "running"
-                    ? "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400"
-                    : "bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400"
+                    ? "bg-success-light text-success-dark"
+                    : "bg-error-light text-error-dark"
                 }
               `}
             >
@@ -125,7 +125,7 @@ export default function InputDetail({ id }: InputDetailProps) {
             onOutputCreated={handleProcessUpdated}
           />
         </div>
-        <p className="text-gray-600 dark:text-gray-400">
+        <p className="text-text-muted">
           {input.metadata?.["restreamer-ui"]?.meta?.description || "Sin descripción"}
         </p>
       </div>

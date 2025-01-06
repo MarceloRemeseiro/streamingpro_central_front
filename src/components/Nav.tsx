@@ -27,11 +27,11 @@ export default function Nav() {
   ];
 
   return (
-    <nav className="bg-white dark:bg-gray-800 shadow">
+    <nav className="bg-nav-background shadow">
       <div className="container mx-auto px-4">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
-            <Link href="/" className="text-xl font-bold text-gray-900 dark:text-white">
+            <Link href="/" className="text-xl font-bold text-text-primary">
               StreamingPro
             </Link>
           </div>
@@ -42,7 +42,7 @@ export default function Nav() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
+                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-nav-text hover:text-nav-hover transition-colors"
               >
                 <item.icon className="h-5 w-5" />
                 <span>{item.label}</span>
@@ -55,7 +55,7 @@ export default function Nav() {
           <div className="md:hidden flex items-center">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="p-2 rounded-md text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200"
+              className="p-2 rounded-md text-nav-text hover:text-nav-hover"
             >
               {isOpen ? (
                 <XMarkIcon className="h-6 w-6" />
@@ -76,12 +76,12 @@ export default function Nav() {
           overflow-hidden
         `}
       >
-        <div className="px-4 pt-2 pb-3 space-y-1 border-t border-gray-200 dark:border-gray-700">
+        <div className="px-4 pt-2 pb-3 space-y-1 border-t border-nav-border">
           {menuItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="flex items-center gap-2 px-4 py-2 text-base font-medium text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 transition-colors rounded-md"
+              className="flex items-center gap-2 px-4 py-2 text-base font-medium text-nav-text hover:text-nav-hover transition-colors rounded-md"
               onClick={() => setIsOpen(false)}
             >
               <item.icon className="h-5 w-5" />

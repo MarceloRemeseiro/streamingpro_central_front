@@ -34,19 +34,19 @@ const OutputDefault: FC<OutputDefaultProps> = ({ streamId }) => {
   ];
 
   return (
-    <div className="mt-2 p-3 bg-white dark:bg-gray-800 rounded-lg shadow">
+    <div className="mt-2 p-3 bg-card-background rounded-lg shadow">
       <div className="flex justify-between items-center mb-2">
-        <h3 className="text-base font-medium text-gray-900 dark:text-white">
+        <h3 className="text-base font-medium text-text-primary">
           Outputs por defecto
         </h3>
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors"
+          className="p-1 hover:bg-info-background rounded-full transition-colors"
         >
           {isCollapsed ? (
-            <ChevronDownIcon className="h-4 w-4 text-gray-500" />
+            <ChevronDownIcon className="h-4 w-4 text-secondary" />
           ) : (
-            <ChevronUpIcon className="h-4 w-4 text-gray-500" />
+            <ChevronUpIcon className="h-4 w-4 text-secondary" />
           )}
         </button>
       </div>
@@ -56,13 +56,13 @@ const OutputDefault: FC<OutputDefaultProps> = ({ streamId }) => {
           {outputs.map(({ label, url }) => (
             <div
               key={label}
-              className="flex items-start justify-between p-1 bg-gray-50 dark:bg-gray-700 rounded"
+              className="flex items-start justify-between p-1 bg-info-background rounded"
             >
               <div className="min-w-0 flex-1 mr-2">
-                <span className="font-medium text-gray-500 dark:text-gray-400 block mb-1">
+                <span className="font-medium text-text-muted block mb-1">
                   {label}
                 </span>
-                <p className="text-gray-900 dark:text-white break-all">{url}</p>
+                <p className="text-text-primary break-all">{url}</p>
               </div>
               <div className="flex-shrink-0">
                 <CopyButton text={url} />
