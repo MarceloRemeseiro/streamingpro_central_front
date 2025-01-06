@@ -20,6 +20,7 @@ export class AuthService {
   private accessToken: string | null = null;
   private refreshToken: string | null = null;
   private isRefreshing = false;
+  private refreshPromise: Promise<void> | null = null;
   private axiosInstance;
 
   private constructor() {
@@ -39,17 +40,29 @@ export class AuthService {
       (response) => response,
       async (error: ApiError) => {
         const config = error.config || {};
-        if (error.response?.status === 401 && !config._retry) {
-          config._retry = true;
-          await this.refreshAccessToken();
-          if (config.headers) {
-            config.headers.Authorization = `Bearer ${this.accessToken}`;
+        
+        if (error.response?.status === 401) {
+          if (config._retry) {
+            // Si ya intentamos refrescar y aún así falla, necesitamos un nuevo login
+            this.clearTokens();
+            throw error;
           }
-          return this.axiosInstance.request({
-            ...config,
-            url: config.url || '',
-            method: config.method || 'get'
-          });
+          
+          config._retry = true;
+          try {
+            await this.refreshAccessToken();
+            if (config.headers) {
+              config.headers.Authorization = `Bearer ${this.accessToken}`;
+            }
+            return this.axiosInstance.request({
+              ...config,
+              url: config.url || '',
+              method: config.method || 'get'
+            });
+          } catch (refreshError) {
+            this.clearTokens();
+            throw error;
+          }
         }
         return Promise.reject(error);
       }
@@ -63,6 +76,13 @@ export class AuthService {
     return AuthService.instance;
   }
 
+  private clearTokens(): void {
+    this.accessToken = null;
+    this.refreshToken = null;
+    this.isRefreshing = false;
+    this.refreshPromise = null;
+  }
+
   private async login(): Promise<void> {
     try {
       const response = await this.axiosInstance.post<LoginResponse>('/api/login', {
@@ -73,12 +93,17 @@ export class AuthService {
       this.accessToken = response.data.access_token;
       this.refreshToken = response.data.refresh_token;
     } catch (error) {
+      this.clearTokens();
       console.error('Error en login:', error);
       throw new Error('Error de autenticación');
     }
   }
 
   private async refreshAccessToken(): Promise<void> {
+    if (this.refreshPromise) {
+      return this.refreshPromise;
+    }
+
     if (this.isRefreshing) {
       return new Promise((resolve) => {
         const checkRefresh = setInterval(() => {
@@ -91,24 +116,29 @@ export class AuthService {
     }
 
     this.isRefreshing = true;
-    try {
-      if (!this.refreshToken) {
-        await this.login();
-        return;
-      }
+    this.refreshPromise = (async () => {
+      try {
+        if (!this.refreshToken) {
+          await this.login();
+          return;
+        }
 
-      const response = await this.axiosInstance.post<LoginResponse>('/api/refresh', {
-        refresh_token: this.refreshToken,
-      });
-      
-      this.accessToken = response.data.access_token;
-      this.refreshToken = response.data.refresh_token;
-    } catch (error) {
-      console.error('Error al refrescar token:', error);
-      await this.login();
-    } finally {
-      this.isRefreshing = false;
-    }
+        const response = await this.axiosInstance.post<LoginResponse>('/api/refresh', {
+          refresh_token: this.refreshToken,
+        });
+        
+        this.accessToken = response.data.access_token;
+        this.refreshToken = response.data.refresh_token;
+      } catch (error) {
+        this.clearTokens();
+        await this.login();
+      } finally {
+        this.isRefreshing = false;
+        this.refreshPromise = null;
+      }
+    })();
+
+    return this.refreshPromise;
   }
 
   public async request<T>(
@@ -134,8 +164,11 @@ export class AuthService {
     } catch (error) {
       const apiError = error as ApiError;
       if (apiError.response?.status === 401) {
-        await this.refreshAccessToken();
-        return this.request(method, url, data);
+        if (!apiError.config?._retry) {
+          await this.refreshAccessToken();
+          return this.request(method, url, data);
+        }
+        this.clearTokens();
       }
       throw error;
     }

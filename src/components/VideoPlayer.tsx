@@ -11,10 +11,11 @@ interface VideoPlayerProps {
   className?: string;
 }
 
-const VideoPlayer: FC<VideoPlayerProps> = ({ url, isRunning, className,stats }) => {
+const VideoPlayer: FC<VideoPlayerProps> = ({ url, isRunning, className, stats }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const hlsRef = useRef<Hls | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const retryTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -29,6 +30,8 @@ const VideoPlayer: FC<VideoPlayerProps> = ({ url, isRunning, className,stats }) 
         enableWorker: true,
         lowLatencyMode: true,
         backBufferLength: 90,
+        maxBufferLength: 30,
+        maxMaxBufferLength: 60,
       });
 
       hls.attachMedia(video);
@@ -39,7 +42,13 @@ const VideoPlayer: FC<VideoPlayerProps> = ({ url, isRunning, className,stats }) 
       hls.on(Hls.Events.MANIFEST_PARSED, () => {
         setIsLoading(false);
         video.muted = true;
-        video.play().catch(console.error);
+        // Envolver el play() en un try-catch y agregar un pequeño retraso
+        setTimeout(() => {
+          video.play().catch((error) => {
+            console.warn("Error al reproducir el video:", error);
+            // No mostrar el error al usuario ya que es esperado en algunos casos
+          });
+        }, 100);
       });
 
       hls.on(Hls.Events.ERROR, (event, data) => {
@@ -57,6 +66,11 @@ const VideoPlayer: FC<VideoPlayerProps> = ({ url, isRunning, className,stats }) 
             default:
               console.log("Error fatal, destruyendo instancia...");
               hls.destroy();
+              // Intentar reiniciar el player después de un error fatal
+              if (retryTimeoutRef.current) {
+                clearTimeout(retryTimeoutRef.current);
+              }
+              retryTimeoutRef.current = setTimeout(initPlayer, 5000);
               break;
           }
         }
@@ -67,13 +81,16 @@ const VideoPlayer: FC<VideoPlayerProps> = ({ url, isRunning, className,stats }) 
 
     if (isRunning) {
       setIsLoading(true);
-      // Aumentamos el delay a 5 segundos para asegurar que el stream HLS esté disponible
+      // Aumentamos el delay para asegurar que el stream HLS esté disponible
       const timer = setTimeout(() => {
         initPlayer();
       }, 8000);
 
       return () => {
         clearTimeout(timer);
+        if (retryTimeoutRef.current) {
+          clearTimeout(retryTimeoutRef.current);
+        }
         if (hlsRef.current) {
           hlsRef.current.destroy();
           hlsRef.current = null;
@@ -127,7 +144,30 @@ const VideoPlayer: FC<VideoPlayerProps> = ({ url, isRunning, className,stats }) 
       style={containerStyle} 
       className={classNames("bg-transparent overflow-hidden relative", className)}
     >
-      <video ref={videoRef} style={contentStyle} controls playsInline muted/>
+      <video 
+        ref={videoRef} 
+        style={contentStyle} 
+        controls 
+        playsInline 
+        muted
+        onError={(e) => {
+          console.warn("Error en el elemento video:", e);
+          // Intentar reiniciar el player si hay un error
+          if (hlsRef.current) {
+            hlsRef.current.destroy();
+            hlsRef.current = null;
+            if (retryTimeoutRef.current) {
+              clearTimeout(retryTimeoutRef.current);
+            }
+            retryTimeoutRef.current = setTimeout(() => {
+              if (isRunning) {
+                setIsLoading(true);
+                hlsRef.current?.loadSource(url);
+              }
+            }, 5000);
+          }
+        }}
+      />
       {isLoading && (
         <div
           style={contentStyle}
