@@ -26,14 +26,12 @@ class ProcessCommandService {
       console.log('Raw response:', responseText);
 
       if (!response.ok) {
-        let errorMessage = 'Error al enviar el comando';
         try {
-          const errorData = responseText ? JSON.parse(responseText) : {};
-          errorMessage = errorData.error || errorMessage;
-        } catch (e) {
-          errorMessage = responseText || errorMessage;
+          const errorData = JSON.parse(responseText);
+          throw new Error(JSON.stringify(errorData));
+        } catch {
+          throw new Error(responseText);
         }
-        throw new Error(errorMessage);
       }
 
       // Solo intentamos parsear como JSON si hay contenido

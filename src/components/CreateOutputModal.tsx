@@ -11,6 +11,17 @@ interface CreateOutputModalProps {
   onOutputCreated?: () => void;
 }
 
+interface SRTOutputConfig {
+  type: 'srt';
+  streamId: string;
+  name: string;
+  url: string;
+  port: string;
+  latency: string;
+  srtStreamId?: string;
+  passphrase?: string;
+}
+
 const CreateOutputModal: FC<CreateOutputModalProps> = ({
   isOpen,
   onClose,
@@ -49,7 +60,7 @@ const CreateOutputModal: FC<CreateOutputModalProps> = ({
 
       onOutputCreated?.();
       onClose();
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Error creating RTMP output:', error);
     } finally {
       setIsLoading(false);
@@ -61,7 +72,7 @@ const CreateOutputModal: FC<CreateOutputModalProps> = ({
     try {
       const processedUrl = srtUrl.startsWith('srt://') ? srtUrl.replace('srt://', '') : srtUrl;
       
-      const outputConfig: any = {
+      const outputConfig: SRTOutputConfig = {
         type: 'srt',
         streamId,
         name: srtName,
@@ -82,7 +93,7 @@ const CreateOutputModal: FC<CreateOutputModalProps> = ({
 
       onOutputCreated?.();
       onClose();
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Error creating SRT output:', error);
     } finally {
       setIsLoading(false);

@@ -139,33 +139,39 @@ const InputCard = memo(
                 Custom Outputs ({input.outputs.length})
               </h4>
               <div className="space-y-3">
-                {input.outputs.map((output) => {
-                  const address = output.config?.output?.[0]?.address || "";
-                  const isRTMP = address.startsWith("rtmp://");
-                  const isSRT = address.startsWith("srt://");
+                {input.outputs
+                  .sort((a, b) => {
+                    const nameA = a.metadata?.["restreamer-ui"]?.name || "";
+                    const nameB = b.metadata?.["restreamer-ui"]?.name || "";
+                    return nameA.localeCompare(nameB);
+                  })
+                  .map((output) => {
+                    const address = output.config?.output?.[0]?.address || "";
+                    const isRTMP = address.startsWith("rtmp://");
+                    const isSRT = address.startsWith("srt://");
 
-                  if (isRTMP) {
-                    return (
-                      <RTMPOutput
-                        key={output.id}
-                        output={output}
-                        onDeleted={onProcessUpdated}
-                        onUpdated={onProcessUpdated}
-                      />
-                    );
-                  }
-                  if (isSRT) {
-                    return (
-                      <SRTOutput
-                        key={output.id}
-                        output={output}
-                        onDeleted={onProcessUpdated}
-                        onUpdated={onProcessUpdated}
-                      />
-                    );
-                  }
-                  return null;
-                })}
+                    if (isRTMP) {
+                      return (
+                        <RTMPOutput
+                          key={output.id}
+                          output={output}
+                          onDeleted={onProcessUpdated}
+                          onUpdated={onProcessUpdated}
+                        />
+                      );
+                    }
+                    if (isSRT) {
+                      return (
+                        <SRTOutput
+                          key={output.id}
+                          output={output}
+                          onDeleted={onProcessUpdated}
+                          onUpdated={onProcessUpdated}
+                        />
+                      );
+                    }
+                    return null;
+                  })}
               </div>
             </div>
           ) : (

@@ -5,12 +5,10 @@ interface CommandRequest {
   command: 'start' | 'stop';
 }
 
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PUT(request: NextRequest) {
   try {
-    const { id } = await params;
+    // Extraer el ID de la URL
+    const id = request.nextUrl.pathname.split('/')[3];
     console.log('Command request received for process:', id);
     const { command } = await request.json() as CommandRequest;
     console.log('Command to execute:', command);
@@ -49,18 +47,30 @@ export async function PUT(
         const data = responseText ? JSON.parse(responseText) : {};
         console.log('API Success Response:', data);
         return NextResponse.json(data);
-      } catch (apiError: any) {
-        console.error('API Error:', apiError);
+      } catch (error: unknown) {
+        console.error('API Error:', error);
+        if (error instanceof Error) {
+          return NextResponse.json(
+            { error: `Error en la API: ${error.message}` },
+            { status: 500 }
+          );
+        }
         return NextResponse.json(
-          { error: `Error en la API: ${apiError?.message || 'Error desconocido'}` },
+          { error: 'Error desconocido en la API' },
           { status: 500 }
         );
       }
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error al procesar la solicitud:', error);
+    if (error instanceof Error) {
+      return NextResponse.json(
+        { error: `Error al enviar el comando: ${error.message}` },
+        { status: 500 }
+      );
+    }
     return NextResponse.json(
-      { error: `Error al enviar el comando: ${error?.message || 'Error desconocido'}` },
+      { error: 'Error desconocido al procesar la solicitud' },
       { status: 500 }
     );
   }

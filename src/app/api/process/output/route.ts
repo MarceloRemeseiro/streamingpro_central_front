@@ -26,7 +26,7 @@ export async function POST(request: Request) {
                     try {
                         const errorData = JSON.parse(processResponseText);
                         errorMessage = errorData.message || errorMessage;
-                    } catch (e) {
+                    } catch {
                         errorMessage = processResponseText || errorMessage;
                     }
                     throw new Error(errorMessage);
@@ -50,7 +50,7 @@ export async function POST(request: Request) {
                     try {
                         const errorData = JSON.parse(metadataResponseText);
                         errorMessage = errorData.message || errorMessage;
-                    } catch (e) {
+                    } catch {
                         errorMessage = metadataResponseText || errorMessage;
                     }
                     throw new Error(errorMessage);

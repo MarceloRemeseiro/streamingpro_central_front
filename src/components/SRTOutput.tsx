@@ -2,9 +2,10 @@ import { FC, useState } from "react";
 import { OutputProcess } from "@/types/processTypes";
 import ProcessSwitch from "./ProcessSwitch";
 import { processCommandService } from "@/services/processCommandService";
-import { TrashIcon, PencilIcon } from "@heroicons/react/24/outline";
+import { TrashIcon, PencilIcon, Cog6ToothIcon } from "@heroicons/react/24/outline";
 import DeleteProcessModal from "./DeleteProcessModal";
 import EditSRTOutputModal from "./EditSRTOutputModal";
+import EditSRTTitleModal from "./EditSRTTitleModal";
 
 interface SRTOutputProps {
   output: OutputProcess;
@@ -15,6 +16,7 @@ interface SRTOutputProps {
 const SRTOutput: FC<SRTOutputProps> = ({ output, onDeleted, onUpdated }) => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isEditTitleModalOpen, setIsEditTitleModalOpen] = useState(false);
 
   const name = output.metadata?.["restreamer-ui"]?.name || "Output sin nombre";
   const address = output.config?.output?.[0]?.address || "";
@@ -54,9 +56,17 @@ const SRTOutput: FC<SRTOutputProps> = ({ output, onDeleted, onUpdated }) => {
     <>
       <div className="p-3 bg-blue-100/60 dark:bg-blue-900/30 rounded-lg border border-blue-300 dark:border-blue-700">
         <div className="flex justify-between items-center mb-2">
-          <h4 className="text-sm font-medium text-blue-900 dark:text-blue-100">
-            {name}
-          </h4>
+          <div className="flex items-center gap-2">
+            <h4 className="text-sm font-medium text-blue-900 dark:text-blue-100">
+              {name}
+            </h4>
+            <button
+              onClick={() => setIsEditTitleModalOpen(true)}
+              className="p-1 text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300"
+            >
+              <PencilIcon className="h-4 w-4" />
+            </button>
+          </div>
           <ProcessSwitch
             processId={output.id}
             state={output.state?.exec || 'finished'}
@@ -109,9 +119,10 @@ const SRTOutput: FC<SRTOutputProps> = ({ output, onDeleted, onUpdated }) => {
         <div className="flex justify-end mt-2 space-x-2">
           <button
             onClick={() => setIsEditModalOpen(true)}
-            className="p-1 text-purple-500 hover:text-purple-600 dark:text-purple-400 dark:hover:text-purple-300"
+            className="p-1 text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300"
+            title="Editar configuración"
           >
-            <PencilIcon className="h-5 w-5" />
+            <Cog6ToothIcon className="h-5 w-5" />
           </button>
           {output.state?.exec !== 'running' && (
             <button
@@ -137,6 +148,16 @@ const SRTOutput: FC<SRTOutputProps> = ({ output, onDeleted, onUpdated }) => {
         output={output}
         onUpdated={() => {
           setIsEditModalOpen(false);
+          onUpdated?.();
+        }}
+      />
+
+      <EditSRTTitleModal
+        isOpen={isEditTitleModalOpen}
+        onClose={() => setIsEditTitleModalOpen(false)}
+        output={output}
+        onUpdated={() => {
+          setIsEditTitleModalOpen(false);
           onUpdated?.();
         }}
       />

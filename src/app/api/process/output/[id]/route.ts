@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { withAuth } from '@/utils/authUtils';
 
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest) {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_BASE_URL;
     const payload = await request.json();
-    const id = params.id;
+    const id = request.nextUrl.pathname.split('/')[4]; // /api/process/output/[id]
 
     if (!id) {
       return NextResponse.json(
@@ -34,7 +34,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
           try {
             const errorData = JSON.parse(processResponseText);
             errorMessage = errorData.message || errorMessage;
-          } catch (e) {
+          } catch {
             errorMessage = processResponseText || errorMessage;
           }
           throw new Error(errorMessage);
@@ -58,7 +58,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
           try {
             const errorData = JSON.parse(metadataResponseText);
             errorMessage = errorData.message || errorMessage;
-          } catch (e) {
+          } catch {
             errorMessage = metadataResponseText || errorMessage;
           }
           throw new Error(errorMessage);

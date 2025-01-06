@@ -576,6 +576,52 @@ export class OutputService {
       throw error;
     }
   }
+
+  async updateRTMPTitle(id: string, name: string): Promise<void> {
+    try {
+      const response = await fetch(`/api/process/output/${id}/metadata`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          name
+        })
+      });
+
+      if (!response.ok) {
+        const text = await response.text();
+        console.error('Server response:', text);
+        throw new Error(text || 'Error updating RTMP title');
+      }
+    } catch (error) {
+      console.error('Update RTMP Title Error:', error);
+      throw error;
+    }
+  }
+
+  async updateSRTTitle(id: string, name: string): Promise<void> {
+    try {
+      const response = await fetch(`/api/process/output/${id}/metadata`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          name
+        })
+      });
+
+      if (!response.ok) {
+        const text = await response.text();
+        console.error('Server response:', text);
+        throw new Error(text || 'Error updating SRT title');
+      }
+    } catch (error) {
+      console.error('Update SRT Title Error:', error);
+      throw error;
+    }
+  }
 }
 
 export const outputService = OutputService.getInstance(); 
