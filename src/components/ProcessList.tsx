@@ -267,7 +267,7 @@ const ProcessList = () => {
 
   return (
     <>
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className="grid gap-6 md:grid-cols-3">
         {sortedInputs.map((input) => (
           <InputCard
             key={input.id}

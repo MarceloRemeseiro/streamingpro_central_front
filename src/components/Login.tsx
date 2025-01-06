@@ -25,6 +25,12 @@ export const Login = ({ onLoginSuccess }: LoginProps) => {
     try {
       const auth = AuthService.getInstance();
       await auth.request("GET", "/api/v3/process");
+      const token = auth.getAccessToken();
+      
+      // Guardar el token en una cookie que dure 30 días
+      const thirtyDays = 30 * 24 * 60 * 60;
+      document.cookie = `auth_token=${token}; path=/; max-age=${thirtyDays}; secure; samesite=strict`; 
+      
       localStorage.setItem("lastUsername", credentials.username);
       onLoginSuccess();
     } catch (err) {

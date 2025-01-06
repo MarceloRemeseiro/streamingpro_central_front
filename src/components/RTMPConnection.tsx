@@ -8,7 +8,7 @@ interface RTMPConnectionProps {
 }
 
 export default function RTMPConnection({ input }: RTMPConnectionProps) {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
   const url = `rtmp://${process.env.NEXT_PUBLIC_RESTREAMER_BASE_URL}`;
   const streamKey = input.streamName;
   const oneLine = `${url}/${streamKey}`;

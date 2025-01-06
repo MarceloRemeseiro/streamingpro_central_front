@@ -8,7 +8,7 @@ interface SRTConnectionProps {
 }
 
 export default function SRTConnection({ input }: SRTConnectionProps) {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
   const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_BASE_URL || "";
   const port = process.env.NEXT_PUBLIC_RESTREAMER_PORT || "6000";
   const streamId = input.streamName;
