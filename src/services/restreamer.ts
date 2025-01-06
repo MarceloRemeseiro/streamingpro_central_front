@@ -93,7 +93,25 @@ export class RestreamerService {
     throw new Error('Método no implementado');
   }
 
-  public async deleteProcess(processId: string): Promise<void> {
-    await this.auth.request('DELETE', `/api/v3/process/${processId}`);
+  public async deleteProcess(processId: string): Promise<{ success: boolean; deletedOutputs: number }> {
+    try {
+      const response = await fetch(`/api/process/${processId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al eliminar el proceso');
+      }
+
+      const result = await response.json();
+      console.log('Respuesta del servidor:', result);
+      return result;
+    } catch (error) {
+      console.error('Error en deleteProcess:', error);
+      throw error;
+    }
   }
 } 

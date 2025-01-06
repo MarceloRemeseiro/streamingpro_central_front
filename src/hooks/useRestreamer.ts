@@ -46,9 +46,15 @@ export const useRestreamer = () => {
 
   const deleteProcess = useCallback(async (processId: string) => {
     try {
-      await restreamerService.deleteProcess(processId);
+      const response = await restreamerService.deleteProcess(processId);
+      if (response.deletedOutputs > 0) {
+        console.log(`Proceso eliminado exitosamente. Se eliminaron ${response.deletedOutputs} outputs asociados.`);
+      } else {
+        console.log('Proceso eliminado exitosamente. No había outputs asociados.');
+      }
       await fetchProcesses();
     } catch (err) {
+      console.error('Error al eliminar el proceso:', err);
       throw err instanceof Error ? err : new Error('Error al eliminar el proceso');
     }
   }, [fetchProcesses, restreamerService]);
