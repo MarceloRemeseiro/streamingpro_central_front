@@ -1,4 +1,3 @@
-
 class ProcessCommandService {
   private static instance: ProcessCommandService;
 
@@ -12,17 +11,37 @@ class ProcessCommandService {
   }
 
   public async sendCommand(processId: string, command: 'start' | 'stop'): Promise<void> {
-    const response = await fetch(`/api/process/${processId}/command`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ command }),
-    });
+    try {
+      console.log('Sending command:', command, 'to process:', processId);
+      
+      const response = await fetch(`/api/process/${processId}/command`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ command }),
+      });
 
-    if (!response.ok) {
-      const error = await response.text();
-      throw new Error(error || 'Error al enviar el comando');
+      const responseText = await response.text();
+      console.log('Raw response:', responseText);
+
+      if (!response.ok) {
+        let errorMessage = 'Error al enviar el comando';
+        try {
+          const errorData = responseText ? JSON.parse(responseText) : {};
+          errorMessage = errorData.error || errorMessage;
+        } catch (e) {
+          errorMessage = responseText || errorMessage;
+        }
+        throw new Error(errorMessage);
+      }
+
+      // Solo intentamos parsear como JSON si hay contenido
+      const data = responseText ? JSON.parse(responseText) : {};
+      console.log('Command response:', data);
+    } catch (error) {
+      console.error('Error in sendCommand:', error);
+      throw error;
     }
   }
 }

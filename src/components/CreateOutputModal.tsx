@@ -37,11 +37,13 @@ const CreateOutputModal: FC<CreateOutputModalProps> = ({
   const handleCreateRTMP = async () => {
     setIsLoading(true);
     try {
+      const processedUrl = rtmpUrl.startsWith('rtmp://') ? rtmpUrl : `rtmp://${rtmpUrl}`;
+      
       await outputService.createOutput({
         type: 'rtmp',
         streamId,
         name: rtmpName,
-        url: rtmpUrl,
+        url: processedUrl,
         streamKey: rtmpStreamKey,
       });
 
@@ -57,16 +59,26 @@ const CreateOutputModal: FC<CreateOutputModalProps> = ({
   const handleCreateSRT = async () => {
     setIsLoading(true);
     try {
-      await outputService.createOutput({
+      const processedUrl = srtUrl.startsWith('srt://') ? srtUrl.replace('srt://', '') : srtUrl;
+      
+      const outputConfig: any = {
         type: 'srt',
         streamId,
         name: srtName,
-        url: srtUrl,
+        url: processedUrl,
         port: srtPort,
         latency: srtLatency,
-        srtStreamId,
-        passphrase: srtPassphrase,
-      });
+      };
+
+      if (srtStreamId.trim()) {
+        outputConfig.srtStreamId = srtStreamId;
+      }
+
+      if (srtPassphrase.trim()) {
+        outputConfig.passphrase = srtPassphrase;
+      }
+
+      await outputService.createOutput(outputConfig);
 
       onOutputCreated?.();
       onClose();
@@ -172,7 +184,7 @@ const CreateOutputModal: FC<CreateOutputModalProps> = ({
                             onChange={(e) => setRtmpUrl(e.target.value)}
                             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md 
                             bg-white dark:bg-gray-800 text-gray-900 dark:text-white
-                            focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"                            placeholder="rtmp://ejemplo.com/live"
+                            focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"                            placeholder="ejemplo.com/live o rtmp://ejemplo.com/live"
                           />
                         </div>
                         <div>
@@ -233,7 +245,7 @@ const CreateOutputModal: FC<CreateOutputModalProps> = ({
                             onChange={(e) => setSrtUrl(e.target.value)}
                             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md 
                             bg-white dark:bg-gray-800 text-gray-900 dark:text-white
-                            focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"                            placeholder="ejemplo.com"
+                            focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"                            placeholder="ejemplo.com o srt://ejemplo.com"
                           />
                         </div>
                         <div>

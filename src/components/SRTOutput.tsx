@@ -24,7 +24,7 @@ const SRTOutput: FC<SRTOutputProps> = ({ output, onDeleted, onUpdated }) => {
   const port = address.split(":")[2].split("?")[0] || "";
   const params = new URLSearchParams(address.split("?")[1] || "");
 
-  const streamId = params.get("streamid") || "";
+  const streamId = params.get("streamid") ||"No configurado";
   const latency = params.get("latency") || "";
   const mode = params.get("mode") || "CALLER";
   const passphrase = params.get("passphrase") || "No configurado";
@@ -106,22 +106,22 @@ const SRTOutput: FC<SRTOutputProps> = ({ output, onDeleted, onUpdated }) => {
           </div>
         </div>
 
-        {output.state?.exec !== 'running' && (
-          <div className="flex justify-end mt-2 space-x-2">
-            <button
-              onClick={() => setIsEditModalOpen(true)}
-              className="p-1 text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300"
-            >
-              <PencilIcon className="h-5 w-5" />
-            </button>
+        <div className="flex justify-end mt-2 space-x-2">
+          <button
+            onClick={() => setIsEditModalOpen(true)}
+            className="p-1 text-purple-500 hover:text-purple-600 dark:text-purple-400 dark:hover:text-purple-300"
+          >
+            <PencilIcon className="h-5 w-5" />
+          </button>
+          {output.state?.exec !== 'running' && (
             <button
               onClick={() => setIsDeleteModalOpen(true)}
               className="p-1 text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300"
             >
               <TrashIcon className="h-5 w-5" />
             </button>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       <DeleteProcessModal

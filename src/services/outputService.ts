@@ -252,15 +252,23 @@ export class OutputService {
 
   private createSRTConfig(config: SRTOutputConfig, existingId?: string) {
     const outputId = existingId || `restreamer-ui:egress:srt:${generateUUID()}`;
-    const srtParams = new URLSearchParams();
-    srtParams.append('mode', 'caller');
-    srtParams.append('transtype', 'live');
-    srtParams.append('latency', config.latency);
-    if (config.srtStreamId) srtParams.append('streamid', config.srtStreamId);
-    if (config.passphrase) srtParams.append('passphrase', config.passphrase);
-    
     const cleanStreamId = config.streamId.split('.')[0];
-    const address = `srt://${config.url}:${config.port}?${srtParams.toString()}`;
+    
+    const urlParams = [
+      'mode=caller',
+      'transtype=live',
+      `latency=${config.latency}`
+    ];
+    
+    if (config.srtStreamId) {
+      urlParams.push(`streamid=${config.srtStreamId}`);
+    }
+    
+    if (config.passphrase) {
+      urlParams.push(`passphrase=${config.passphrase}`);
+    }
+    
+    const address = `srt://${config.url}:${config.port}?${urlParams.join('&')}`;
 
     return {
       id: outputId,

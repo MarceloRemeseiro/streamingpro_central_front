@@ -9,17 +9,15 @@ interface ProcessSwitchProps {
 }
 
 const ProcessSwitch: FC<ProcessSwitchProps> = ({ processId, state, lastLogLine, onStateChange }) => {
-    console.log(processId);
-    
   const [isLoading, setIsLoading] = useState(false);
   const [isMovedRight, setIsMovedRight] = useState(state === 'running');
   const [previousState, setPreviousState] = useState(state);
 
   useEffect(() => {
-    // Solo actualizamos el estado si no estamos en loading o si el estado ha cambiado
     if (state !== previousState) {
       setIsLoading(false);
       setPreviousState(state);
+      setIsMovedRight(state === 'running');
     }
   }, [state, previousState]);
 
@@ -35,6 +33,8 @@ const ProcessSwitch: FC<ProcessSwitchProps> = ({ processId, state, lastLogLine, 
 
   const handleChange = async (checked: boolean) => {
     try {
+      console.log('Process state change requested:', { processId, checked });
+      
       // Si estamos apagando, permitimos la acción incluso durante loading
       if (!checked) {
         setIsMovedRight(false);
@@ -49,12 +49,12 @@ const ProcessSwitch: FC<ProcessSwitchProps> = ({ processId, state, lastLogLine, 
         await onStateChange(true);
       }
     } catch (error) {
+      console.error('Error changing process state:', error);
       // Si hay error al encender, regresamos el switch a su posición original
       if (!state.includes('running')) {
         setIsMovedRight(false);
       }
       setIsLoading(false);
-      console.error('Error changing process state:', error);
     }
   };
 

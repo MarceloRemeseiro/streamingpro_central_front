@@ -87,8 +87,9 @@ const EditSRTOutputModal: FC<EditSRTOutputModalProps> = ({
               id="name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white sm:text-sm"
-              required
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md 
+              bg-white dark:bg-gray-800 text-gray-900 dark:text-white
+              focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"                   required
             />
           </div>
 
@@ -101,8 +102,9 @@ const EditSRTOutputModal: FC<EditSRTOutputModalProps> = ({
               id="url"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white sm:text-sm"
-              required
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md 
+              bg-white dark:bg-gray-800 text-gray-900 dark:text-white
+              focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"                   required
             />
           </div>
 
@@ -115,8 +117,9 @@ const EditSRTOutputModal: FC<EditSRTOutputModalProps> = ({
               id="port"
               value={port}
               onChange={(e) => setPort(e.target.value)}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white sm:text-sm"
-              required
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md 
+              bg-white dark:bg-gray-800 text-gray-900 dark:text-white
+              focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"                   required
             />
           </div>
 
@@ -129,8 +132,9 @@ const EditSRTOutputModal: FC<EditSRTOutputModalProps> = ({
               id="latency"
               value={latency}
               onChange={(e) => setLatency(e.target.value)}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white sm:text-sm"
-              required
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md 
+              bg-white dark:bg-gray-800 text-gray-900 dark:text-white
+              focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"                   required
             />
           </div>
 
@@ -143,8 +147,9 @@ const EditSRTOutputModal: FC<EditSRTOutputModalProps> = ({
               id="streamId"
               value={srtStreamId}
               onChange={(e) => setSrtStreamId(e.target.value)}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white sm:text-sm"
-            />
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md 
+              bg-white dark:bg-gray-800 text-gray-900 dark:text-white
+              focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"                 />
           </div>
 
           <div>
@@ -156,8 +161,9 @@ const EditSRTOutputModal: FC<EditSRTOutputModalProps> = ({
               id="passphrase"
               value={passphrase}
               onChange={(e) => setPassphrase(e.target.value)}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white sm:text-sm"
-            />
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md 
+              bg-white dark:bg-gray-800 text-gray-900 dark:text-white
+              focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"                 />
           </div>
         </div>
 
