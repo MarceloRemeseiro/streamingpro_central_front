@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { AuthService } from "@/services/auth";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 
 interface LoginProps {
   onLoginSuccess: () => void;
@@ -8,6 +9,7 @@ interface LoginProps {
 export const Login = ({ onLoginSuccess }: LoginProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
   const [credentials, setCredentials] = useState({
     username: "",
     password: "",
@@ -77,14 +79,14 @@ export const Login = ({ onLoginSuccess }: LoginProps) => {
                   disabled={isLoading}
                 />
               </div>
-              <div>
+              <div className="relative">
                 <label htmlFor="password" className="sr-only">
                   Contraseña
                 </label>
                 <input
                   id="password"
                   name="password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   autoComplete="current-password"
                   value={credentials.password}
                   onChange={(e) =>
@@ -98,6 +100,17 @@ export const Login = ({ onLoginSuccess }: LoginProps) => {
                   placeholder="Contraseña"
                   disabled={isLoading}
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600"
+                >
+                  {showPassword ? (
+                    <EyeSlashIcon className="h-5 w-5" />
+                  ) : (
+                    <EyeIcon className="h-5 w-5" />
+                  )}
+                </button>
               </div>
             </div>
 

@@ -11,7 +11,6 @@ import SRTConnection from "./SRTConnection";
 import CustomOutputs from "./CustomOutputs";
 import RTMPOutput from "./RTMPOutput";
 import SRTOutput from "./SRTOutput";
-import StreamStats from "./StreamStats";
 import PacketLossStats from "./PacketLossStats";
 import DeleteProcessModal from "./DeleteProcessModal";
 import EditProcessModal from "./EditProcessModal";
