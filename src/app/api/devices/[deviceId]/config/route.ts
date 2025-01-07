@@ -64,7 +64,6 @@ export async function GET(
                 }
             } catch (error) {
                 console.error(`[CONFIG] Error al verificar SRT:`, error);
-                const lastState = lastProcessStates.get(device.assigned_srt);
             }
         }
 

@@ -46,7 +46,14 @@ export default function InputDetail({ id }: InputDetailProps) {
   }, [fetchInput]);
 
   const handleProcessUpdated = async () => {
+    const scrollPosition = window.scrollY;
     await fetchInput();
+    requestAnimationFrame(() => {
+      window.scrollTo({
+        top: scrollPosition,
+        behavior: 'instant'
+      });
+    });
   };
 
   if (isLoading) {

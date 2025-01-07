@@ -1,19 +1,6 @@
-import axios from 'axios';
-import https from 'https';
-import { LoginResponse } from '../types/restreamer';
 import { authConfig } from '../lib/config';
 
-interface ApiError {
-  response?: {
-    status: number;
-  };
-  config?: {
-    _retry?: boolean;
-    headers?: Record<string, string>;
-    url?: string;
-    method?: string;
-  };
-}
+
 
 export class AuthService {
   private static instance: AuthService;
@@ -21,53 +8,9 @@ export class AuthService {
   private refreshToken: string | null = null;
   private isRefreshing = false;
   private refreshPromise: Promise<void> | null = null;
-  private axiosInstance;
+  private isAuthenticated = false;
 
-  private constructor() {
-    const config = {
-      baseURL: authConfig.apiUrl,
-      headers: {
-        'Accept': 'application/json',
-      },
-      httpsAgent: new https.Agent({
-        rejectUnauthorized: false,
-      }),
-    };
-
-    this.axiosInstance = axios.create(config);
-
-    this.axiosInstance.interceptors.response.use(
-      (response) => response,
-      async (error: ApiError) => {
-        const config = error.config || {};
-        
-        if (error.response?.status === 401) {
-          if (config._retry) {
-            // Si ya intentamos refrescar y aún así falla, necesitamos un nuevo login
-            this.clearTokens();
-            throw error;
-          }
-          
-          config._retry = true;
-          try {
-            await this.refreshAccessToken();
-            if (config.headers) {
-              config.headers.Authorization = `Bearer ${this.accessToken}`;
-            }
-            return this.axiosInstance.request({
-              ...config,
-              url: config.url || '',
-              method: config.method || 'get'
-            });
-          } catch {
-            this.clearTokens();
-            throw error;
-          }
-        }
-        return Promise.reject(error);
-      }
-    );
-  }
+  private constructor() {}
 
   public static getInstance(): AuthService {
     if (!AuthService.instance) {
@@ -81,17 +24,30 @@ export class AuthService {
     this.refreshToken = null;
     this.isRefreshing = false;
     this.refreshPromise = null;
+    this.isAuthenticated = false;
   }
 
-  private async login(): Promise<void> {
+  private async loginToRestreamer(): Promise<void> {
     try {
-      const response = await this.axiosInstance.post<LoginResponse>('/api/login', {
-        username: authConfig.username,
-        password: authConfig.password,
+      const response = await fetch(`${authConfig.apiUrl}/api/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          username: authConfig.username,
+          password: authConfig.password,
+        })
       });
-      
-      this.accessToken = response.data.access_token;
-      this.refreshToken = response.data.refresh_token;
+
+      if (!response.ok) {
+        throw new Error('Error en la autenticación');
+      }
+
+      const data = await response.json();
+      this.accessToken = data.access_token;
+      this.refreshToken = data.refresh_token;
     } catch (error) {
       this.clearTokens();
       console.error('Error en login:', error);
@@ -119,19 +75,31 @@ export class AuthService {
     this.refreshPromise = (async () => {
       try {
         if (!this.refreshToken) {
-          await this.login();
+          await this.loginToRestreamer();
           return;
         }
 
-        const response = await this.axiosInstance.post<LoginResponse>('/api/refresh', {
-          refresh_token: this.refreshToken,
+        const response = await fetch(`${authConfig.apiUrl}/api/refresh`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            refresh_token: this.refreshToken,
+          })
         });
-        
-        this.accessToken = response.data.access_token;
-        this.refreshToken = response.data.refresh_token;
+
+        if (!response.ok) {
+          throw new Error('Error al refrescar el token');
+        }
+
+        const data = await response.json();
+        this.accessToken = data.access_token;
+        this.refreshToken = data.refresh_token;
       } catch {
         this.clearTokens();
-        await this.login();
+        await this.loginToRestreamer();
       } finally {
         this.isRefreshing = false;
         this.refreshPromise = null;
@@ -147,29 +115,31 @@ export class AuthService {
     data?: unknown
   ): Promise<T> {
     if (!this.accessToken) {
-      await this.login();
+      await this.loginToRestreamer();
     }
 
     try {
-      const response = await this.axiosInstance.request({
+      const response = await fetch(`${authConfig.apiUrl}${url}`, {
         method,
-        url,
-        data,
         headers: {
-          Authorization: `Bearer ${this.accessToken}`,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${this.accessToken}`
         },
-        responseType: 'json',
+        body: data ? JSON.stringify(data) : undefined
       });
-      return response.data as T;
-    } catch (error) {
-      const apiError = error as ApiError;
-      if (apiError.response?.status === 401) {
-        if (!apiError.config?._retry) {
+
+      if (!response.ok) {
+        if (response.status === 401) {
           await this.refreshAccessToken();
           return this.request(method, url, data);
         }
-        this.clearTokens();
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
+
+      return response.json();
+    } catch (error) {
+      console.error('Error en request:', error);
       throw error;
     }
   }
@@ -180,6 +150,32 @@ export class AuthService {
 
   public setAccessToken(token: string): void {
     this.accessToken = token;
+  }
+
+  public isUserAuthenticated(): boolean {
+    return this.isAuthenticated;
+  }
+
+  public async login(username: string, password: string): Promise<boolean> {
+    const isValidUser = username === process.env.NEXT_PUBLIC_STREAMINGPRO_USERNAME &&
+                       password === process.env.NEXT_PUBLIC_STREAMINGPRO_PASSWORD;
+
+    if (isValidUser) {
+      try {
+        await this.loginToRestreamer();
+        this.isAuthenticated = true;
+        return true;
+      } catch (error) {
+        console.error('Error al conectar con Restreamer:', error);
+        return false;
+      }
+    }
+
+    return false;
+  }
+
+  public logout(): void {
+    this.clearTokens();
   }
 }
 

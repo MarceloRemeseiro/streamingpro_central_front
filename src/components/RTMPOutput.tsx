@@ -51,6 +51,7 @@ const RTMPOutput: FC<RTMPOutputProps> = ({ output, onDeleted, onUpdated }) => {
 
   const handleDelete = async () => {
     try {
+      const scrollPosition = window.scrollY;
       const response = await fetch(`/api/process/output/${output.id}`, {
         method: 'DELETE',
       });
@@ -59,6 +60,13 @@ const RTMPOutput: FC<RTMPOutputProps> = ({ output, onDeleted, onUpdated }) => {
       
       setModals(m => ({ ...m, delete: false }));
       onDeleted?.();
+      
+      requestAnimationFrame(() => {
+        window.scrollTo({
+          top: scrollPosition,
+          behavior: 'instant'
+        });
+      });
     } catch (error) {
       console.error('Error deleting output:', error);
     }

@@ -9,6 +9,7 @@ import {
 } from "@heroicons/react/24/outline";
 import LogoutButton from "@/components/LogoutButton";
 import { useState } from "react";
+import { SystemMetrics } from "./SystemMetrics";
 
 export default function Nav() {
   const [isOpen, setIsOpen] = useState(false);
@@ -37,6 +38,7 @@ export default function Nav() {
           </div>
 
           {/* Desktop menu */}
+            <SystemMetrics />
           <div className="hidden md:flex items-center gap-2">
             {menuItems.map((item) => (
               <Link
@@ -89,6 +91,7 @@ export default function Nav() {
             </Link>
           ))}
           <div className="px-4 py-2">
+            <SystemMetrics />
             <LogoutButton />
           </div>
         </div>

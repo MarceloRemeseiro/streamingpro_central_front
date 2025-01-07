@@ -26,8 +26,19 @@ export const Login = ({ onLoginSuccess }: LoginProps) => {
 
     try {
       const auth = AuthService.getInstance();
-      await auth.request("GET", "/api/v3/process");
+      const isAuthenticated = await auth.login(credentials.username, credentials.password);
+      
+      if (!isAuthenticated) {
+        setError("Usuario o contraseña incorrectos");
+        setCredentials((prev) => ({ ...prev, password: "" }));
+        return;
+      }
+
       const token = auth.getAccessToken();
+      if (!token) {
+        setError("Error al conectar con el servidor");
+        return;
+      }
       
       // Guardar el token en una cookie que dure 30 días
       const thirtyDays = 30 * 24 * 60 * 60;
@@ -37,7 +48,7 @@ export const Login = ({ onLoginSuccess }: LoginProps) => {
       onLoginSuccess();
     } catch (err) {
       console.error("Error de autenticación:", err);
-      setError("Error al autenticar. Por favor, verifica tus credenciales.");
+      setError("Error al conectar con el servidor. Por favor, inténtalo de nuevo más tarde.");
       setCredentials((prev) => ({ ...prev, password: "" }));
     } finally {
       setIsLoading(false);
@@ -74,7 +85,7 @@ export const Login = ({ onLoginSuccess }: LoginProps) => {
                     }))
                   }
                   required
-                  className="block w-full rounded-md border-0 py-1.5 px-3 text-text-primary ring-1 ring-inset ring-auth-input-border placeholder:text-text-muted focus:ring-2 focus:ring-inset focus:ring-auth-input-focus sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 px-3 text-text-muted ring-1 ring-inset ring-auth-input-border focus:ring-2 focus:ring-inset focus:ring-auth-input-focus sm:text-sm sm:leading-6"
                   placeholder="Usuario"
                   disabled={isLoading}
                 />
@@ -96,7 +107,7 @@ export const Login = ({ onLoginSuccess }: LoginProps) => {
                     }))
                   }
                   required
-                  className="block w-full rounded-md border-0 py-1.5 px-3 text-text-primary ring-1 ring-inset ring-auth-input-border placeholder:text-text-muted focus:ring-2 focus:ring-inset focus:ring-auth-input-focus sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 px-3 text-text-muted ring-1 ring-inset ring-auth-input-border focus:ring-2 focus:ring-inset focus:ring-auth-input-focus sm:text-sm sm:leading-6"
                   placeholder="Contraseña"
                   disabled={isLoading}
                 />

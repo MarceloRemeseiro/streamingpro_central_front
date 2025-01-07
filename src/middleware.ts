@@ -1,9 +1,13 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { AuthService } from './services/auth';
 
 export function middleware(request: NextRequest) {
-  // Si ya está en login, permitir
-  if (request.nextUrl.pathname === '/login') {
+  // Excluir rutas públicas y API
+  if (
+    request.nextUrl.pathname.startsWith('/api') ||
+    request.nextUrl.pathname === '/login'
+  ) {
     return NextResponse.next();
   }
 
@@ -15,6 +19,10 @@ export function middleware(request: NextRequest) {
     const loginUrl = new URL('/login', request.url);
     return NextResponse.redirect(loginUrl);
   }
+
+  // Si hay token, verificar que sea válido
+  const authService = AuthService.getInstance();
+  authService.setAccessToken(authToken);
 
   return NextResponse.next();
 }
@@ -31,4 +39,4 @@ export const config = {
      */
     '/((?!api|_next/static|_next/image|favicon.ico|login).*)',
   ],
-} 
+}; 

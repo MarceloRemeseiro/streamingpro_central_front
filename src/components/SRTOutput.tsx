@@ -65,6 +65,7 @@ const SRTOutput: FC<SRTOutputProps> = ({ output, onDeleted, onUpdated }) => {
 
   const handleDelete = async () => {
     try {
+      const scrollPosition = window.scrollY;
       const response = await fetch(`/api/process/output/${output.id}`, {
         method: "DELETE",
       });
@@ -73,6 +74,14 @@ const SRTOutput: FC<SRTOutputProps> = ({ output, onDeleted, onUpdated }) => {
 
       setModals((m) => ({ ...m, delete: false }));
       onDeleted?.();
+
+      // Restaurar la posición del scroll después de que se actualice la UI
+      requestAnimationFrame(() => {
+        window.scrollTo({
+          top: scrollPosition,
+          behavior: 'instant'
+        });
+      });
     } catch (error) {
       console.error("Error deleting output:", error);
     }

@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# StreamingPro
 
-## Getting Started
+Aplicación web para gestionar streams de video usando Restreamer.
 
-First, run the development server:
+## Requisitos
 
+- Docker
+- Docker Compose
+
+## Despliegue
+
+1. Clonar el repositorio:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/yourusername/streamingpro.git
+cd streamingpro
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Crear el archivo de variables de entorno:
+```bash
+cp .env.example .env
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Editar el archivo `.env` con tus configuraciones:
+```env
+# Restreamer API Configuration
+NEXT_PUBLIC_RESTREAMER_API_URL=https://tu.dominio.com
+NEXT_PUBLIC_RESTREAMER_PORT=6000
+NEXT_PUBLIC_RESTREAMER_USERNAME=admin
+NEXT_PUBLIC_RESTREAMER_PASSWORD=tu_password_restreamer
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# URLs para HLS y otros servicios
+NEXT_PUBLIC_RESTREAMER_BASE_URL=tu.dominio.com
 
-## Learn More
+# StreamingPro Auth
+NEXT_PUBLIC_STREAMINGPRO_USERNAME=tu_usuario
+NEXT_PUBLIC_STREAMINGPRO_PASSWORD=tu_password
+```
 
-To learn more about Next.js, take a look at the following resources:
+4. Construir y ejecutar los contenedores:
+```bash
+docker compose up -d
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+La aplicación estará disponible en `http://localhost:3002`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Actualización
 
-## Deploy on Vercel
+Para actualizar la aplicación a la última versión:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+git pull
+docker compose down
+docker compose up -d --build
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Logs
+
+Para ver los logs de la aplicación:
+
+```bash
+docker compose logs -f streamingpro
+```
+
+## Detener la aplicación
+
+```bash
+docker compose down
+```

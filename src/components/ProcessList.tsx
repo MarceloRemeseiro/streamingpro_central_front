@@ -228,9 +228,11 @@ const ProcessList = () => {
   const handleProcessUpdated = () => {
     const scrollPosition = window.scrollY;
     refresh().then(() => {
-      window.scrollTo({
-        top: scrollPosition,
-        behavior: "instant",
+      requestAnimationFrame(() => {
+        window.scrollTo({
+          top: scrollPosition,
+          behavior: 'instant'
+        });
       });
     });
   };
