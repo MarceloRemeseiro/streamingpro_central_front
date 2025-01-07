@@ -79,3 +79,52 @@ export async function PUT(request: NextRequest) {
     );
   }
 } 
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const id = request.url.split('/').pop()?.split('?')[0];
+    if (!id) {
+      return NextResponse.json({ error: 'ID no proporcionado' }, { status: 400 });
+    }
+
+    const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_BASE_URL;
+
+    return await withAuth(async (token) => {
+      // Primero obtenemos todos los procesos para encontrar los outputs asociados
+      const processesResponse = await fetch(`http://${baseUrl}:8080/api/v3/process`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!processesResponse.ok) {
+        throw new Error('Error obteniendo los procesos');
+      }
+     
+      const processResponse = await fetch(`http://${baseUrl}:8080/api/v3/process/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!processResponse.ok) {
+        const errorData = await processResponse.json().catch(() => ({}));
+        throw new Error(errorData.message || 'Error eliminando el proceso');
+      }
+
+      return NextResponse.json({ 
+        success: true,
+      });
+    });
+  } catch (error) {
+    console.error('Error deleting process:', error);
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : 'Error interno del servidor' },
+      { status: 500 }
+    );
+  }
+} 

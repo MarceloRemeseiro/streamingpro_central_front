@@ -65,7 +65,7 @@ const SRTOutput: FC<SRTOutputProps> = ({ output, onDeleted, onUpdated }) => {
 
   const handleDelete = async () => {
     try {
-      const response = await fetch(`/api/process/${output.id}`, {
+      const response = await fetch(`/api/process/output/${output.id}`, {
         method: "DELETE",
       });
 
