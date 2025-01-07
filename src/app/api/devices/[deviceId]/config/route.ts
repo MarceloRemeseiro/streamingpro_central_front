@@ -49,11 +49,9 @@ export async function GET(
                 const lastState = lastProcessStates.get(device.assigned_srt);
                 
                 if (lastState && lastState !== processState) {
-                    console.log(`[CONFIG] ${deviceId} - SRT ${device.assigned_srt} - Estado cambió de ${lastState} a ${processState}`);
                 }
                 
                 lastProcessStates.set(device.assigned_srt, processState);
-                console.log(`[CONFIG] ${deviceId} - SRT ${device.assigned_srt} - Estado actual: ${processState}`);
 
                 if (processState === 'running') {
                     const streamId = device.assigned_srt
@@ -62,14 +60,11 @@ export async function GET(
                     
                     srt_url = `srt://core.streamingpro.es:6000/?mode=caller&transtype=live&streamid=${streamId}`;
                     deviceStatus = 'ONLINE';
-                    console.log(`[CONFIG] ${deviceId} - Proceso running, estableciendo ONLINE`);
                 } else {
-                    console.log(`[CONFIG] ${deviceId} - Proceso no running (${processState}), manteniendo NO REPRODUCIENDO`);
                 }
             } catch (error) {
                 console.error(`[CONFIG] Error al verificar SRT:`, error);
                 const lastState = lastProcessStates.get(device.assigned_srt);
-                console.log(`[CONFIG] ${deviceId} - Error al obtener estado. Último estado conocido: ${lastState}`);
             }
         }
 
@@ -80,7 +75,6 @@ export async function GET(
             device_status: deviceStatus
         };
 
-        console.log(`[CONFIG] ${deviceId} - Estado final: ${deviceStatus} - SRT: ${srt_url ? 'asignado' : 'no asignado'}`);
         return NextResponse.json(response);
     } catch (error) {
         console.error("[CONFIG] Error:", error);

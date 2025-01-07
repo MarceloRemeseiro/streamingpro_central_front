@@ -5,10 +5,9 @@
       "display_name": "CASA",
       "local_ip": "192.168.1.41",
       "public_ip": "80.102.143.155",
-      "status": "ONLINE",
-      "last_ping": "2025-01-06T23:01:06.310Z",
-      "created_at": "2025-01-06T19:44:49.675Z",
-      "assigned_srt": "restreamer-ui:ingest:d9e3a799-1cdb-4449-9c23-766990d7e65e"
+      "status": "NO REPRODUCIENDO",
+      "last_ping": "2025-01-07T00:29:12.859Z",
+      "created_at": "2025-01-06T19:44:49.675Z"
     }
   ]
 }

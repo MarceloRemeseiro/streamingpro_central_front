@@ -12,7 +12,6 @@ class ProcessCommandService {
 
   public async sendCommand(processId: string, command: 'start' | 'stop'): Promise<void> {
     try {
-      console.log('Sending command:', command, 'to process:', processId);
       
       const response = await fetch(`/api/process/${processId}/command`, {
         method: 'PUT',
@@ -23,7 +22,6 @@ class ProcessCommandService {
       });
 
       const responseText = await response.text();
-      console.log('Raw response:', responseText);
 
       if (!response.ok) {
         try {
@@ -36,7 +34,6 @@ class ProcessCommandService {
 
       // Solo intentamos parsear como JSON si hay contenido
       const data = responseText ? JSON.parse(responseText) : {};
-      console.log('Command response:', data);
     } catch (error) {
       console.error('Error in sendCommand:', error);
       throw error;

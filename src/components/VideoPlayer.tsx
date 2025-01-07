@@ -56,15 +56,12 @@ const VideoPlayer: FC<VideoPlayerProps> = ({ url, isRunning, className, stats })
           setIsLoading(false);
           switch (data.type) {
             case Hls.ErrorTypes.NETWORK_ERROR:
-              console.log("Error de red, intentando reconectar...");
               hls.startLoad();
               break;
             case Hls.ErrorTypes.MEDIA_ERROR:
-              console.log("Error de media, intentando recuperar...");
               hls.recoverMediaError();
               break;
             default:
-              console.log("Error fatal, destruyendo instancia...");
               hls.destroy();
               // Intentar reiniciar el player después de un error fatal
               if (retryTimeoutRef.current) {

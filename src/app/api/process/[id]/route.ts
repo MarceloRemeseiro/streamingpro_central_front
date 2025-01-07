@@ -20,40 +20,52 @@ export async function GET(request: NextRequest) {
     }
 
     const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_BASE_URL;
+    const authHeader = request.headers.get('authorization');
+
+    if (!authHeader) {
+      return NextResponse.json({ error: 'No se proporcionó token de autenticación' }, { status: 401 });
+    }
 
     return await withAuth(async (token) => {
-      // Obtener el estado del proceso
-      const processResponse = await fetch(`http://${baseUrl}:8080/api/v3/process/${id}/state`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        }
-      });
+      try {
+        const processResponse = await fetch(`http://${baseUrl}:8080/api/v3/process/${id}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }
+        });
 
-      if (!processResponse.ok) {
-        const errorData = await processResponse.json().catch(() => ({}));
-        throw new Error(errorData.message || 'Error obteniendo el estado del proceso');
+        if (!processResponse.ok) {
+          const errorText = await processResponse.text();
+          throw new Error(`Error obteniendo los datos del proceso: ${errorText}`);
+        }
+
+        const processData = await processResponse.json();
+
+        const data = {
+          ...processData,
+          state: {
+            exec: processData.state?.exec || 'unknown',
+            progress: processData.state?.progress || 0
+          },
+          progress: processData.state?.progress || {}
+        };
+
+        return NextResponse.json(data);
+      } catch (error) {
+        throw error;
       }
-
-      const data = await processResponse.json();
-
-      // Convertir el estado al formato esperado
-      const state = {
-        state: {
-          exec: data.exec || 'unknown',
-          progress: data.progress || 0
-        }
-      };
-
-      return NextResponse.json(state);
     });
   } catch (error) {
     console.error('Error fetching process:', error);
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Error interno del servidor' },
-      { status: 500 }
-    );
+    if (error instanceof Error) {
+      if (error.message.includes('autenticación') || error.message.includes('token')) {
+        return NextResponse.json({ error: error.message }, { status: 401 });
+      }
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+    return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 });
   }
 }
 
@@ -140,7 +152,6 @@ export async function DELETE(request: NextRequest) {
 
       // Eliminar todos los outputs asociados
       for (const output of outputsToDelete) {
-        console.log('Eliminando output:', output.id);
         await fetch(`http://${baseUrl}:8080/api/v3/process/${output.id}`, {
           method: 'DELETE',
           headers: {

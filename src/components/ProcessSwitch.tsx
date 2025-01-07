@@ -33,7 +33,6 @@ const ProcessSwitch: FC<ProcessSwitchProps> = ({ processId, state, lastLogLine, 
 
   const handleChange = async (checked: boolean) => {
     try {
-      console.log('Process state change requested:', { processId, checked });
       
       // Si estamos apagando y está running, solo notificamos sin mover el switch
       if (!checked && state === 'running') {

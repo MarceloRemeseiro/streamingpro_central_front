@@ -27,7 +27,6 @@ export async function PUT(request: NextRequest) {
         });
 
         const processResponseText = await processResponse.text();
-        console.log('Process Response:', processResponseText);
 
         if (!processResponse.ok) {
           let errorMessage = 'Error updating output process';
@@ -51,7 +50,6 @@ export async function PUT(request: NextRequest) {
         });
 
         const metadataResponseText = await metadataResponse.text();
-        console.log('Metadata Response:', metadataResponseText);
 
         if (!metadataResponse.ok) {
           let errorMessage = 'Error updating output metadata';

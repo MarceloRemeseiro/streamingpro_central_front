@@ -8,21 +8,17 @@ export async function PUT(
   try {
     const { deviceId } = await context.params;
     const body = await request.json();
-    console.log(`\n[SRT] PUT Actualización de SRT para dispositivo ${deviceId}:`, body);
 
     const { srtId } = body;
     const store = Store.getInstance();
 
     // Si srtId es una cadena vacía o "NINGUNO", establecer como null
     const normalizedSrtId = (!srtId || srtId === "" || srtId === "NINGUNO") ? null : srtId;
-    console.log(`[SRT] SRT ID normalizado: ${normalizedSrtId}`);
     
     // Obtener estado actual antes de actualizar
     const currentDevice = store.getDevices().find(d => d.device_id === deviceId);
-    console.log(`[SRT] Estado actual del dispositivo:`, currentDevice);
     
     if (!currentDevice) {
-      console.log(`[SRT] Dispositivo no encontrado: ${deviceId}`);
       return NextResponse.json({ 
         message: "Dispositivo no encontrado",
         timestamp: new Date().toISOString()
@@ -51,7 +47,6 @@ export async function PUT(
       status: newStatus
     });
 
-    console.log(`[SRT] Dispositivo actualizado:`, device);
     
     return NextResponse.json({
       ...device,

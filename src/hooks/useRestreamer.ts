@@ -48,9 +48,7 @@ export const useRestreamer = () => {
     try {
       const response = await restreamerService.deleteProcess(processId);
       if (response.deletedOutputs > 0) {
-        console.log(`Proceso eliminado exitosamente. Se eliminaron ${response.deletedOutputs} outputs asociados.`);
       } else {
-        console.log('Proceso eliminado exitosamente. No había outputs asociados.');
       }
       await fetchProcesses();
     } catch (err) {

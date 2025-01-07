@@ -519,17 +519,13 @@ export class OutputService {
 
   async updateRTMPOutput(id: string, config: RTMPOutputConfig): Promise<void> {
     try {
-      console.log('Updating RTMP Output with ID:', id);
-      console.log('Config received:', config);
 
       const processConfig = this.createRTMPConfig(config, id);
-      console.log('Process config created:', processConfig);
 
       const payload = {
         config: processConfig.config,
         metadata: processConfig.metadata["restreamer-ui"]
       };
-      console.log('Payload to send:', payload);
 
       const response = await fetch(`/api/process/output/${id}`, {
         method: 'PUT',

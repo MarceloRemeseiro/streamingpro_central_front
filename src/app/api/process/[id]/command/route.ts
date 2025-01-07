@@ -9,9 +9,7 @@ export async function PUT(request: NextRequest) {
   try {
     // Extraer el ID de la URL
     const id = request.nextUrl.pathname.split('/')[3];
-    console.log('Command request received for process:', id);
     const { command } = await request.json() as CommandRequest;
-    console.log('Command to execute:', command);
 
     if (!command || !['start', 'stop'].includes(command)) {
       console.error('Invalid command received:', command);
@@ -23,7 +21,6 @@ export async function PUT(request: NextRequest) {
 
     const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_BASE_URL;
     const apiUrl = `http://${baseUrl}:8080/api/v3/process/${id}/command`;
-    console.log('Sending request to API:', apiUrl);
 
     return await withAuth(async (token) => {
       try {
@@ -37,7 +34,6 @@ export async function PUT(request: NextRequest) {
         });
 
         const responseText = await response.text();
-        console.log('Raw API Response:', responseText);
 
         if (!response.ok) {
           console.error('API Error Response:', responseText);
@@ -45,7 +41,6 @@ export async function PUT(request: NextRequest) {
         }
 
         const data = responseText ? JSON.parse(responseText) : {};
-        console.log('API Success Response:', data);
         return NextResponse.json(data);
       } catch (error: unknown) {
         console.error('API Error:', error);

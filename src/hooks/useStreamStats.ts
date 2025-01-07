@@ -24,18 +24,29 @@ export const useStreamStats = (input: InputProcess) => {
   useEffect(() => {
     const updateStats = async () => {
       try {
+
         if (input.state?.exec !== 'running') {
           setStats(initialStats);
           return;
         }
 
         const process = await getProcess(input.id);
-        
-        if (!process?.progress?.inputs) {
+
+        if (!process) {
           setStats(initialStats);
           return;
         }
 
+        if (!process.progress) {
+          setStats(initialStats);
+          return;
+        }
+
+        if (!process.progress.inputs) {
+          setStats(initialStats);
+          return;
+        }
+        
         const progress = process.progress;
 
         // Calcular pérdida de paquetes

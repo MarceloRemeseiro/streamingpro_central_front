@@ -107,7 +107,6 @@ export class RestreamerService {
       }
 
       const result = await response.json();
-      console.log('Respuesta del servidor:', result);
       return result;
     } catch (error) {
       console.error('Error en deleteProcess:', error);
