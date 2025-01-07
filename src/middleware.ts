@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { AuthService } from './services/auth';
 
 export function middleware(request: NextRequest) {
   // Excluir rutas públicas y API
@@ -12,17 +11,13 @@ export function middleware(request: NextRequest) {
   }
 
   // Verificar si existe la cookie de autenticación
-  const authToken = request.cookies.get('auth_token')?.value;
+  const isAuthenticated = request.cookies.get('isAuthenticated')?.value === 'true';
 
-  // Si no hay token, redirigir a login
-  if (!authToken) {
+  // Si no está autenticado, redirigir a login
+  if (!isAuthenticated) {
     const loginUrl = new URL('/login', request.url);
     return NextResponse.redirect(loginUrl);
   }
-
-  // Si hay token, verificar que sea válido
-  const authService = AuthService.getInstance();
-  authService.setAccessToken(authToken);
 
   return NextResponse.next();
 }

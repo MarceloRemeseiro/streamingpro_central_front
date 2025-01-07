@@ -1,12 +1,10 @@
 import { useState, useEffect } from "react";
-import { AuthService } from "@/services/auth";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
+import { appAuth } from "@/services/appAuth";
+import { useAuth } from "./AuthProvider";
 
-interface LoginProps {
-  onLoginSuccess: () => void;
-}
-
-export const Login = ({ onLoginSuccess }: LoginProps) => {
+export const Login = () => {
+  const { login } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
@@ -25,8 +23,7 @@ export const Login = ({ onLoginSuccess }: LoginProps) => {
     setError(null);
 
     try {
-      const auth = AuthService.getInstance();
-      const isAuthenticated = await auth.login(credentials.username, credentials.password);
+      const isAuthenticated = await appAuth.login(credentials.username, credentials.password);
       
       if (!isAuthenticated) {
         setError("Usuario o contraseña incorrectos");
@@ -34,18 +31,8 @@ export const Login = ({ onLoginSuccess }: LoginProps) => {
         return;
       }
 
-      const token = auth.getAccessToken();
-      if (!token) {
-        setError("Error al conectar con el servidor");
-        return;
-      }
-      
-      // Guardar el token en una cookie que dure 30 días
-      const thirtyDays = 30 * 24 * 60 * 60;
-      document.cookie = `auth_token=${token}; path=/; max-age=${thirtyDays}; secure; samesite=strict`; 
-      
       localStorage.setItem("lastUsername", credentials.username);
-      onLoginSuccess();
+      login();
     } catch (err) {
       console.error("Error de autenticación:", err);
       setError("Error al conectar con el servidor. Por favor, inténtalo de nuevo más tarde.");
@@ -125,56 +112,19 @@ export const Login = ({ onLoginSuccess }: LoginProps) => {
               </div>
             </div>
 
+            {error && (
+              <div className="text-sm text-red-500 text-center">{error}</div>
+            )}
+
             <button
               type="submit"
-              disabled={
-                isLoading || !credentials.username || !credentials.password
-              }
-              className={`
-                w-full flex justify-center items-center rounded-md px-4 py-2
-                text-sm font-semibold text-text-light shadow-sm
-                transition-colors duration-150
-                ${
-                  isLoading || !credentials.username || !credentials.password
-                    ? "bg-auth-button-disabled cursor-not-allowed"
-                    : "bg-auth-button-enabled hover:bg-auth-button-hover focus:outline-none focus:ring-2 focus:ring-auth-input-focus focus:ring-offset-2"
-                }
-              `}
+              disabled={isLoading}
+              className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary ${
+                isLoading ? "opacity-50 cursor-not-allowed" : ""
+              }`}
             >
-              {isLoading ? (
-                <>
-                  <svg
-                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-text-light"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
-                  </svg>
-                  Autenticando...
-                </>
-              ) : (
-                "Iniciar Sesión"
-              )}
+              {isLoading ? "Iniciando sesión..." : "Iniciar sesión"}
             </button>
-
-            {error && (
-              <div className="mt-2 text-sm text-center text-error bg-error-light p-2 rounded-md">
-                {error}
-              </div>
-            )}
           </form>
         </div>
       </div>

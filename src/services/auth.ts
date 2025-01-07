@@ -1,16 +1,28 @@
-import { authConfig } from '../lib/config';
+import { authConfig } from '@/lib/config';
 
+// Tipo genérico para las respuestas de la API
+interface ApiResponse {
+  [key: string]: any;
+}
 
+interface AuthTokens {
+  access_token: string;
+  refresh_token: string;
+}
 
 export class AuthService {
   private static instance: AuthService;
   private accessToken: string | null = null;
   private refreshToken: string | null = null;
-  private isRefreshing = false;
-  private refreshPromise: Promise<void> | null = null;
-  private isAuthenticated = false;
+  private baseUrl: string;
 
-  private constructor() {}
+  private constructor() {
+    const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_API_URL?.replace(/\/$/, '');
+    if (!baseUrl) {
+      throw new Error('NEXT_PUBLIC_RESTREAMER_API_URL no está definida');
+    }
+    this.baseUrl = baseUrl;
+  }
 
   public static getInstance(): AuthService {
     if (!AuthService.instance) {
@@ -19,127 +31,108 @@ export class AuthService {
     return AuthService.instance;
   }
 
-  private clearTokens(): void {
-    this.accessToken = null;
-    this.refreshToken = null;
-    this.isRefreshing = false;
-    this.refreshPromise = null;
-    this.isAuthenticated = false;
+  private getApiUrl(path: string): string {
+    return `${this.baseUrl}${path.startsWith('/') ? path : `/${path}`}`;
   }
 
-  private async loginToRestreamer(): Promise<void> {
+  public async login(): Promise<boolean> {
     try {
-      const response = await fetch(`${authConfig.apiUrl}/api/login`, {
+      const response = await fetch('/api/restreamer/login', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify({
-          username: authConfig.username,
-          password: authConfig.password,
-        })
       });
 
       if (!response.ok) {
-        throw new Error('Error en la autenticación');
+        const data = await response.json();
+        console.error('Error en la respuesta de autenticación:', data);
+        return false;
+      }
+
+      const tokens: AuthTokens = await response.json();
+      this.accessToken = tokens.access_token;
+      this.refreshToken = tokens.refresh_token;
+      return true;
+    } catch (error) {
+      console.error('Error al autenticar:', error);
+      return false;
+    }
+  }
+
+  private async refreshAccessToken(): Promise<boolean> {
+    if (!this.refreshToken) {
+      return false;
+    }
+
+    try {
+      const response = await fetch('/api/restreamer/login/refresh', {
+        headers: {
+          'Authorization': `Bearer ${this.refreshToken}`,
+        },
+      });
+
+      if (!response.ok) {
+        return false;
       }
 
       const data = await response.json();
       this.accessToken = data.access_token;
-      this.refreshToken = data.refresh_token;
+      return true;
     } catch (error) {
-      this.clearTokens();
-      console.error('Error en login:', error);
-      throw new Error('Error de autenticación');
+      console.error('Error al refrescar token:', error);
+      return false;
     }
   }
 
-  private async refreshAccessToken(): Promise<void> {
-    if (this.refreshPromise) {
-      return this.refreshPromise;
-    }
-
-    if (this.isRefreshing) {
-      return new Promise((resolve) => {
-        const checkRefresh = setInterval(() => {
-          if (!this.isRefreshing) {
-            clearInterval(checkRefresh);
-            resolve();
-          }
-        }, 100);
-      });
-    }
-
-    this.isRefreshing = true;
-    this.refreshPromise = (async () => {
-      try {
-        if (!this.refreshToken) {
-          await this.loginToRestreamer();
-          return;
-        }
-
-        const response = await fetch(`${authConfig.apiUrl}/api/refresh`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify({
-            refresh_token: this.refreshToken,
-          })
-        });
-
-        if (!response.ok) {
-          throw new Error('Error al refrescar el token');
-        }
-
-        const data = await response.json();
-        this.accessToken = data.access_token;
-        this.refreshToken = data.refresh_token;
-      } catch {
-        this.clearTokens();
-        await this.loginToRestreamer();
-      } finally {
-        this.isRefreshing = false;
-        this.refreshPromise = null;
-      }
-    })();
-
-    return this.refreshPromise;
-  }
-
-  public async request<T>(
-    method: string,
-    url: string,
-    data?: unknown
-  ): Promise<T> {
+  public async request<T = ApiResponse>(method: string, path: string, body?: any): Promise<T> {
     if (!this.accessToken) {
-      await this.loginToRestreamer();
+      const success = await this.login();
+      if (!success) {
+        throw new Error('No se pudo autenticar con Restreamer');
+      }
     }
 
     try {
-      const response = await fetch(`${authConfig.apiUrl}${url}`, {
+      const url = this.getApiUrl(path);
+      const response = await fetch(url, {
         method,
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Authorization': `Bearer ${this.accessToken}`
+          'Authorization': `Bearer ${this.accessToken}`,
         },
-        body: data ? JSON.stringify(data) : undefined
+        body: body ? JSON.stringify(body) : undefined,
       });
 
       if (!response.ok) {
         if (response.status === 401) {
-          await this.refreshAccessToken();
-          return this.request(method, url, data);
+          // Si el token expiró, intentamos refrescarlo
+          const success = await this.refreshAccessToken();
+          if (!success) {
+            // Si no se pudo refrescar, intentamos login completo
+            const loginSuccess = await this.login();
+            if (!loginSuccess) {
+              throw new Error('No se pudo renovar la autenticación');
+            }
+          }
+          return this.request<T>(method, path, body);
         }
-        throw new Error(`HTTP error! status: ${response.status}`);
+
+        const errorText = await response.text();
+        console.error(`Error en la petición ${method}:`, {
+          status: response.status,
+          statusText: response.statusText,
+          body: errorText,
+          url
+        });
+        throw new Error(`Error en la petición: ${response.status}`);
       }
 
       return response.json();
     } catch (error) {
-      console.error('Error en request:', error);
+      console.error(`Error en la petición ${method}:`, {
+        error,
+        path,
+        method,
+        body
+      });
       throw error;
     }
   }
@@ -152,54 +145,8 @@ export class AuthService {
     this.accessToken = token;
   }
 
-  public isUserAuthenticated(): boolean {
-    return this.isAuthenticated;
-  }
-
-  public async login(username: string, password: string): Promise<boolean> {
-    const isValidUser = username === process.env.NEXT_PUBLIC_STREAMINGPRO_USERNAME &&
-                       password === process.env.NEXT_PUBLIC_STREAMINGPRO_PASSWORD;
-
-    if (isValidUser) {
-      try {
-        await this.loginToRestreamer();
-        this.isAuthenticated = true;
-        return true;
-      } catch (error) {
-        console.error('Error al conectar con Restreamer:', error);
-        return false;
-      }
-    }
-
-    return false;
-  }
-
   public logout(): void {
-    this.clearTokens();
-  }
-}
-
-export async function getAuthToken(): Promise<string | null> {
-  try {
-    const response = await fetch('/api/v3/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        username: process.env.NEXT_PUBLIC_RESTREAMER_USERNAME,
-        password: process.env.NEXT_PUBLIC_RESTREAMER_PASSWORD
-      })
-    });
-
-    if (!response.ok) {
-      throw new Error('Authentication failed');
-    }
-
-    const data = await response.json();
-    return data.token;
-  } catch (error) {
-    console.error('Error getting auth token:', error);
-    return null;
+    this.accessToken = null;
+    this.refreshToken = null;
   }
 } 
