@@ -2,17 +2,15 @@
 
 import { ArrowRightOnRectangleIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
-import { AuthService } from "@/services/auth";
+import { useAuth } from "./AuthProvider";
 
 export default function LogoutButton() {
   const router = useRouter();
+  const { logout } = useAuth();
 
   const handleLogout = async () => {
     try {
-      const authService = AuthService.getInstance();
-      authService.setAccessToken(''); // Limpiamos el token
-      document.cookie = 'auth_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT; secure; samesite=strict';
-      router.push('/login');
+      logout();
     } catch (error) {
       console.error('Error al cerrar sesión:', error);
     }

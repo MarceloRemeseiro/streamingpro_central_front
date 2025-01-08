@@ -6,12 +6,14 @@ import { appAuth } from '@/services/appAuth';
 
 interface AuthContextType {
   isAuthenticated: boolean;
+  isLoading: boolean;
   login: () => void;
   logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType>({
   isAuthenticated: false,
+  isLoading: true,
   login: () => {},
   logout: () => {},
 });
@@ -36,22 +38,26 @@ function removeCookie(name: string) {
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
+  const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   // Cargar el estado inicial de autenticación
   useEffect(() => {
     const isAuthenticatedCookie = getCookie('isAuthenticated') === 'true';
     setIsAuthenticated(isAuthenticatedCookie);
+    setIsLoading(false);
   }, []);
 
   // Manejar redirecciones basadas en autenticación
   useEffect(() => {
+    if (isLoading) return; // No hacer nada mientras se está cargando
+
     if (isAuthenticated && pathname === '/login') {
       router.replace('/');
     } else if (!isAuthenticated && pathname !== '/login') {
       router.replace('/login');
     }
-  }, [isAuthenticated, pathname, router]);
+  }, [isAuthenticated, pathname, router, isLoading]);
 
   const login = () => {
     setIsAuthenticated(true);
@@ -66,8 +72,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     router.replace('/login');
   };
 
+  // Mostrar nada mientras se está cargando
+  if (isLoading) {
+    return null;
+  }
+
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, isLoading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

@@ -15,11 +15,11 @@ export default function Nav() {
   const [isOpen, setIsOpen] = useState(false);
 
   const menuItems = [
-    {
+   /*  {
       href: "/devices",
       icon: DevicePhoneMobileIcon,
       label: "Dispositivos"
-    },
+    }, */
     {
       href: "/create",
       icon: PlusCircleIcon,

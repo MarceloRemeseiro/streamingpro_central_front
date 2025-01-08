@@ -11,10 +11,10 @@ export function middleware(request: NextRequest) {
   }
 
   // Verificar si existe la cookie de autenticación
-  const isAuthenticated = request.cookies.get('isAuthenticated')?.value === 'true';
+  const authCookie = request.cookies.get('isAuthenticated');
 
-  // Si no está autenticado, redirigir a login
-  if (!isAuthenticated) {
+  // Solo redirigir si la cookie existe y es false
+  if (authCookie?.value === 'false') {
     const loginUrl = new URL('/login', request.url);
     return NextResponse.redirect(loginUrl);
   }

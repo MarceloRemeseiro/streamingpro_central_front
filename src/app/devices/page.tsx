@@ -1,9 +1,10 @@
 "use client";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import EditNameModal from "@/components/EditNameModal";
 import Link from "next/link";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { Device } from "@/lib/store";
+import { useAuthenticatedFetch } from "@/hooks/useAuthenticatedFetch";
 
 interface SrtInput {
   id: string;
@@ -12,27 +13,12 @@ interface SrtInput {
 }
 
 const StatusIndicator = ({ deviceId }: { deviceId: string }) => {
-  const [status, setStatus] = useState<Device['status']>('OFFLINE');
-
-  useEffect(() => {
-    const checkStatus = async () => {
-      try {
-        const response = await fetch(`/api/devices/${deviceId}/config`);
-        if (response.ok) {
-          const data = await response.json();
-          setStatus(data.device_status);
-        }
-      } catch (error) {
-        console.error("Error al obtener estado:", error);
-      }
-    };
-
-    checkStatus();
-    const interval = setInterval(checkStatus, 5000);
-    return () => clearInterval(interval);
-  }, [deviceId]);
+  const { data: deviceData } = useAuthenticatedFetch<{ device_status: Device['status'] }>(
+    `/api/devices/${deviceId}/config`
+  );
 
   const getStatusColor = () => {
+    const status = deviceData?.device_status || 'OFFLINE';
     switch (status) {
       case 'ONLINE':
         return 'bg-success dark:bg-success';
@@ -46,50 +32,27 @@ const StatusIndicator = ({ deviceId }: { deviceId: string }) => {
   return (
     <div className="flex items-center gap-2">
       <div className={`w-3 h-3 rounded-full ${getStatusColor()}`}></div>
-      <span className="text-text-primary dark:text-text-light">{status}</span>
+      <span className="text-text-primary dark:text-text-light">
+        {deviceData?.device_status || 'OFFLINE'}
+      </span>
     </div>
   );
 };
 
 export default function DevicesPage() {
-  const [devices, setDevices] = useState<Device[]>([]);
-  const [srtInputs, setSrtInputs] = useState<SrtInput[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: devices = [], isLoading: devicesLoading, refetch: refetchDevices } = 
+    useAuthenticatedFetch<Device[]>('/api/devices');
+  const { data: srtInputs = [], isLoading: srtLoading } = 
+    useAuthenticatedFetch<SrtInput[]>('/api/process/inputs');
   const [editingDevice, setEditingDevice] = useState<Device | null>(null);
 
-  const fetchDevices = useCallback(async () => {
-    try {
-      const response = await fetch("/api/devices");
-      if (response.ok) {
-        const data = await response.json();
-        setDevices(data);
-      }
-    } catch (error) {
-      console.error("Error al obtener dispositivos:", error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
+  // Polling de dispositivos cada 5 segundos
   useEffect(() => {
-    const fetchSrtInputs = async () => {
-      try {
-        const response = await fetch("/api/process/inputs");
-        if (response.ok) {
-          const data = await response.json();
-          setSrtInputs(data);
-        }
-      } catch (error) {
-        console.error("Error al obtener SRTs:", error);
-      }
-    };
-
-    fetchDevices();
-    fetchSrtInputs();
-
-    const pollInterval = setInterval(fetchDevices, 5000);
-    return () => clearInterval(pollInterval);
-  }, [fetchDevices]);
+    const interval = setInterval(() => {
+      refetchDevices();
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [refetchDevices]);
 
   const handleSrtSelection = async (deviceId: string, srtId: string) => {
     try {
@@ -103,19 +66,9 @@ export default function DevicesPage() {
         throw new Error('Error al actualizar SRT');
       }
 
-      const updatedDevice = await response.json();
-      
-      setDevices((prevDevices) =>
-        prevDevices.map((device) => {
-          if (device.device_id === deviceId) {
-            return { ...device, assigned_srt: updatedDevice.assigned_srt };
-          }
-          return device;
-        })
-      );
+      refetchDevices();
     } catch (error) {
       console.error("Error:", error);
-      fetchDevices();
     }
   };
 
@@ -133,15 +86,12 @@ export default function DevicesPage() {
         body: JSON.stringify({ displayName: newName }),
       });
 
-      if (response.ok) {
-        setDevices((prevDevices) =>
-          prevDevices.map((device) =>
-            device.device_id === deviceId
-              ? { ...device, display_name: newName }
-              : device
-          )
-        );
+      if (!response.ok) {
+        throw new Error('Error al actualizar nombre');
       }
+
+      refetchDevices();
+      setEditingDevice(null);
     } catch (error) {
       console.error("Error al actualizar nombre:", error);
     }
@@ -157,19 +107,17 @@ export default function DevicesPage() {
         method: "DELETE",
       });
 
-      if (response.ok) {
-        setDevices((prevDevices) =>
-          prevDevices.filter((device) => device.device_id !== deviceId)
-        );
-      } else {
-        console.error("Error al eliminar dispositivo");
+      if (!response.ok) {
+        throw new Error('Error al eliminar dispositivo');
       }
+
+      refetchDevices();
     } catch (error) {
       console.error("Error al eliminar dispositivo:", error);
     }
   };
 
-  if (loading) {
+  if (devicesLoading || srtLoading) {
     return (
       <div className="flex justify-center items-center h-screen">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 dark:border-indigo-400"></div>
@@ -188,11 +136,11 @@ export default function DevicesPage() {
           <span>Volver</span>
         </Link>
       </div>
-        <h1 className="text-2xl font-semibold text-text-primary dark:text-text-light mb-2">
-          Dispositivos
-        </h1>
+      <h1 className="text-2xl font-semibold text-text-primary dark:text-text-light mb-2">
+        Dispositivos
+      </h1>
 
-      {devices.length === 0 ? (
+      {(!devices || devices.length === 0) ? (
         <div className="bg-info-background dark:bg-card-background/50 rounded-lg p-8 text-center">
           <p className="text-text-muted dark:text-text-muted">No hay dispositivos conectados</p>
         </div>
@@ -258,7 +206,7 @@ export default function DevicesPage() {
                         }
                       >
                         <option value="">NINGUNO</option>
-                        {srtInputs.map((srt) => (
+                        {(srtInputs || []).map((srt) => (
                           <option key={srt.id} value={srt.id}>
                             {srt.name}
                           </option>
