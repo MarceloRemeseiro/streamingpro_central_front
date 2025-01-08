@@ -73,10 +73,10 @@ export default function SRTConnection({ input }: SRTConnectionProps) {
               <span className="font-medium text-text-muted block mb-1">
                 Stream ID
               </span>
-              <p className="text-text-primary break-all">{streamId}</p>
+              <p className="text-text-primary break-all">{`${streamId},mode:publish`}</p>
             </div>
             <div className="flex-shrink-0">
-              <CopyButton text={streamId} />
+              <CopyButton text={`${streamId},mode:publish`} />
             </div>
           </div>
 

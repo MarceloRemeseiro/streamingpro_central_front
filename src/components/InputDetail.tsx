@@ -128,7 +128,6 @@ export default function InputDetail({ id }: InputDetailProps) {
               url={getHlsUrl()}
               isRunning={input.state?.exec === "running"}
               stats={input}
-              className="aspect-video w-full"
             />
           </div>
 
