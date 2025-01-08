@@ -46,7 +46,7 @@ class SRTService {
             '-codec:a',
             'copy',
             '-metadata',
-            `title=https://core.streamingpro.es/${streamId}/oembed.json`,
+            `title=https://${process.env.NEXT_PUBLIC_RESTREAMER_BASE_URL}/${streamId}/oembed.json`,
             '-metadata',
             'service_provider=datarhei-Restreamer',
             '-flags',
