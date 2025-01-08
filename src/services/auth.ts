@@ -1,13 +1,11 @@
-import { authConfig } from '@/lib/config';
-
-// Tipo genérico para las respuestas de la API
-interface ApiResponse {
-  [key: string]: any;
-}
 
 interface AuthTokens {
   access_token: string;
   refresh_token: string;
+}
+
+interface RequestBody {
+  [key: string]: string | number | boolean | null | undefined;
 }
 
 export class AuthService {
@@ -82,7 +80,7 @@ export class AuthService {
     }
   }
 
-  public async request<T = ApiResponse>(method: string, path: string, body?: any): Promise<T> {
+  public async request<T>(method: string, path: string, body?: RequestBody): Promise<T> {
     if (!this.accessToken) {
       const success = await this.login();
       if (!success) {

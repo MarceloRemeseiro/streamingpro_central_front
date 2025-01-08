@@ -1,34 +1,34 @@
 import { NextResponse } from 'next/server';
 import { withAuth } from '@/utils/authUtils';
 
-interface ProcessedMetrics {
-  system: {
-    cpu: {
-      idle: number;
-      system: number;
-      user: number;
-    };
-    memory: {
-      free: number;
-      total: number;
-      used: number;
-    };
-    network: {
-      rx: number;
-      tx: number;
-    };
-  };
-  sessions: {
-    total: number;
-    active: number;
-    byProcess: {
-      [processId: string]: {
-        active: number;
-        rxBitrate: number;
-        txBitrate: number;
-      };
-    };
-  };
+interface Metric {
+  name: string;
+  value: number;
+}
+
+interface ProcessState {
+  state: string;
+  cpu_usage: number;
+  memory_bytes: number;
+  traffic_in_bytes?: number;
+  traffic_out_bytes?: number;
+  bitrate_kbit?: number;
+}
+
+interface Process {
+  id: string;
+  name: string;
+  type: string;
+  state: ProcessState;
+}
+
+interface Session {
+  bandwidth_rx_kbit: number;
+  bandwidth_tx_kbit: number;
+}
+
+interface SessionMap {
+  [key: string]: Session[];
 }
 
 export async function GET() {
@@ -58,8 +58,6 @@ export async function GET() {
         })
       ]);
 
-
-
       if (!processesResponse.ok) {
         throw new Error(`Error en /process: ${processesResponse.status} ${processesResponse.statusText}`);
       }
@@ -70,34 +68,24 @@ export async function GET() {
         throw new Error(`Error en /session: ${sessionsResponse.status} ${sessionsResponse.statusText}`);
       }
 
-      const [processes, metrics, sessions] = await Promise.all([
+      const [processes, metrics, sessions]: [Process[], Metric[], SessionMap] = await Promise.all([
         processesResponse.json(),
         metricsResponse.json(),
         sessionsResponse.json()
       ]);
 
-
-      
-
       // Encontrar métricas específicas
-      const cpuIdle = metrics.find((m: any) => m.name === 'cpu_idle')?.value || 0;
-      const cpuSystem = metrics.find((m: any) => m.name === 'cpu_system')?.value || 0;
-      const cpuUser = metrics.find((m: any) => m.name === 'cpu_user')?.value || 0;
-      const cpuCores = metrics.find((m: any) => m.name === 'cpu_ncpu')?.value || 0;
-      const memTotal = metrics.find((m: any) => m.name === 'mem_total')?.value || 0;
-      const memFree = metrics.find((m: any) => m.name === 'mem_free')?.value || 0;
-      const memUsed = memTotal - memFree;
-      const memPercentage = (memUsed / memTotal) * 100;
+      const cpuCores = metrics.find((m) => m.name === 'cpu_ncpu')?.value || 0;
 
       // Calcular métricas de red y sesiones
       let totalRxBitrate = 0;
       let totalTxBitrate = 0;
-      let maxRxBitrate = 0;
-      let maxTxBitrate = 0;
+      const maxRxBitrate = 0;
+      const maxTxBitrate = 0;
       let totalSessions = 0;
 
       // Procesar sesiones activas
-      Object.values(sessions).forEach((sessionList: any) => {
+      Object.values(sessions).forEach((sessionList) => {
         if (Array.isArray(sessionList)) {
           sessionList.forEach(session => {
             totalRxBitrate += session.bandwidth_rx_kbit || 0;
@@ -114,16 +102,16 @@ export async function GET() {
       // Procesar métricas del sistema
       const systemMetrics = {
         cpu: {
-          total: processes.reduce((acc: number, process: any) => {
+          total: processes.reduce((acc, process) => {
             return acc + (process.state?.cpu_usage || 0);
           }, 0),
           cores: cpuCores
         },
         memory: {
-          total: processes.reduce((acc: number, process: any) => {
+          total: processes.reduce((acc, process) => {
             return acc + (process.state?.memory_bytes || 0);
           }, 0),
-          used: processes.reduce((acc: number, process: any) => {
+          used: processes.reduce((acc, process) => {
             return acc + (process.state?.memory_bytes || 0);
           }, 0),
           free: 0,
@@ -139,7 +127,7 @@ export async function GET() {
           active: totalSessions,
           max: Math.max(totalSessions, 0)
         },
-        processes: processes.map((process: any) => ({
+        processes: processes.map((process) => ({
           id: process.id,
           name: process.name,
           type: process.type,

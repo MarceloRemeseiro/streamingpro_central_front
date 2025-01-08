@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { 
-  DevicePhoneMobileIcon, 
+  /* DevicePhoneMobileIcon, */ 
   PlusCircleIcon,
   Bars3Icon,
   XMarkIcon

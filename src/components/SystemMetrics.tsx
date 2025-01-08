@@ -69,9 +69,6 @@ export const SystemMetrics = () => {
         if (!response.ok) throw new Error('Error al obtener métricas');
         const data = await response.json();
        
-        // Calcular totales para debug
-        const cpuTotal = data.processes.reduce((acc: number, p: { cpu: number }) => acc + (p.cpu || 0), 0);
-        const memTotal = data.processes.reduce((acc: number, p: { memory: number }) => acc + (p.memory || 0), 0);
       
         setMetrics(data);
         setHasError(false);

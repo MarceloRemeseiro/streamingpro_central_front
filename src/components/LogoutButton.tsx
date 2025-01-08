@@ -1,11 +1,9 @@
 'use client';
 
 import { ArrowRightOnRectangleIcon } from "@heroicons/react/24/outline";
-import { useRouter } from "next/navigation";
 import { useAuth } from "./AuthProvider";
 
 export default function LogoutButton() {
-  const router = useRouter();
   const { logout } = useAuth();
 
   const handleLogout = async () => {

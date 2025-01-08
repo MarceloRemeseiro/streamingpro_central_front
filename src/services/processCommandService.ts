@@ -32,8 +32,7 @@ class ProcessCommandService {
         }
       }
 
-      // Solo intentamos parsear como JSON si hay contenido
-      const data = responseText ? JSON.parse(responseText) : {};
+     
     } catch (error) {
       console.error('Error in sendCommand:', error);
       throw error;

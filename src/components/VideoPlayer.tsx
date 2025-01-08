@@ -40,7 +40,7 @@ const VideoPlayer: FC<VideoPlayerProps> = ({
           backBufferLength: 90,
         });
 
-        hls.on(Hls.Events.ERROR, (_event, _data) => {
+        hls.on(Hls.Events.ERROR, () => {
           setIsPlaying(false);
           setIsConnecting(true);
           if (retryTimeoutRef.current) {
