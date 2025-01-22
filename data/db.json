@@ -1,3 +1,31 @@
 {
-  "devices": []
+  "devices": [
+    {
+      "device_id": "PLAYER_TEST_002",
+      "local_ip": "192.168.0.17",
+      "public_ip": "192.168.0.17",
+      "status": "OFFLINE",
+      "last_heartbeat": 1736673284296,
+      "assigned_srt": null,
+      "created_at": "2025-01-12T07:54:16.016Z"
+    },
+    {
+      "device_id": "PLAYER_TEST_001",
+      "local_ip": "192.168.0.17",
+      "public_ip": "192.168.0.17",
+      "status": "OFFLINE",
+      "last_heartbeat": 1736673284293,
+      "assigned_srt": null,
+      "created_at": "2025-01-12T07:54:21.055Z"
+    },
+    {
+      "device_id": "PLAYER_TEST_003",
+      "local_ip": "192.168.0.17",
+      "public_ip": "192.168.0.17",
+      "status": "OFFLINE",
+      "last_heartbeat": 1736673284292,
+      "assigned_srt": null,
+      "created_at": "2025-01-12T07:54:21.056Z"
+    }
+  ]
 }
