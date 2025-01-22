@@ -1,6 +1,7 @@
 'use client';
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { 
   /* DevicePhoneMobileIcon, */ 
   PlusCircleIcon,
@@ -10,9 +11,13 @@ import {
 import LogoutButton from "@/components/LogoutButton";
 import { useState } from "react";
 import { SystemMetrics } from "./SystemMetrics";
+import ThemeToggle from "./ThemeToggle";
+
+
 
 export default function Nav() {
   const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
 
   const menuItems = [
    /*  {
@@ -28,36 +33,40 @@ export default function Nav() {
   ];
 
   return (
-    <nav className="bg-nav-background shadow">
+    <nav className="bg-nav-background dark:bg-nav-background-dark border-b border-nav-border dark:border-nav-border-dark">
       <div className="container mx-auto px-4">
-        <div className="flex justify-between h-16">
+        <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
-            <Link href="/" className="text-xl font-bold text-text-primary">
-              StreamingPro
-            </Link>
+            <div className="flex-shrink-0">
+              <span className="text-2xl font-bold text-primary dark:text-primary-light">
+                StreamingPro
+              </span>
+            </div>
+         
           </div>
 
           {/* Desktop menu */}
+          <div className="hidden md:flex items-center gap-4">
             <SystemMetrics />
-          <div className="hidden md:flex items-center gap-2">
             {menuItems.map((item) => (
               <Link
-                key={item.href}
-                href={item.href}
-                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-nav-text hover:text-nav-hover transition-colors"
+              key={item.href}
+              href={item.href}
+              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-nav-text dark:text-nav-text-dark hover:text-nav-hover dark:hover:text-nav-hover-dark transition-colors"
               >
                 <item.icon className="h-5 w-5" />
                 <span>{item.label}</span>
               </Link>
             ))}
             <LogoutButton />
+            <ThemeToggle />
           </div>
 
           {/* Mobile menu button */}
           <div className="md:hidden flex items-center">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="p-2 rounded-md text-nav-text hover:text-nav-hover"
+              className="p-2 rounded-md text-nav-text dark:text-nav-text-dark hover:text-nav-hover dark:hover:text-nav-hover-dark"
             >
               {isOpen ? (
                 <XMarkIcon className="h-6 w-6" />
@@ -78,12 +87,12 @@ export default function Nav() {
           overflow-hidden
         `}
       >
-        <div className="px-4 pt-2 pb-3 space-y-1 border-t border-nav-border">
+        <div className="px-4 pt-2 pb-3 space-y-1 border-t border-nav-border dark:border-nav-border-dark">
           {menuItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="flex items-center gap-2 px-4 py-2 text-base font-medium text-nav-text hover:text-nav-hover transition-colors rounded-md"
+              className="flex items-center gap-2 px-4 py-2 text-base font-medium text-nav-text dark:text-nav-text-dark hover:text-nav-hover dark:hover:text-nav-hover-dark transition-colors rounded-md"
               onClick={() => setIsOpen(false)}
             >
               <item.icon className="h-5 w-5" />
@@ -92,7 +101,10 @@ export default function Nav() {
           ))}
           <div className="px-4 py-2">
             <SystemMetrics />
-            <LogoutButton />
+            <div className="flex items-center gap-2 mt-2">
+              <ThemeToggle />
+              <LogoutButton />
+            </div>
           </div>
         </div>
       </div>

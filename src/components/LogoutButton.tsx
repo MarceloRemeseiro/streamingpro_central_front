@@ -17,7 +17,7 @@ export default function LogoutButton() {
   return (
     <button
       onClick={handleLogout}
-      className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-nav-text hover:text-nav-hover transition-colors"
+      className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-nav-text dark:text-nav-text-dark hover:text-nav-hover dark:hover:text-nav-hover-dark transition-colors"
     >
       <ArrowRightOnRectangleIcon className="h-5 w-5" />
       <span>Cerrar Sesión</span>

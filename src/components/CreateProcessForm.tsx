@@ -47,14 +47,14 @@ export default function CreateProcessForm({ onSuccess }: CreateProcessFormProps)
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {error && (
-        <div className="bg-error-light p-4 rounded-md">
-          <p className="text-error">{error}</p>
+        <div className="bg-error-light dark:bg-error-dark p-4 rounded-md">
+          <p className="text-error dark:text-error-dark">{error}</p>
         </div>
       )}
 
       <div className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-text-muted mb-2">
+          <label className="block text-sm font-medium text-text-muted dark:text-text-muted-dark mb-2">
             Tipo de Conexión
           </label>
           <div className="flex gap-4">
@@ -63,8 +63,8 @@ export default function CreateProcessForm({ onSuccess }: CreateProcessFormProps)
               onClick={() => handleTypeChange("rtmp")}
               className={`px-4 py-2 rounded-md ${
                 formData.type === "rtmp"
-                  ? "bg-protocol-rtmp-background text-protocol-rtmp-text"
-                  : "bg-info-background text-text-muted"
+                  ? "bg-protocol-rtmp-background dark:bg-protocol-rtmp-background-dark text-protocol-rtmp-text dark:text-protocol-rtmp-text"
+                  : "bg-info-background dark:bg-info-background-dark text-text-muted dark:text-text"
               }`}
             >
               RTMP
@@ -74,8 +74,8 @@ export default function CreateProcessForm({ onSuccess }: CreateProcessFormProps)
               onClick={() => handleTypeChange("srt")}
               className={`px-4 py-2 rounded-md ${
                 formData.type === "srt"
-                  ? "bg-protocol-srt-background text-protocol-srt-text"
-                  : "bg-info-background text-text-muted"
+                  ? "bg-protocol-srt-background dark:bg-protocol-srt-background-dark text-protocol-srt-text dark:text-protocol-srt-text"
+                  : "bg-info-background dark:bg-info-background-dark text-text-muted dark:text-text"
               }`}
             >
               SRT
@@ -86,7 +86,7 @@ export default function CreateProcessForm({ onSuccess }: CreateProcessFormProps)
         <div>
           <label
             htmlFor="name"
-            className="block text-sm font-medium text-text-muted mb-2"
+            className="block text-sm font-medium text-text-muted dark:text-text-muted-dark mb-2"
           >
             Nombre
           </label>
@@ -97,9 +97,9 @@ export default function CreateProcessForm({ onSuccess }: CreateProcessFormProps)
             onChange={(e) =>
               setFormData((prev) => ({ ...prev, name: e.target.value }))
             }
-            className="w-full px-3 py-2 border border-border rounded-md 
-                     bg-card-background text-text-primary
-                     focus:ring-2 focus:ring-primary"
+            className="w-full px-3 py-2 border border-border dark:border-border-dark rounded-md 
+                     bg-card dark:bg-card-dark text-text dark:text-text-primary
+                     focus:ring-2 focus:ring-primary dark:focus:ring-primary-dark"
             required
           />
         </div>
@@ -107,7 +107,7 @@ export default function CreateProcessForm({ onSuccess }: CreateProcessFormProps)
         <div>
           <label
             htmlFor="description"
-            className="block text-sm font-medium text-text-muted mb-2"
+            className="block text-sm font-medium text-text-muted dark:text-text-muted-dark mb-2"
           >
             Descripción
           </label>
@@ -118,9 +118,9 @@ export default function CreateProcessForm({ onSuccess }: CreateProcessFormProps)
             onChange={(e) =>
               setFormData((prev) => ({ ...prev, description: e.target.value }))
             }
-            className="w-full px-3 py-2 border border-border rounded-md 
-                     bg-card-background text-text-primary
-                     focus:ring-2 focus:ring-primary"
+            className="w-full px-3 py-2 border border-border dark:border-border-dark rounded-md 
+                     bg-card dark:bg-card-dark text-text dark:text-text-primary
+                     focus:ring-2 focus:ring-primary dark:focus:ring-primary-dark"
           />
         </div>
 
@@ -128,11 +128,11 @@ export default function CreateProcessForm({ onSuccess }: CreateProcessFormProps)
           <button
             type="submit"
             disabled={isLoading}
-            className={`w-full px-4 py-2 rounded-md text-text-light
+            className={`w-full px-4 py-2 rounded-md text-text-light dark:text-text-light
                      ${
                        isLoading
-                         ? "bg-primary-light cursor-not-allowed"
-                         : "bg-primary hover:bg-primary-hover"
+                         ? "bg-primary-light dark:bg-primary-dark cursor-not-allowed"
+                         : "bg-primary dark:bg-primary-dark hover:bg-primary-hover dark:hover:bg-primary-hover-dark"
                      }`}
           >
             {isLoading ? "Creando..." : "Crear Proceso"}

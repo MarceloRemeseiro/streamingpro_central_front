@@ -59,7 +59,7 @@ export default function InputDetail({ id }: InputDetailProps) {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary dark:border-primary-dark"></div>
       </div>
     );
   }
@@ -67,7 +67,7 @@ export default function InputDetail({ id }: InputDetailProps) {
   if (error || !input) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <div className="text-error">
+        <div className="text-error dark:text-error-dark">
           {error || "Input no encontrado"}
         </div>
       </div>
@@ -86,7 +86,7 @@ export default function InputDetail({ id }: InputDetailProps) {
         <div className="flex items-center gap-2">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-nav-text hover:text-nav-hover transition-colors"
+            className="inline-flex items-center gap-2 text-nav-text dark:text-nav-text-dark hover:text-nav-hover dark:hover:text-nav-hover-dark transition-colors"
           >
             <ArrowLeftIcon className="h-5 w-5" />
             <span>Volver</span>
@@ -94,7 +94,7 @@ export default function InputDetail({ id }: InputDetailProps) {
         </div>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <h1 className="text-2xl font-bold text-text-primary">
+            <h1 className="text-2xl font-bold text-text dark:text-text-dark">
               {input.metadata?.["restreamer-ui"]?.meta?.name || "Input sin nombre"}
             </h1>
             <span
@@ -102,8 +102,8 @@ export default function InputDetail({ id }: InputDetailProps) {
                 px-3 py-1 text-sm rounded-full
                 ${
                   input.state?.exec === "running"
-                    ? "bg-success-light text-success-dark"
-                    : "bg-error-light text-error-dark"
+                    ? "bg-success-light dark:bg-success-dark text-success-dark dark:text-success-light"
+                    : "bg-error-light dark:bg-error-dark text-error-dark dark:text-error-light"
                 }
               `}
             >
@@ -116,7 +116,7 @@ export default function InputDetail({ id }: InputDetailProps) {
             onOutputCreated={handleProcessUpdated}
           />
         </div>
-        <p className="text-text-muted">
+        <p className="text-text-muted dark:text-text-muted-dark">
           {input.metadata?.["restreamer-ui"]?.meta?.description || "Sin descripción"}
         </p>
       </div>

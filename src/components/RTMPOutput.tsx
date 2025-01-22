@@ -82,7 +82,7 @@ const RTMPOutput: FC<RTMPOutputProps> = ({ output, onDeleted, onUpdated }) => {
 
   return (
     <>
-      <div className="p-2 bg-protocol-rtmp-output-background rounded border border-protocol-rtmp-output-border">
+      <div className="p-2 bg-protocol-rtmp-output-background dark:bg-protocol-rtmp-output-background-dark rounded border border-protocol-rtmp-output-border dark:border-protocol-rtmp-output-border-dark">
         <div className="flex justify-between items-center">
           <button
             onClick={() => setIsCollapsed(!isCollapsed)}
@@ -90,11 +90,11 @@ const RTMPOutput: FC<RTMPOutputProps> = ({ output, onDeleted, onUpdated }) => {
           >
             <div className="flex items-center gap-1">
               <ChevronDownIcon 
-                className={`h-3 w-3 text-protocol-rtmp-output-secondary transition-transform ${
+                className={`h-3 w-3 text-protocol-rtmp-output-secondary dark:text-protocol-rtmp-output-secondary-dark transition-transform ${
                   !isCollapsed ? 'transform rotate-180' : ''
                 }`}
               />
-              <h4 className="text-xs font-medium text-protocol-rtmp-output-text">
+              <h4 className="text-xs font-medium text-protocol-rtmp-output-text dark:text-protocol-rtmp-output-text-dark">
                 {name}
               </h4>
               <span
@@ -102,7 +102,7 @@ const RTMPOutput: FC<RTMPOutputProps> = ({ output, onDeleted, onUpdated }) => {
                   e.stopPropagation();
                   setModals(m => ({ ...m, editTitle: true }));
                 }}
-                className="p-0.5 text-protocol-rtmp-output-secondary hover:text-protocol-rtmp-output-hover cursor-pointer"
+                className="p-0.5 text-protocol-rtmp-output-secondary dark:text-protocol-rtmp-output-secondary-dark hover:text-protocol-rtmp-output-hover dark:hover:text-protocol-rtmp-output-hover-dark cursor-pointer"
               >
                 <PencilIcon className="h-3 w-3" />
               </span>
@@ -128,10 +128,10 @@ const RTMPOutput: FC<RTMPOutputProps> = ({ output, onDeleted, onUpdated }) => {
             <div className="space-y-1 mt-2">
               <div className="flex items-center justify-between">
                 <div className="min-w-0 flex-1 mr-1">
-                  <span className="text-[10px] font-medium text-protocol-rtmp-output-secondary">
+                  <span className="text-[10px] font-medium text-protocol-rtmp-output-secondary dark:text-protocol-rtmp-output-secondary-dark">
                     URL
                   </span>
-                  <p className="text-protocol-rtmp-output-text break-all text-[10px]">
+                  <p className="text-protocol-rtmp-output-text dark:text-protocol-rtmp-output-text-dark break-all text-[10px]">
                     {address}
                   </p>
                 </div>
@@ -139,10 +139,10 @@ const RTMPOutput: FC<RTMPOutputProps> = ({ output, onDeleted, onUpdated }) => {
 
               <div className="flex items-center justify-between">
                 <div className="min-w-0 flex-1 mr-1">
-                  <span className="text-[10px] font-medium text-protocol-rtmp-output-secondary">
+                  <span className="text-[10px] font-medium text-protocol-rtmp-output-secondary dark:text-protocol-rtmp-output-secondary-dark">
                     Stream Key
                   </span>
-                  <p className="text-protocol-rtmp-output-text break-all text-[10px]">
+                  <p className="text-protocol-rtmp-output-text dark:text-protocol-rtmp-output-text-dark break-all text-[10px]">
                     {streamKey}
                   </p>
                 </div>
@@ -152,7 +152,7 @@ const RTMPOutput: FC<RTMPOutputProps> = ({ output, onDeleted, onUpdated }) => {
             <div className="flex justify-end mt-1 space-x-1">
               <button
                 onClick={() => setModals(m => ({ ...m, edit: true }))}
-                className="p-0.5 text-protocol-rtmp-output-secondary hover:text-protocol-rtmp-output-hover"
+                className="p-0.5 text-protocol-rtmp-output-secondary dark:text-protocol-rtmp-output-secondary-dark hover:text-protocol-rtmp-output-hover dark:hover:text-protocol-rtmp-output-hover-dark"
                 title="Editar configuración"
               >
                 <Cog6ToothIcon className="h-4 w-4" />
@@ -160,7 +160,7 @@ const RTMPOutput: FC<RTMPOutputProps> = ({ output, onDeleted, onUpdated }) => {
               {output.state?.exec !== 'running' && (
                 <button
                   onClick={() => setModals(m => ({ ...m, delete: true }))}
-                  className="p-0.5 text-error hover:text-error-dark"
+                  className="p-0.5 text-error dark:text-error-dark hover:text-error-hover dark:hover:text-error-hover-dark"
                 >
                   <TrashIcon className="h-4 w-4" />
                 </button>

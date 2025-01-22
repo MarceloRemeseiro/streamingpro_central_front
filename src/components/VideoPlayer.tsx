@@ -110,15 +110,15 @@ const VideoPlayer: FC<VideoPlayerProps> = ({
           style={{ display: isPlaying ? "block" : "none" }}
         />
         {!isPlaying && (
-          <div className="absolute bg-card-background inset-0 flex items-center justify-center text-white">
+          <div className="absolute bg-card-background dark:bg-card-background-dark inset-0 flex items-center justify-center text-text dark:text-text-dark">
             <div className="text-center">
               {isConnecting ? (
                 <div className="flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                  <div className="w-2 h-2 bg-primary dark:bg-primary-dark rounded-full animate-pulse"></div>
                   <p className="text-lg">Conectando...</p>
                 </div>
               ) : (
-                <p className=" text-lg">NO HAY VIDEO DISPONIBLE</p>
+                <p className="text-lg">NO HAY VIDEO DISPONIBLE</p>
               )}
             </div>
           </div>

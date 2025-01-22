@@ -71,15 +71,15 @@ const EditProcessModal = ({ isOpen, onClose, process, onProcessUpdated }: EditPr
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-card-background p-6 text-left align-middle shadow-xl transition-all">
-                <Dialog.Title as="h3" className="text-xl font-semibold text-text-primary">
+              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-card-background dark:bg-card-background-dark p-6 text-left align-middle shadow-xl transition-all">
+                <Dialog.Title as="h3" className="text-xl font-semibold text-text dark:text-text-dark">
                   Editar Proceso
                 </Dialog.Title>
 
                 <form onSubmit={handleSubmit} className="mt-6">
                   <div className="space-y-6">
                     <div>
-                      <label htmlFor="name" className="block text-sm font-medium text-text-muted">
+                      <label htmlFor="name" className="block text-sm font-medium text-text-muted dark:text-text-muted-dark">
                         Nombre
                       </label>
                       <input
@@ -87,13 +87,13 @@ const EditProcessModal = ({ isOpen, onClose, process, onProcessUpdated }: EditPr
                         id="name"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        className="mt-2 block w-full rounded-lg border border-border bg-card-background px-3 py-2 text-text-primary placeholder-text-muted focus:border-primary focus:outline-none focus:ring-primary sm:text-sm"
+                        className="mt-2 block w-full rounded-lg border border-border dark:border-border-dark bg-card-background dark:bg-card-background-dark px-3 py-2 text-text dark:text-text-dark placeholder-text-muted dark:placeholder-text-muted-dark focus:border-primary dark:focus:border-primary-dark focus:outline-none focus:ring-primary dark:focus:ring-primary-dark sm:text-sm"
                         required
                       />
                     </div>
 
                     <div>
-                      <label htmlFor="description" className="block text-sm font-medium text-text-muted">
+                      <label htmlFor="description" className="block text-sm font-medium text-text-muted dark:text-text-muted-dark">
                         Descripción
                       </label>
                       <textarea
@@ -101,7 +101,7 @@ const EditProcessModal = ({ isOpen, onClose, process, onProcessUpdated }: EditPr
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
                         rows={3}
-                        className="mt-2 block w-full rounded-lg border border-border bg-card-background px-3 py-2 text-text-primary placeholder-text-muted focus:border-primary focus:outline-none focus:ring-primary sm:text-sm"
+                        className="mt-2 block w-full rounded-lg border border-border dark:border-border-dark bg-card-background dark:bg-card-background-dark px-3 py-2 text-text dark:text-text-dark placeholder-text-muted dark:placeholder-text-muted-dark focus:border-primary dark:focus:border-primary-dark focus:outline-none focus:ring-primary dark:focus:ring-primary-dark sm:text-sm"
                       />
                     </div>
                   </div>
@@ -110,14 +110,14 @@ const EditProcessModal = ({ isOpen, onClose, process, onProcessUpdated }: EditPr
                     <button
                       type="button"
                       onClick={onClose}
-                      className="inline-flex justify-center rounded-lg border border-border bg-card-background px-4 py-2 text-sm font-medium text-text-primary hover:bg-info-background focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                      className="inline-flex justify-center rounded-lg border border-border dark:border-border-dark bg-card-background dark:bg-card-background-dark px-4 py-2 text-sm font-medium text-text dark:text-text-dark hover:bg-info-background dark:hover:bg-info-background-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-primary dark:focus-visible:ring-primary-dark focus-visible:ring-offset-2"
                     >
                       Cancelar
                     </button>
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="inline-flex justify-center rounded-lg border border-transparent bg-primary px-4 py-2 text-sm font-medium text-text-light hover:bg-primary-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="inline-flex justify-center rounded-lg border border-transparent bg-primary dark:bg-primary-dark px-4 py-2 text-sm font-medium text-text-light hover:bg-primary-hover dark:hover:bg-primary-hover-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-primary dark:focus-visible:ring-primary-dark focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {isSubmitting ? 'Guardando...' : 'Guardar'}
                     </button>

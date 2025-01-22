@@ -45,10 +45,10 @@ export const Login = () => {
   return (
     <div className="container mx-auto px-4 h-screen flex items-center justify-center">
       <div className="w-full max-w-md">
-        <div className="bg-card-background rounded-xl shadow-lg p-8">
+        <div className="bg-card-background dark:bg-card-background-dark rounded-xl shadow-lg p-8">
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold tracking-tight text-text-primary">Streaming Pro</h2>
-            <p className="mt-2 text-sm text-text-muted">
+            <h2 className="text-3xl font-bold tracking-tight text-text dark:text-text-dark">Streaming Pro</h2>
+            <p className="mt-2 text-sm text-text-muted dark:text-text-muted-dark">
               Accede a tu cuenta para gestionar tus streams
             </p>
           </div>
@@ -72,7 +72,7 @@ export const Login = () => {
                     }))
                   }
                   required
-                  className="block w-full rounded-md border-0 py-1.5 px-3 text-text-muted ring-1 ring-inset ring-auth-input-border focus:ring-2 focus:ring-inset focus:ring-auth-input-focus sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 px-3 text-text dark:text-text-dark bg-card-background dark:bg-card-background-dark ring-1 ring-inset ring-auth-input-border dark:ring-auth-input-border-dark focus:ring-2 focus:ring-inset focus:ring-auth-input-focus dark:focus:ring-auth-input-focus-dark sm:text-sm sm:leading-6"
                   placeholder="Usuario"
                   disabled={isLoading}
                 />
@@ -94,14 +94,14 @@ export const Login = () => {
                     }))
                   }
                   required
-                  className="block w-full rounded-md border-0 py-1.5 px-3 text-text-muted ring-1 ring-inset ring-auth-input-border focus:ring-2 focus:ring-inset focus:ring-auth-input-focus sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 px-3 text-text dark:text-text-dark bg-card-background dark:bg-card-background-dark ring-1 ring-inset ring-auth-input-border dark:ring-auth-input-border-dark focus:ring-2 focus:ring-inset focus:ring-auth-input-focus dark:focus:ring-auth-input-focus-dark sm:text-sm sm:leading-6"
                   placeholder="Contraseña"
                   disabled={isLoading}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 flex items-center pr-3 text-text-muted hover:text-text-primary"
+                  className="absolute inset-y-0 right-0 flex items-center pr-3 text-text-muted dark:text-text-muted-dark hover:text-text dark:hover:text-text-dark"
                 >
                   {showPassword ? (
                     <EyeSlashIcon className="h-5 w-5" />
@@ -113,14 +113,14 @@ export const Login = () => {
             </div>
 
             {error && (
-              <div className="text-sm text-red-500 text-center">{error}</div>
+              <div className="text-sm text-error dark:text-error-dark text-center">{error}</div>
             )}
 
             <button
               type="submit"
               disabled={isLoading}
-              className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary ${
-                isLoading ? "opacity-50 cursor-not-allowed" : ""
+              className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-text-light bg-auth-button-enabled dark:bg-auth-button-enabled-dark hover:bg-auth-button-hover dark:hover:bg-auth-button-hover-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-auth-input-focus dark:focus:ring-auth-input-focus-dark ${
+                isLoading ? "opacity-50 cursor-not-allowed bg-auth-button-disabled dark:bg-auth-button-disabled-dark" : ""
               }`}
             >
               {isLoading ? "Iniciando sesión..." : "Iniciar sesión"}

@@ -9,11 +9,11 @@ import Link from "next/link";
 const getInputTypeStyles = (type: InputProcess["inputType"]) => {
   switch (type) {
     case "srt":
-      return "bg-protocol-srt-background border-protocol-srt-border";
+      return "bg-protocol-srt-background dark:bg-protocol-srt-background-dark border-protocol-srt-border dark:border-protocol-srt-border-dark";
     case "rtmp":
-      return "bg-protocol-rtmp-background border-protocol-rtmp-border";
+      return "bg-protocol-rtmp-background dark:bg-protocol-rtmp-background-dark border-protocol-rtmp-border dark:border-protocol-rtmp-border-dark";
     default:
-      return "bg-card-background border-border-color";
+      return "bg-card dark:bg-card-dark border-border dark:border-border-dark";
   }
 };
 
@@ -21,13 +21,13 @@ const getInputTypeLabel = (type: InputProcess["inputType"]) => {
   switch (type) {
     case "srt":
       return (
-        <span className="px-1.5 py-0.5 text-xs font-medium rounded-full bg-protocol-srt-background text-protocol-srt-text">
+        <span className="px-1.5 py-0.5 text-xs font-medium rounded-full bg-protocol-srt-background dark:bg-protocol-srt-background-dark text-protocol-srt-text dark:text-protocol-srt-text-dark">
           SRT
         </span>
       );
     case "rtmp":
       return (
-        <span className="px-1.5 py-0.5 text-xs font-medium rounded-full bg-protocol-rtmp-background text-protocol-rtmp-text">
+        <span className="px-1.5 py-0.5 text-xs font-medium rounded-full bg-protocol-rtmp-background dark:bg-protocol-rtmp-background-dark text-protocol-rtmp-text dark:text-protocol-rtmp-text-dark">
           RTMP
         </span>
       );
@@ -53,26 +53,26 @@ export default function ProcessPill({ process, onDelete, onProcessUpdated }: Pro
             {getInputTypeLabel(process.inputType)}
             <Link 
               href={`/input/${process.id}`}
-              className="font-medium text-sm text-text-primary hover:text-hover-link truncate transition-colors"
+              className="font-medium text-sm text-text dark:text-text-dark hover:text-hover-link dark:hover:text-hover-link-dark truncate transition-colors"
             >
               {process.metadata?.["restreamer-ui"]?.meta?.name || "Input sin nombre"}
             </Link>
           </div>
-          <p className="text-xs text-text-muted line-clamp-1 mt-0.5">
+          <p className="text-xs text-text-muted dark:text-text-muted-dark line-clamp-1 mt-0.5">
             {process.metadata?.["restreamer-ui"]?.meta?.description || "Sin descripción"}
           </p>
         </div>
         <div className="flex items-center gap-1 ml-2">
           <button
             onClick={() => setIsEditModalOpen(true)}
-            className="p-0.5 text-secondary hover:text-secondary-dark"
+            className="p-0.5 text-secondary dark:text-secondary-dark hover:text-secondary-hover dark:hover:text-secondary-hover-dark"
           >
             <PencilIcon className="h-3.5 w-3.5" />
           </button>
           {process.state?.exec !== "running" && (
             <button
               onClick={() => onDelete(process)}
-              className="p-0.5 text-error hover:text-error-dark"
+              className="p-0.5 text-error dark:text-error-dark hover:text-error-hover dark:hover:text-error-hover-dark"
             >
               <TrashIcon className="h-3.5 w-3.5" />
             </button>
@@ -86,8 +86,8 @@ export default function ProcessPill({ process, onDelete, onProcessUpdated }: Pro
             inline-flex items-center px-1.5 py-0.5 text-xs font-medium rounded-full
             ${
               process.state?.exec === "running"
-                ? "bg-success-light text-success-dark"
-                : "bg-error-light text-error-dark"
+                ? "bg-success-light dark:bg-success-dark text-success-dark dark:text-success-light"
+                : "bg-error-light dark:bg-error-dark text-error-dark dark:text-error-light"
             }
           `}
         >

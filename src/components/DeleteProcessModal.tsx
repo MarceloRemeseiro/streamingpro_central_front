@@ -38,17 +38,17 @@ const DeleteProcessModal = ({ isOpen, onClose, onConfirm, processName }: DeleteP
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-card-background p-6 text-left align-middle shadow-xl transition-all">
+              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-card-background dark:bg-card-background-dark p-6 text-left align-middle shadow-xl transition-all">
                 <div className="flex items-center gap-4">
                   <div className="flex-shrink-0">
-                    <ExclamationTriangleIcon className="h-6 w-6 text-error" aria-hidden="true" />
+                    <ExclamationTriangleIcon className="h-6 w-6 text-error dark:text-error-dark" aria-hidden="true" />
                   </div>
                   <div>
-                    <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-text-primary">
+                    <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-text dark:text-text-dark">
                       Eliminar Input
                     </Dialog.Title>
                     <div className="mt-2">
-                      <p className="text-sm text-text-muted">
+                      <p className="text-sm text-text-muted dark:text-text-muted-dark">
                         ¿Estás seguro que deseas eliminar {processName || "sin nombre"}? Esta acción no se puede deshacer.
                       </p>
                     </div>
@@ -58,14 +58,14 @@ const DeleteProcessModal = ({ isOpen, onClose, onConfirm, processName }: DeleteP
                 <div className="mt-6 flex justify-end gap-3">
                   <button
                     type="button"
-                    className="inline-flex justify-center rounded-md border border-border bg-card-background px-4 py-2 text-sm font-medium text-text-primary hover:bg-info-background focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                    className="inline-flex justify-center rounded-md border border-border dark:border-border-dark bg-card dark:bg-card-dark px-4 py-2 text-sm font-medium text-text dark:text-text-dark hover:bg-info-background dark:hover:bg-info-background-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-primary dark:focus-visible:ring-primary-dark focus-visible:ring-offset-2"
                     onClick={onClose}
                   >
                     Cancelar
                   </button>
                   <button
                     type="button"
-                    className="inline-flex justify-center rounded-md border border-transparent bg-error px-4 py-2 text-sm font-medium text-text-light hover:bg-error-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-error focus-visible:ring-offset-2"
+                    className="inline-flex justify-center rounded-md border border-transparent bg-error dark:bg-error-dark px-4 py-2 text-sm font-medium text-text-light hover:bg-error-hover dark:hover:bg-error-hover-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-error dark:focus-visible:ring-error-dark focus-visible:ring-offset-2"
                     onClick={() => {
                       onConfirm();
                       onClose();

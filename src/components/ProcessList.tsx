@@ -19,11 +19,11 @@ import { TrashIcon, PencilIcon } from "@heroicons/react/24/outline";
 const getInputTypeStyles = (type: InputProcess["inputType"]) => {
   switch (type) {
     case "srt":
-      return "bg-protocol-srt-background border-protocol-srt-border";
+      return "bg-protocol-srt-background dark:bg-protocol-srt-background-dark border-protocol-srt-border dark:border-protocol-srt-border-dark";
     case "rtmp":
-      return "bg-protocol-rtmp-background border-protocol-rtmp-border";
+      return "bg-protocol-rtmp-background dark:bg-protocol-rtmp-background-dark border-protocol-rtmp-border dark:border-protocol-rtmp-border-dark";
     default:
-      return "bg-card-background border-border-color";
+      return "bg-card dark:bg-card-dark border-border dark:border-border-dark";
   }
 };
 
@@ -31,13 +31,13 @@ const getInputTypeLabel = (type: InputProcess["inputType"]) => {
   switch (type) {
     case "srt":
       return (
-        <span className="px-2 py-1 text-xs font-medium rounded-full bg-protocol-srt-background text-protocol-srt-text">
+        <span className="px-2 py-1 text-xs font-medium rounded-full bg-protocol-srt-background dark:bg-protocol-srt-background-dark text-protocol-srt-text dark:text-protocol-srt-text-dark">
           SRT
         </span>
       );
     case "rtmp":
       return (
-        <span className="px-2 py-1 text-xs font-medium rounded-full bg-protocol-rtmp-background text-protocol-rtmp-text">
+        <span className="px-2 py-1 text-xs font-medium rounded-full bg-protocol-rtmp-background dark:bg-protocol-rtmp-background-dark text-protocol-rtmp-text dark:text-protocol-rtmp-text-dark">
           RTMP
         </span>
       );
@@ -75,19 +75,19 @@ const InputCard = memo(
               {getInputTypeLabel(input.inputType)}
               <Link 
                 href={`/input/${input.id}`}
-                className="font-medium hover:text-hover-link transition-colors"
+                className="font-medium text-text dark:text-text-dark hover:text-hover-link dark:hover:text-hover-link-dark transition-colors"
               >
                 {input.metadata?.["restreamer-ui"]?.meta?.name ||
                   "Input sin nombre"}
               </Link>
               <button
                 onClick={() => setIsEditModalOpen(true)}
-                className="p-1 text-secondary hover:text-secondary-dark"
+                className="p-1 text-secondary dark:text-secondary-dark hover:text-secondary-hover dark:hover:text-secondary-hover-dark"
               >
                 <PencilIcon className="h-4 w-4" />
               </button>
             </div>
-            <p className="text-sm text-text-muted">
+            <p className="text-sm text-text-muted dark:text-text-muted-dark">
               {input.metadata?.["restreamer-ui"]?.meta?.description ||
                 "Sin descripción"}
             </p>
@@ -137,7 +137,7 @@ const InputCard = memo(
         <div className="mt-4">
           {input.outputs.length > 0 ? (
             <div className="space-y-3">
-              <h4 className="text-base font-bold text-text-primary">
+              <h4 className="text-base font-bold text-text dark:text-text-dark">
                 Custom Outputs ({input.outputs.length})
               </h4>
               <div className="space-y-3">
@@ -177,7 +177,7 @@ const InputCard = memo(
               </div>
             </div>
           ) : (
-            <p className="text-base text-text-muted">
+            <p className="text-base text-text-muted dark:text-text-muted-dark">
               No hay outputs configurados
             </p>
           )}
@@ -248,18 +248,18 @@ const ProcessList = () => {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center p-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary dark:border-primary-dark"></div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="bg-error-light p-4 rounded-md">
-        <p className="text-error">{error}</p>
+      <div className="bg-error-light dark:bg-error-dark p-4 rounded-md">
+        <p className="text-error dark:text-error-dark">{error}</p>
         <button
           onClick={refresh}
-          className="mt-2 text-sm text-error hover:text-error-dark"
+          className="mt-2 text-sm text-error dark:text-error-dark hover:text-error-hover dark:hover:text-error-hover-dark"
         >
           Intentar de nuevo
         </button>
@@ -269,7 +269,7 @@ const ProcessList = () => {
 
   if (inputs.length === 0) {
     return (
-      <div className="text-center p-8 text-text-muted">
+      <div className="text-center p-8 text-text-muted dark:text-text-muted-dark">
         No hay inputs activos
       </div>
     );

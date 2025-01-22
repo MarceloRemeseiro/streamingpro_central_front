@@ -126,29 +126,29 @@ const CreateOutputModal: FC<CreateOutputModalProps> = ({
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-full max-w-2xl transform overflow-hidden rounded-lg bg-white dark:bg-gray-800 p-6 shadow-xl transition-all">
+              <Dialog.Panel className="w-full max-w-2xl transform overflow-hidden rounded-lg bg-card-background dark:bg-card-background-dark p-6 shadow-xl transition-all">
                 <div className="flex justify-between items-center mb-4">
-                  <Dialog.Title className="text-lg font-medium text-gray-900 dark:text-white">
+                  <Dialog.Title className="text-lg font-medium text-text dark:text-text-dark">
                     Crear Nuevo Output
                   </Dialog.Title>
                   <button
                     onClick={onClose}
-                    className="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300"
+                    className="text-text-muted dark:text-text-muted-dark hover:text-text dark:hover:text-text-dark"
                   >
                     <XMarkIcon className="h-6 w-6" />
                   </button>
                 </div>
 
                 <Tab.Group selectedIndex={selectedTab} onChange={setSelectedTab}>
-                  <Tab.List className="flex space-x-1 rounded-xl bg-gray-100 dark:bg-gray-700 p-1 mb-4">
+                  <Tab.List className="flex space-x-1 rounded-xl bg-info-background dark:bg-info-background-dark p-1 mb-4">
                     <Tab
                       className={({ selected }) =>
                         classNames(
                           'w-full rounded-lg py-2.5 text-sm font-medium leading-5 transition-all',
-                          'ring-white/60 ring-offset-2 ring-offset-blue-400 focus:outline-none',
+                          'ring-white/60 ring-offset-2 ring-offset-primary focus:outline-none',
                           selected
-                            ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/50 dark:text-purple-300 shadow'
-                            : 'text-gray-600 hover:bg-white/[0.12] hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200'
+                            ? 'bg-protocol-rtmp-background dark:bg-protocol-rtmp-background-dark text-protocol-rtmp-text dark:text-protocol-rtmp-text-dark shadow'
+                            : 'text-text-muted dark:text-text-muted-dark hover:text-text dark:hover:text-text-dark'
                         )
                       }
                     >
@@ -158,10 +158,10 @@ const CreateOutputModal: FC<CreateOutputModalProps> = ({
                       className={({ selected }) =>
                         classNames(
                           'w-full rounded-lg py-2.5 text-sm font-medium leading-5 transition-all',
-                          'ring-white/60 ring-offset-2 ring-offset-blue-400 focus:outline-none',
+                          'ring-white/60 ring-offset-2 ring-offset-primary focus:outline-none',
                           selected
-                            ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300 shadow'
-                            : 'text-gray-600 hover:bg-white/[0.12] hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200'
+                            ? 'bg-protocol-srt-background dark:bg-protocol-srt-background-dark text-protocol-srt-text dark:text-protocol-srt-text-dark shadow'
+                            : 'text-text-muted dark:text-text-muted-dark hover:text-text dark:hover:text-text-dark'
                         )
                       }
                     >
@@ -173,49 +173,52 @@ const CreateOutputModal: FC<CreateOutputModalProps> = ({
                     <Tab.Panel className=" ">
                       <div className="space-y-4 p-4">
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                          <label className="block text-sm font-medium text-text-muted dark:text-text-muted-dark mb-1">
                             Nombre
                           </label>
                           <input
                             type="text"
                             value={rtmpName}
                             onChange={(e) => setRtmpName(e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md 
-                            bg-white dark:bg-gray-800 text-gray-900 dark:text-white
-                            focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"                            placeholder="Nombre del output"
+                            className="w-full px-3 py-2 border border-border dark:border-border-dark rounded-md 
+                            bg-card-background dark:bg-card-background-dark text-text dark:text-text-dark
+                            focus:ring-2 focus:ring-protocol-rtmp-border dark:focus:ring-protocol-rtmp-border-dark"
+                            placeholder="Nombre del output"
                           />
                         </div>
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                          <label className="block text-sm font-medium text-text-muted dark:text-text-muted-dark mb-1">
                             URL
                           </label>
                           <input
                             type="text"
                             value={rtmpUrl}
                             onChange={(e) => setRtmpUrl(e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md 
-                            bg-white dark:bg-gray-800 text-gray-900 dark:text-white
-                            focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"                            placeholder="ejemplo.com/live o rtmp://ejemplo.com/live"
+                            className="w-full px-3 py-2 border border-border dark:border-border-dark rounded-md 
+                            bg-card-background dark:bg-card-background-dark text-text dark:text-text-dark
+                            focus:ring-2 focus:ring-protocol-rtmp-border dark:focus:ring-protocol-rtmp-border-dark"
+                            placeholder="ejemplo.com/live o rtmp://ejemplo.com/live"
                           />
                         </div>
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                          <label className="block text-sm font-medium text-text-muted dark:text-text-muted-dark mb-1">
                             Stream Key
                           </label>
                           <input
                             type="text"
                             value={rtmpStreamKey}
                             onChange={(e) => setRtmpStreamKey(e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md 
-                            bg-white dark:bg-gray-800 text-gray-900 dark:text-white
-                            focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"                            placeholder="Stream key"
+                            className="w-full px-3 py-2 border border-border dark:border-border-dark rounded-md 
+                            bg-card-background dark:bg-card-background-dark text-text dark:text-text-dark
+                            focus:ring-2 focus:ring-protocol-rtmp-border dark:focus:ring-protocol-rtmp-border-dark"
+                            placeholder="Stream key"
                           />
                         </div>
                         <div className="flex justify-end gap-3 pt-4">
                           <button
                             type="button"
                             onClick={onClose}
-                            className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors"
+                            className="px-4 py-2 text-sm font-medium text-text dark:text-text-dark hover:bg-info-background dark:hover:bg-info-background-dark rounded-md transition-colors"
                           >
                             Cancelar
                           </button>
@@ -223,7 +226,7 @@ const CreateOutputModal: FC<CreateOutputModalProps> = ({
                             type="button"
                             onClick={handleCreateRTMP}
                             disabled={isLoading || !rtmpName || !rtmpUrl || !rtmpStreamKey}
-                            className="px-4 py-2 text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 disabled:bg-purple-400 rounded-md transition-colors"
+                            className="px-4 py-2 text-sm font-medium text-text-light bg-protocol-rtmp-background dark:bg-protocol-rtmp-background-dark hover:bg-protocol-rtmp dark:hover:bg-protocol-rtmp-dark disabled:opacity-50 rounded-md transition-colors"
                           >
                             {isLoading ? 'Creando...' : 'Crear Output RTMP'}
                           </button>
@@ -234,88 +237,94 @@ const CreateOutputModal: FC<CreateOutputModalProps> = ({
                     <Tab.Panel>
                       <div className="space-y-4 p-4">
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                          <label className="block text-sm font-medium text-text-muted dark:text-text-muted-dark mb-1">
                             Nombre
                           </label>
                           <input
                             type="text"
                             value={srtName}
                             onChange={(e) => setSrtName(e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md 
-                            bg-white dark:bg-gray-800 text-gray-900 dark:text-white
-                            focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"                             placeholder="Nombre del output"
+                            className="w-full px-3 py-2 border border-border dark:border-border-dark rounded-md 
+                            bg-card-background dark:bg-card-background-dark text-text dark:text-text-dark
+                            focus:ring-2 focus:ring-protocol-srt-border dark:focus:ring-protocol-srt-border-dark"
+                            placeholder="Nombre del output"
                           />
                         </div>
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                          <label className="block text-sm font-medium text-text-muted dark:text-text-muted-dark mb-1">
                             URL
                           </label>
                           <input
                             type="text"
                             value={srtUrl}
                             onChange={(e) => setSrtUrl(e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md 
-                            bg-white dark:bg-gray-800 text-gray-900 dark:text-white
-                            focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"                            placeholder="ejemplo.com o srt://ejemplo.com"
+                            className="w-full px-3 py-2 border border-border dark:border-border-dark rounded-md 
+                            bg-card-background dark:bg-card-background-dark text-text dark:text-text-dark
+                            focus:ring-2 focus:ring-protocol-srt-border dark:focus:ring-protocol-srt-border-dark"
+                            placeholder="ejemplo.com o srt://ejemplo.com"
                           />
                         </div>
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                          <label className="block text-sm font-medium text-text-muted dark:text-text-muted-dark mb-1">
                             Puerto
                           </label>
                           <input
                             type="text"
                             value={srtPort}
                             onChange={(e) => setSrtPort(e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md 
-                            bg-white dark:bg-gray-800 text-gray-900 dark:text-white
-                            focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"                            placeholder="9000"
+                            className="w-full px-3 py-2 border border-border dark:border-border-dark rounded-md 
+                            bg-card-background dark:bg-card-background-dark text-text dark:text-text-dark
+                            focus:ring-2 focus:ring-protocol-srt-border dark:focus:ring-protocol-srt-border-dark"
+                            placeholder="9000"
                           />
                         </div>
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                          <label className="block text-sm font-medium text-text-muted dark:text-text-muted-dark mb-1">
                             Latency (ms)
                           </label>
                           <input
                             type="number"
                             value={srtLatency}
                             onChange={(e) => setSrtLatency(e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md 
-                            bg-white dark:bg-gray-800 text-gray-900 dark:text-white
-                            focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"                            placeholder="200"
+                            className="w-full px-3 py-2 border border-border dark:border-border-dark rounded-md 
+                            bg-card-background dark:bg-card-background-dark text-text dark:text-text-dark
+                            focus:ring-2 focus:ring-protocol-srt-border dark:focus:ring-protocol-srt-border-dark"
+                            placeholder="200"
                           />
                         </div>
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                          <label className="block text-sm font-medium text-text-muted dark:text-text-muted-dark mb-1">
                             Stream ID (opcional)
                           </label>
                           <input
                             type="text"
                             value={srtStreamId}
                             onChange={(e) => setSrtStreamId(e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md 
-                            bg-white dark:bg-gray-800 text-gray-900 dark:text-white
-                            focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"                            placeholder="stream_id"
+                            className="w-full px-3 py-2 border border-border dark:border-border-dark rounded-md 
+                            bg-card-background dark:bg-card-background-dark text-text dark:text-text-dark
+                            focus:ring-2 focus:ring-protocol-srt-border dark:focus:ring-protocol-srt-border-dark"
+                            placeholder="stream_id"
                           />
                         </div>
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                          <label className="block text-sm font-medium text-text-muted dark:text-text-muted-dark mb-1">
                             Passphrase (opcional)
                           </label>
                           <input
                             type="text"
                             value={srtPassphrase}
                             onChange={(e) => setSrtPassphrase(e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md 
-                            bg-white dark:bg-gray-800 text-gray-900 dark:text-white
-                            focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"                            placeholder="Contraseña"
+                            className="w-full px-3 py-2 border border-border dark:border-border-dark rounded-md 
+                            bg-card-background dark:bg-card-background-dark text-text dark:text-text-dark
+                            focus:ring-2 focus:ring-protocol-srt-border dark:focus:ring-protocol-srt-border-dark"
+                            placeholder="Contraseña"
                           />
                         </div>
                         <div className="flex justify-end gap-3 pt-4">
                           <button
                             type="button"
                             onClick={onClose}
-                            className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors"
+                            className="px-4 py-2 text-sm font-medium text-text dark:text-text-dark hover:bg-info-background dark:hover:bg-info-background-dark rounded-md transition-colors"
                           >
                             Cancelar
                           </button>
@@ -323,7 +332,7 @@ const CreateOutputModal: FC<CreateOutputModalProps> = ({
                             type="button"
                             onClick={handleCreateSRT}
                             disabled={isLoading || !srtName || !srtUrl || !srtPort}
-                            className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 rounded-md transition-colors"
+                            className="px-4 py-2 text-sm font-medium text-text-light bg-protocol-srt-background dark:bg-protocol-srt-background-dark hover:bg-protocol-srt dark:hover:bg-protocol-srt-dark disabled:opacity-50 rounded-md transition-colors"
                           >
                             {isLoading ? 'Creando...' : 'Crear Output SRT'}
                           </button>

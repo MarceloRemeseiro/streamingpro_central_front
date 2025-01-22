@@ -10,120 +10,236 @@ export default {
     extend: {
       colors: {
         // Colores base
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        background: {
+          DEFAULT: '#ffffff',
+          dark: '#130d44'    // Azul oscuro base
+        },
+        foreground: {
+          DEFAULT: '#1a1a1a',
+          dark: '#ffffff'
+        },
         card: {
-          background: "var(--card-background)",
+          background: {
+            DEFAULT: '#ffffff',
+            dark: '#0a0722'   // Azul más oscuro
+          }
         },
         // Colores de texto
         text: {
-          primary: "var(--text-primary)",
-          light: "var(--text-light)",
-          muted: "var(--text-muted)",
+          primary: {
+            DEFAULT: '#1a1a1a',
+            dark: '#ffffff'
+          },
+          light: '#ffffff',
+          muted: {
+            DEFAULT: '#6b7280',
+            dark: '#9ca3af'
+          }
         },
-        // Colores primarios
+        // Colores primarios y secundarios de marca
         primary: {
-          DEFAULT: "var(--primary)",
-          light: "var(--primary-light)",
-          dark: "var(--primary-dark)",
-          hover: "var(--primary-hover)",
+          DEFAULT: '#3B82F6',    // Azul brillante
+          light: '#60a5fa',
+          dark: '#2563EB',       // Azul más oscuro
+          hover: '#2563EB'
         },
-        // Colores secundarios
         secondary: {
-          DEFAULT: "var(--secondary)",
-          light: "var(--secondary-light)",
-          dark: "var(--secondary-dark)",
+          DEFAULT: '#2563EB',    // Azul más oscuro
+          light: '#3B82F6',
+          dark: '#1d4ed8',
+          hover: '#1d4ed8'
         },
         // Colores de estado
         success: {
-          DEFAULT: "var(--success)",
-          light: "var(--success-light)",
-          dark: "var(--success-dark)",
+          DEFAULT: '#22c55e',
+          light: '#bbf7d0',
+          dark: '#15803d'
         },
         warning: {
-          DEFAULT: "var(--warning)",
-          light: "var(--warning-light)",
-          dark: "var(--warning-dark)",
+          DEFAULT: '#f59e0b',
+          light: '#fde68a',
+          dark: '#b45309'
         },
-        // Colores de error
         error: {
-          DEFAULT: "var(--error)",
-          light: "var(--error-light)",
-          dark: "var(--error-dark)",
+          DEFAULT: '#ef4444',
+          light: '#fee2e2',
+          dark: '#b91c1c',
+          hover: '#dc2626'
         },
         // Colores para protocolos
         protocol: {
           srt: {
-            background: "var(--srt-background)",
-            border: "var(--srt-border)",
-            text: "var(--srt-text)",
-            output: {
-              background: "var(--srt-output-background)",
-              border: "var(--srt-output-border)",
-              text: "var(--srt-output-text)",
-              secondary: "var(--srt-output-text-secondary)",
-              hover: "var(--srt-output-text-hover)",
+            background: {
+              DEFAULT: '#dbeafe',
+              dark: 'rgba(59, 130, 246, 0.2)'   // primary con opacidad
             },
+            border: {
+              DEFAULT: '#bfdbfe',
+              dark: '#2563EB'                    // secondary
+            },
+            text: {
+              DEFAULT: '#1e40af',
+              dark: '#93c5fd'
+            },
+            output: {
+              background: {
+                DEFAULT: 'rgba(219, 234, 254, 0.6)',
+                dark: 'rgba(59, 130, 246, 0.3)'  // primary con opacidad
+              },
+              border: {
+                DEFAULT: '#93c5fd',
+                dark: '#2563EB'                   // secondary
+              },
+              text: {
+                DEFAULT: '#1e3a8a',
+                dark: '#bfdbfe'
+              },
+              secondary: {
+                DEFAULT: '#2563eb',
+                dark: '#60a5fa'
+              },
+              hover: {
+                DEFAULT: '#1d4ed8',
+                dark: '#93c5fd'
+              }
+            }
           },
           rtmp: {
-            background: "var(--rtmp-background)",
-            border: "var(--rtmp-border)",
-            text: "var(--rtmp-text)",
-            output: {
-              background: "var(--rtmp-output-background)",
-              border: "var(--rtmp-output-border)",
-              text: "var(--rtmp-output-text)",
-              secondary: "var(--rtmp-output-text-secondary)",
-              hover: "var(--rtmp-output-text-hover)",
+            background: {
+              DEFAULT: '#f3e8ff',
+              dark: 'rgba(147, 51, 234, 0.2)'
             },
-          },
+            border: {
+              DEFAULT: '#e9d5ff',
+              dark: '#6b21a8'
+            },
+            text: {
+              DEFAULT: '#6b21a8',
+              dark: '#e9d5ff'
+            },
+            output: {
+              background: {
+                DEFAULT: 'rgba(243, 232, 255, 0.6)',
+                dark: 'rgba(147, 51, 234, 0.3)'
+              },
+              border: {
+                DEFAULT: '#d8b4fe',
+                dark: '#7e22ce'
+              },
+              text: {
+                DEFAULT: '#6b21a8',
+                dark: '#f3e8ff'
+              },
+              secondary: {
+                DEFAULT: '#9333ea',
+                dark: '#c084fc'
+              },
+              hover: {
+                DEFAULT: '#7e22ce',
+                dark: '#e9d5ff'
+              }
+            }
+          }
         },
         // Estados del switch
         switch: {
-          off: "var(--switch-off)",
-          connecting: "var(--switch-connecting)",
-          running: "var(--switch-running)",
-          failed: "var(--switch-failed)",
+          off: {
+            DEFAULT: '#d1d5db',
+            dark: '#4b5563'
+          },
+          connecting: {
+            DEFAULT: '#f97316',
+            dark: '#c2410c'
+          },
+          running: {
+            DEFAULT: '#22c55e',
+            dark: '#15803d'
+          },
+          failed: {
+            DEFAULT: '#ef4444',
+            dark: '#b91c1c'
+          }
         },
         // Colores para packet loss
         packetLoss: {
-          good: "var(--packet-loss-good)",
-          bad: "var(--packet-loss-bad)",
-          text: "var(--packet-loss-text)",
+          good: {
+            DEFAULT: '#22c55e',
+            dark: '#34d399'
+          },
+          bad: {
+            DEFAULT: '#ef4444',
+            dark: '#f87171'
+          },
+          text: {
+            DEFAULT: '#9ca3af',
+            dark: '#9ca3af'
+          }
         },
         // Navegación
         nav: {
-          background: "var(--nav-background)",
-          border: "var(--nav-border)",
-          text: "var(--nav-text)",
-          hover: "var(--nav-text-hover)",
-          active: "var(--nav-text-active)",
+          background: {
+            DEFAULT: '#ffffff',
+            dark: '#0a0722'      // darker
+          },
+          border: {
+            DEFAULT: '#e5e7eb',
+            dark: '#130d44'      // dark
+          },
+          text: {
+            DEFAULT: '#4b5563',
+            dark: '#9ca3af'
+          },
+          hover: {
+            DEFAULT: '#3B82F6',  // primary
+            dark: '#60a5fa'      // primary light
+          },
+          active: {
+            DEFAULT: '#2563EB',  // secondary
+            dark: '#3B82F6'      // primary
+          }
         },
         // Autenticación
         auth: {
           input: {
-            border: "var(--auth-input-border)",
-            focus: "var(--auth-input-focus)",
+            border: {
+              DEFAULT: '#d1d5db',
+              dark: '#130d44'    // dark
+            },
+            focus: {
+              DEFAULT: '#3B82F6', // primary
+              dark: '#2563EB'     // secondary
+            }
           },
           button: {
-            disabled: "var(--auth-button-disabled)",
-            enabled: "var(--auth-button-enabled)",
-            hover: "var(--auth-button-hover)",
-          },
+            disabled: {
+              DEFAULT: '#60a5fa', // primary light
+              dark: '#2563EB'     // secondary
+            },
+            enabled: {
+              DEFAULT: '#3B82F6', // primary
+              dark: '#2563EB'     // secondary
+            },
+            hover: {
+              DEFAULT: '#2563EB', // secondary
+              dark: '#1d4ed8'     // secondary dark
+            }
+          }
         },
-        // Colores específicos
-        hover: {
-          link: "var(--hover-link)",
-        },
+        // Bordes y otros
         border: {
-          DEFAULT: "var(--border-color)",
+          DEFAULT: '#e5e7eb',
+          dark: '#130d44'        // dark
         },
-        // Fondos especiales
         info: {
-          background: "var(--info-background)",
-        },
-      },
-    },
+          background: {
+            DEFAULT: '#f3f4f6',
+            dark: '#130d44'      // dark
+          }
+        }
+      }
+    }
   },
-  plugins: [],
+  darkMode: 'class',
+  plugins: []
 } satisfies Config;
+

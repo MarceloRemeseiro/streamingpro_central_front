@@ -53,7 +53,7 @@ export default function CreatePage() {
       <div className="flex items-center gap-2 mb-4">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
+          className="inline-flex items-center gap-2 text-text-muted hover:text-text dark:text-text-muted-dark dark:hover:text-text-dark transition-colors"
         >
           <ArrowLeftIcon className="h-5 w-5" />
           <span>Volver</span>
@@ -61,7 +61,7 @@ export default function CreatePage() {
       </div>
 
       <div className="max-w-2xl mx-auto">
-        <h1 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">
+        <h1 className="text-2xl font-semibold text-text dark:text-text-dark mb-6">
           Crear nuevo Input
         </h1>
 
@@ -69,17 +69,17 @@ export default function CreatePage() {
           <CreateProcessForm onSuccess={handleSuccess} />
         </div>
 
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">
+        <h2 className="text-xl font-semibold text-text dark:text-text-dark mb-6">
           Inputs creados
         </h2>
 
         {isLoading ? (
           <div className="flex justify-center items-center p-8">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary dark:border-primary-dark"></div>
           </div>
         ) : error ? (
-          <div className="bg-red-50 dark:bg-red-900/10 p-4 rounded-md">
-            <p className="text-red-600 dark:text-red-400">{error}</p>
+          <div className="bg-error-light dark:bg-error-dark p-4 rounded-md">
+            <p className="text-error dark:text-error-dark">{error}</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

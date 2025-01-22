@@ -58,7 +58,7 @@ const initialMetrics: SystemMetrics = {
   processes: []
 };
 
-export const SystemMetrics = () => {
+export function SystemMetrics() {
   const [metrics, setMetrics] = useState<SystemMetrics>(initialMetrics);
   const [hasError, setHasError] = useState<boolean>(false);
 
@@ -114,23 +114,22 @@ export const SystemMetrics = () => {
   const totalMemory = metrics.processes.reduce((acc, process) => acc + (process.memory || 0), 0);
 
   return (
-    <div className="flex items-center gap-4 px-4 py-2 bg-card-background rounded-lg text-sm">
+    <div className="flex items-center gap-4 px-4 py-2 bg-card dark:bg-card-dark rounded-lg text-sm">
       {/* CPU */}
       <div className="flex items-center gap-2">
-        <CpuChipIcon className="h-4 w-4 text-primary" />
+        <CpuChipIcon className="h-4 w-4 text-primary dark:text-primary-light" />
         <div className="flex flex-col">
-          <span className="text-text-primary">
+          <span className="text-text dark:text-text-dark">
             {formatCPU(totalCPU)}%
           </span>
-          
         </div>
       </div>
 
       {/* Memoria */}
       <div className="flex items-center gap-2">
-        <ServerIcon className="h-4 w-4 text-primary" />
+        <ServerIcon className="h-4 w-4 text-primary dark:text-primary-light" />
         <div className="flex flex-col">
-          <span className="text-text-primary">
+          <span className="text-text dark:text-text-dark">
             {formatMemory(totalMemory)} MB
           </span>
         </div>
@@ -138,9 +137,9 @@ export const SystemMetrics = () => {
 
       {/* Network IN */}
       <div className="flex items-center gap-2">
-        <ArrowDownIcon className="h-4 w-4 text-green-500" />
+        <ArrowDownIcon className="h-4 w-4 text-success dark:text-success-dark" />
         <div className="flex flex-col">
-          <span className="text-text-primary">
+          <span className="text-text dark:text-text-dark">
             {formatBandwidth(metrics.network.bandwidth_rx)}
           </span>
         </div>
@@ -148,9 +147,9 @@ export const SystemMetrics = () => {
 
       {/* Network OUT */}
       <div className="flex items-center gap-2">
-        <ArrowUpIcon className="h-4 w-4 text-blue-500" />
+        <ArrowUpIcon className="h-4 w-4 text-primary dark:text-primary-light" />
         <div className="flex flex-col">
-          <span className="text-text-primary">
+          <span className="text-text dark:text-text-dark">
             {formatBandwidth(metrics.network.bandwidth_tx)}
           </span>
         </div>
@@ -158,13 +157,13 @@ export const SystemMetrics = () => {
 
       {/* Active Sessions */}
       <div className="flex items-center gap-2">
-        <UserGroupIcon className="h-4 w-4 text-primary" />
+        <UserGroupIcon className="h-4 w-4 text-primary dark:text-primary-light" />
         <div className="flex flex-col">
-          <span className="text-text-primary">
-            {metrics.sessions.active-2} Viewer{metrics.sessions.active !== 1 ? 's' : ''}
+          <span className="text-text dark:text-text-dark">
+            {metrics.sessions.active} Viewer{metrics.sessions.active !== 1 ? 's' : ''}
           </span>
         </div>
       </div>
     </div>
   );
-}; 
+} 

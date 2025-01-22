@@ -97,7 +97,7 @@ const SRTOutput: FC<SRTOutputProps> = ({ output, onDeleted, onUpdated }) => {
 
   return (
     <>
-      <div className="p-2 bg-protocol-srt-output-background rounded border border-protocol-srt-output-border">
+      <div className="p-2 bg-protocol-srt-output-background dark:bg-protocol-srt-output-background-dark rounded border border-protocol-srt-output-border dark:border-protocol-srt-output-border-dark">
         <div className="flex justify-between items-center">
           <button
             onClick={() => setIsCollapsed(!isCollapsed)}
@@ -105,11 +105,11 @@ const SRTOutput: FC<SRTOutputProps> = ({ output, onDeleted, onUpdated }) => {
           >
             <div className="flex items-center gap-1">
               <ChevronDownIcon
-                className={`h-3 w-3 text-protocol-srt-output-secondary transition-transform ${
+                className={`h-3 w-3 text-protocol-srt-output-secondary dark:text-protocol-srt-output-secondary-dark transition-transform ${
                   !isCollapsed ? "transform rotate-180" : ""
                 }`}
               />
-              <h4 className="text-xs font-medium text-protocol-srt-output-text">
+              <h4 className="text-xs font-medium text-protocol-srt-output-text dark:text-protocol-srt-output-text-dark">
                 {name}
               </h4>
               <span
@@ -117,7 +117,7 @@ const SRTOutput: FC<SRTOutputProps> = ({ output, onDeleted, onUpdated }) => {
                   e.stopPropagation();
                   setModals((m) => ({ ...m, editTitle: true }));
                 }}
-                className="p-0.5 text-protocol-srt-output-secondary hover:text-protocol-srt-output-hover cursor-pointer"
+                className="p-0.5 text-protocol-srt-output-secondary dark:text-protocol-srt-output-secondary-dark hover:text-protocol-srt-output-hover dark:hover:text-protocol-srt-output-hover-dark cursor-pointer"
               >
                 <PencilIcon className="h-3 w-3" />
               </span>
@@ -142,49 +142,49 @@ const SRTOutput: FC<SRTOutputProps> = ({ output, onDeleted, onUpdated }) => {
           <>
             <div className="grid grid-cols-2 gap-1 text-[10px] mt-2">
               <div>
-                <span className="font-medium text-protocol-srt-output-secondary">
+                <span className="font-medium text-protocol-srt-output-secondary dark:text-protocol-srt-output-secondary-dark">
                   URL
                 </span>
-                <p className="text-protocol-srt-output-text break-all">{url}</p>
+                <p className="text-protocol-srt-output-text dark:text-protocol-srt-output-text-dark break-all">{url}</p>
               </div>
               <div>
-                <span className="font-medium text-protocol-srt-output-secondary">
+                <span className="font-medium text-protocol-srt-output-secondary dark:text-protocol-srt-output-secondary-dark">
                   Puerto
                 </span>
-                <p className="text-protocol-srt-output-text">{port}</p>
+                <p className="text-protocol-srt-output-text dark:text-protocol-srt-output-text-dark">{port}</p>
               </div>
               <div>
-                <span className="font-medium text-protocol-srt-output-secondary">
+                <span className="font-medium text-protocol-srt-output-secondary dark:text-protocol-srt-output-secondary-dark">
                   Stream ID
                 </span>
-                <p className="text-protocol-srt-output-text break-all">
+                <p className="text-protocol-srt-output-text dark:text-protocol-srt-output-text-dark break-all">
                   {streamId}
                 </p>
               </div>
               <div>
-                <span className="font-medium text-protocol-srt-output-secondary">
+                <span className="font-medium text-protocol-srt-output-secondary dark:text-protocol-srt-output-secondary-dark">
                   Latency
                 </span>
-                <p className="text-protocol-srt-output-text">{latency}ms</p>
+                <p className="text-protocol-srt-output-text dark:text-protocol-srt-output-text-dark">{latency}ms</p>
               </div>
               <div>
-                <span className="font-medium text-protocol-srt-output-secondary">
+                <span className="font-medium text-protocol-srt-output-secondary dark:text-protocol-srt-output-secondary-dark">
                   Mode
                 </span>
-                <p className="text-protocol-srt-output-text">{mode}</p>
+                <p className="text-protocol-srt-output-text dark:text-protocol-srt-output-text-dark">{mode}</p>
               </div>
               <div>
-                <span className="font-medium text-protocol-srt-output-secondary">
+                <span className="font-medium text-protocol-srt-output-secondary dark:text-protocol-srt-output-secondary-dark">
                   Passphrase
                 </span>
-                <p className="text-protocol-srt-output-text">{passphrase}</p>
+                <p className="text-protocol-srt-output-text dark:text-protocol-srt-output-text-dark">{passphrase}</p>
               </div>
             </div>
 
             <div className="flex justify-end mt-1 space-x-1">
               <button
                 onClick={() => setModals((m) => ({ ...m, edit: true }))}
-                className="p-0.5 text-protocol-srt-output-secondary hover:text-protocol-srt-output-hover"
+                className="p-0.5 text-protocol-srt-output-secondary dark:text-protocol-srt-output-secondary-dark hover:text-protocol-srt-output-hover dark:hover:text-protocol-srt-output-hover-dark"
                 title="Editar configuración"
               >
                 <Cog6ToothIcon className="h-4 w-4" />
@@ -192,7 +192,7 @@ const SRTOutput: FC<SRTOutputProps> = ({ output, onDeleted, onUpdated }) => {
               {output.state?.exec !== "running" && (
                 <button
                   onClick={() => setModals((m) => ({ ...m, delete: true }))}
-                  className="p-0.5 text-error hover:text-error-dark"
+                  className="p-0.5 text-error dark:text-error-dark hover:text-error-hover dark:hover:text-error-hover-dark"
                 >
                   <TrashIcon className="h-4 w-4" />
                 </button>
