@@ -1,6 +1,7 @@
 import { FC, useState } from "react";
 import CopyButton from "./CopyButton";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
+import CollapseButton from '@/components/ui/CollapseButton';
 
 interface OutputDefaultProps {
   streamId: string;
@@ -39,16 +40,10 @@ const OutputDefault: FC<OutputDefaultProps> = ({ streamId }) => {
         <h3 className="text-base font-medium text-text dark:text-text-dark">
           Outputs por defecto
         </h3>
-        <button
+        <CollapseButton
+          isCollapsed={isCollapsed}
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className="p-1 hover:bg-info-background dark:hover:bg-info-background-dark rounded-full transition-colors"
-        >
-          {isCollapsed ? (
-            <ChevronDownIcon className="h-4 w-4 text-secondary dark:text-secondary-dark" />
-          ) : (
-            <ChevronUpIcon className="h-4 w-4 text-secondary dark:text-secondary-dark" />
-          )}
-        </button>
+        />
       </div>
 
       {!isCollapsed && (

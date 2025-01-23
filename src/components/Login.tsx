@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import { appAuth } from "@/services/appAuth";
 import { useAuth } from "./AuthProvider";
+import Button from '@/components/ui/Button';
 
 export const Login = () => {
   const { login } = useAuth();
@@ -116,15 +117,15 @@ export const Login = () => {
               <div className="text-sm text-error dark:text-error-dark text-center">{error}</div>
             )}
 
-            <button
+            <Button
               type="submit"
-              disabled={isLoading}
-              className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-text-light bg-auth-button-enabled dark:bg-auth-button-enabled-dark hover:bg-auth-button-hover dark:hover:bg-auth-button-hover-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-auth-input-focus dark:focus:ring-auth-input-focus-dark ${
-                isLoading ? "opacity-50 cursor-not-allowed bg-auth-button-disabled dark:bg-auth-button-disabled-dark" : ""
-              }`}
+              variant="primary"
+              isLoading={isLoading}
+              loadingText="Iniciando sesión..."
+              fullWidth
             >
-              {isLoading ? "Iniciando sesión..." : "Iniciar sesión"}
-            </button>
+              Iniciar sesión
+            </Button>
           </form>
         </div>
       </div>

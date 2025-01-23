@@ -3,10 +3,11 @@ import { OutputProcess } from "@/types/processTypes";
 import ProcessSwitch from "./ProcessSwitch";
 import { processCommandService } from "@/services/processCommandService";
 import { TrashIcon, PencilIcon, Cog6ToothIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
-import DeleteProcessModal from "./DeleteProcessModal";
-import EditRTMPOutputModal from "./EditRTMPOutputModal";
-import EditRTMPTitleModal from "./EditRTMPTitleModal";
+import DeleteProcessModal from "./modals/DeleteProcessModal";
+import EditRTMPOutputModal from "./modals/EditRTMPOutputModal";
+import EditRTMPTitleModal from "./modals/EditRTMPTitleModal";
 import SwitchWarning from "./SwitchWarning";
+import CollapseButton from '@/components/ui/CollapseButton';
 
 interface RTMPOutputProps {
   output: OutputProcess;
@@ -88,38 +89,37 @@ const RTMPOutput: FC<RTMPOutputProps> = ({ output, onDeleted, onUpdated }) => {
             onClick={() => setIsCollapsed(!isCollapsed)}
             className="flex items-center gap-2 flex-1 group"
           >
-            <div className="flex items-center gap-1">
-              <ChevronDownIcon 
-                className={`h-3 w-3 text-protocol-rtmp-output-secondary dark:text-protocol-rtmp-output-secondary-dark transition-transform ${
-                  !isCollapsed ? 'transform rotate-180' : ''
-                }`}
-              />
-              <h4 className="text-xs font-medium text-protocol-rtmp-output-text dark:text-protocol-rtmp-output-text-dark">
-                {name}
-              </h4>
-              <span
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setModals(m => ({ ...m, editTitle: true }));
-                }}
-                className="p-0.5 text-protocol-rtmp-output-secondary dark:text-protocol-rtmp-output-secondary-dark hover:text-protocol-rtmp-output-hover dark:hover:text-protocol-rtmp-output-hover-dark cursor-pointer"
-              >
-                <PencilIcon className="h-3 w-3" />
-              </span>
-            </div>
+            <CollapseButton
+              isCollapsed={isCollapsed}
+              protocol="rtmp"
+            />
+            <h4 className="text-xs font-medium text-protocol-rtmp-output-text dark:text-protocol-rtmp-output-text-dark">
+              {name}
+            </h4>
           </button>
-          <div className="relative">
-            <ProcessSwitch
-              processId={output.id}
-              state={output.state?.exec || 'finished'}
-              lastLogLine={output.state?.last_logline}
-              onStateChange={handleStateChange}
-            />
-            <SwitchWarning 
-              isVisible={showStopWarning}
-              onConfirm={handleConfirmStop}
-              onCancel={handleCancelStop}
-            />
+          <div className="flex items-center gap-2">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setModals(m => ({ ...m, editTitle: true }));
+              }}
+              className="p-0.5 text-protocol-rtmp-output-secondary dark:text-protocol-rtmp-output-secondary-dark hover:text-protocol-rtmp-output-hover dark:hover:text-protocol-rtmp-output-hover-dark cursor-pointer"
+            >
+              <PencilIcon className="h-3 w-3" />
+            </button>
+            <div className="relative">
+              <ProcessSwitch
+                processId={output.id}
+                state={output.state?.exec || 'finished'}
+                lastLogLine={output.state?.last_logline}
+                onStateChange={handleStateChange}
+              />
+              <SwitchWarning 
+                isVisible={showStopWarning}
+                onConfirm={handleConfirmStop}
+                onCancel={handleCancelStop}
+              />
+            </div>
           </div>
         </div>
 

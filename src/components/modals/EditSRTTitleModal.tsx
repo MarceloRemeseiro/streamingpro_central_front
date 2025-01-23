@@ -2,7 +2,9 @@ import { FC, useState } from 'react';
 import { Dialog } from '@headlessui/react';
 import { OutputProcess } from '@/types/processTypes';
 import { outputService } from '@/services/outputService';
-import Modal from './Modal';
+import Modal from '../Modal';
+import Input from '@/components/ui/Input';
+import Button from '@/components/ui/Button';
 
 interface EditSRTTitleModalProps {
   isOpen: boolean;
@@ -45,21 +47,15 @@ const EditSRTTitleModal: FC<EditSRTTitleModalProps> = ({
       </Dialog.Title>
 
       <form onSubmit={handleSubmit} className="mt-4">
-        <div>
-          <label htmlFor="name" className="block text-sm font-medium text-text-muted dark:text-text-muted-dark">
-            Nombre
-          </label>
-          <input
-            type="text"
-            id="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="w-full px-3 py-2 border border-border dark:border-border-dark rounded-md 
-            bg-card-background dark:bg-card-background-dark text-text dark:text-text-dark
-            focus:ring-2 focus:ring-protocol-srt-border dark:focus:ring-protocol-srt-border-dark"
-            required
-          />
-        </div>
+        <Input
+          label="Nombre"
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Nombre del output"
+          protocol="srt"
+          required
+        />
 
         {error && (
           <div className="mt-4 text-sm text-error dark:text-error-dark">
@@ -67,21 +63,22 @@ const EditSRTTitleModal: FC<EditSRTTitleModalProps> = ({
           </div>
         )}
 
-        <div className="mt-6 flex justify-end space-x-3">
-          <button
+        <div className="mt-8 flex justify-end gap-3">
+          <Button
             type="button"
+            variant="secondary"
             onClick={onClose}
-            className="rounded-md border border-border dark:border-border-dark bg-card dark:bg-card-dark px-4 py-2 text-sm font-medium text-text dark:text-text-dark shadow-sm hover:bg-info-background dark:hover:bg-info-background-dark focus:outline-none focus:ring-2 focus:ring-protocol-srt-border dark:focus:ring-protocol-srt-border-dark focus:ring-offset-2"
           >
             Cancelar
-          </button>
-          <button
+          </Button>
+          <Button
             type="submit"
-            disabled={isLoading}
-            className="inline-flex justify-center rounded-lg border border-transparent bg-primary dark:bg-primary-dark px-4 py-2 text-sm font-medium text-text-light hover:bg-primary-hover dark:hover:bg-primary-hover-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-primary dark:focus-visible:ring-primary-dark focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-            {isLoading ? 'Guardando...' : 'Guardar'}
-          </button>
+            variant="primary"
+            isLoading={isLoading}
+            loadingText="Guardando..."
+          >
+            Guardar
+          </Button>
         </div>
       </form>
     </Modal>

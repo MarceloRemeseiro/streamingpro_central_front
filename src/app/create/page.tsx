@@ -6,7 +6,7 @@ import CreateProcessForm from "@/components/CreateProcessForm";
 import ProcessPill from "@/components/ProcessPill";
 import { useProcesses } from "@/hooks/useProcesses";
 import { useState } from "react";
-import DeleteProcessModal from "@/components/DeleteProcessModal";
+import DeleteProcessModal from "@/components/modals/DeleteProcessModal";
 import { InputProcess } from "@/types/processTypes";
 
 export default function CreatePage() {

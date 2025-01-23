@@ -6,13 +6,16 @@ import {
   ProcessType
 } from "@/types/createProcessTypes";
 import { processService } from "@/services/process";
-
+import Input from "@/components/ui/Input";
+import Textarea from "@/components/ui/Textarea";
+import Button from '@/components/ui/Button';
 
 interface CreateProcessFormProps {
   onSuccess?: () => void;
+  onCancel?: () => void;
 }
 
-export default function CreateProcessForm({ onSuccess }: CreateProcessFormProps) {
+export default function CreateProcessForm({ onSuccess, onCancel }: CreateProcessFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState<CreateProcessInput>({
@@ -64,7 +67,7 @@ export default function CreateProcessForm({ onSuccess }: CreateProcessFormProps)
               className={`px-4 py-2 rounded-md ${
                 formData.type === "rtmp"
                   ? "bg-protocol-rtmp-background dark:bg-protocol-rtmp-background-dark text-protocol-rtmp-text dark:text-text-light"
-                  : "bg-info-background dark:bg-info-background-dark text-text-muted dark:text-text-muted-dark  "
+                  : "bg-info-background dark:bg-info-background-dark text-text-muted dark:text-text-muted-dark"
               }`}
             >
               RTMP
@@ -75,7 +78,7 @@ export default function CreateProcessForm({ onSuccess }: CreateProcessFormProps)
               className={`px-4 py-2 rounded-md ${
                 formData.type === "srt"
                   ? "bg-protocol-srt-background dark:bg-protocol-srt-background-dark text-protocol-srt-text dark:text-text-light"
-                  : "bg-info-background dark:bg-info-background-dark text-text-muted dark:text-text-muted-dark  "
+                  : "bg-info-background dark:bg-info-background-dark text-text-muted dark:text-text-muted-dark"
               }`}
             >
               SRT
@@ -83,60 +86,34 @@ export default function CreateProcessForm({ onSuccess }: CreateProcessFormProps)
           </div>
         </div>
 
-        <div>
-          <label
-            htmlFor="name"
-            className="block text-sm font-medium text-text-muted dark:text-text-muted-dark mb-2"
-          >
-            Nombre
-          </label>
-          <input
-            type="text"
-            id="name"
-            value={formData.name}
-            onChange={(e) =>
-              setFormData((prev) => ({ ...prev, name: e.target.value }))
-            }
-            className="w-full px-3 py-2 border border-border dark:border-border-dark rounded-md 
-                     bg-card dark:bg-card-dark text-text dark:text-text-primary
-                     focus:ring-2 focus:ring-primary dark:focus:ring-primary-dark"
-            required
-          />
-        </div>
+        <Input
+          label="Nombre"
+          type="text"
+          value={formData.name}
+          onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
+          placeholder="Nombre del proceso"
+          protocol={formData.type}
+          required
+        />
 
-        <div>
-          <label
-            htmlFor="description"
-            className="block text-sm font-medium text-text-muted dark:text-text-muted-dark mb-2"
-          >
-            Descripción
-          </label>
-          <input
-            type="text"
-            id="description"
-            value={formData.description}
-            onChange={(e) =>
-              setFormData((prev) => ({ ...prev, description: e.target.value }))
-            }
-            className="w-full px-3 py-2 border border-border dark:border-border-dark rounded-md 
-                     bg-card dark:bg-card-dark text-text dark:text-text-primary
-                     focus:ring-2 focus:ring-primary dark:focus:ring-primary-dark"
-          />
-        </div>
+        <Textarea
+          label="Descripción"
+          value={formData.description}
+          onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
+          placeholder="Descripción del proceso"
+          protocol={formData.type}
+        />
 
-        <div>
-          <button
+        <div className="mt-8 flex justify-end gap-3">
+        
+          <Button
             type="submit"
-            disabled={isLoading}
-            className={`w-full px-4 py-2 rounded-md text-text-light dark:text-text-light
-                     ${
-                       isLoading
-                         ? "bg-primary-light dark:bg-primary-dark cursor-not-allowed"
-                         : "bg-primary dark:bg-primary-dark hover:bg-primary-hover dark:hover:bg-primary-hover-dark"
-                     }`}
+            variant="primary"
+            isLoading={isLoading}
+            loadingText="Creando..."
           >
-            {isLoading ? "Creando..." : "Crear Proceso"}
-          </button>
+            Crear Proceso
+          </Button>
         </div>
       </div>
     </form>

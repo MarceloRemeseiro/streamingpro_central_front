@@ -3,6 +3,7 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
+import Button from '@/components/ui/Button';
 
 interface DeleteProcessModalProps {
   isOpen: boolean;
@@ -56,23 +57,23 @@ const DeleteProcessModal = ({ isOpen, onClose, onConfirm, processName }: DeleteP
                 </div>
 
                 <div className="mt-6 flex justify-end gap-3">
-                  <button
+                  <Button
                     type="button"
-                    className="inline-flex justify-center rounded-md border border-border dark:border-border-dark bg-card dark:bg-card-dark px-4 py-2 text-sm font-medium text-text dark:text-text-dark hover:bg-info-background dark:hover:bg-info-background-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-primary dark:focus-visible:ring-primary-dark focus-visible:ring-offset-2"
+                    variant="secondary"
                     onClick={onClose}
                   >
                     Cancelar
-                  </button>
-                  <button
+                  </Button>
+                  <Button
                     type="button"
-                    className="inline-flex justify-center rounded-md border border-transparent bg-error dark:bg-error-dark px-4 py-2 text-sm font-medium text-text-light hover:bg-error-hover dark:hover:bg-error-hover-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-error dark:focus-visible:ring-error-dark focus-visible:ring-offset-2"
+                    variant="danger"
                     onClick={() => {
                       onConfirm();
                       onClose();
                     }}
                   >
                     Eliminar
-                  </button>
+                  </Button>
                 </div>
               </Dialog.Panel>
             </Transition.Child>

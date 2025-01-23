@@ -12,9 +12,10 @@ import CustomOutputs from "./CustomOutputs";
 import RTMPOutput from "./RTMPOutput";
 import SRTOutput from "./SRTOutput";
 import PacketLossStats from "./PacketLossStats";
-import DeleteProcessModal from "./DeleteProcessModal";
-import EditProcessModal from "./EditProcessModal";
+import DeleteProcessModal from "./modals/DeleteProcessModal";
+import EditProcessModal from "./modals/EditProcessModal";
 import { TrashIcon, PencilIcon } from "@heroicons/react/24/outline";
+import Button from '@/components/ui/Button';
 
 const getInputTypeStyles = (type: InputProcess["inputType"]) => {
   switch (type) {
@@ -257,12 +258,13 @@ const ProcessList = () => {
     return (
       <div className="bg-error-light dark:bg-error-dark p-4 rounded-md">
         <p className="text-error dark:text-error-dark">{error}</p>
-        <button
+        <Button
           onClick={refresh}
-          className="mt-2 text-sm text-error dark:text-error-dark hover:text-error-hover dark:hover:text-error-hover-dark"
+          variant="danger"
+          type="button"
         >
           Intentar de nuevo
-        </button>
+        </Button>
       </div>
     );
   }

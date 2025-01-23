@@ -1,6 +1,6 @@
 import { FC, useState } from "react";
 import { PlusIcon } from "@heroicons/react/24/outline";
-import CreateOutputModal from "./CreateOutputModal";
+import CreateOutputModal from "./modals/CreateOutputModal";
 
 interface CustomOutputsProps {
   streamId: string;

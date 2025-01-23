@@ -8,10 +8,11 @@ import {
   Cog6ToothIcon,
   ChevronDownIcon,
 } from "@heroicons/react/24/outline";
-import DeleteProcessModal from "./DeleteProcessModal";
-import EditSRTOutputModal from "./EditSRTOutputModal";
-import EditSRTTitleModal from "./EditSRTTitleModal";
+import DeleteProcessModal from "./modals/DeleteProcessModal";
+import EditSRTOutputModal from "./modals/EditSRTOutputModal";
+import EditSRTTitleModal from "./modals/EditSRTTitleModal";
 import SwitchWarning from "./SwitchWarning";
+import CollapseButton from '@/components/ui/CollapseButton';
 
 interface SRTOutputProps {
   output: OutputProcess;
@@ -103,38 +104,37 @@ const SRTOutput: FC<SRTOutputProps> = ({ output, onDeleted, onUpdated }) => {
             onClick={() => setIsCollapsed(!isCollapsed)}
             className="flex items-center gap-2 flex-1 group"
           >
-            <div className="flex items-center gap-1">
-              <ChevronDownIcon
-                className={`h-3 w-3 text-protocol-srt-output-secondary dark:text-protocol-srt-output-secondary-dark transition-transform ${
-                  !isCollapsed ? "transform rotate-180" : ""
-                }`}
-              />
-              <h4 className="text-xs font-medium text-protocol-srt-output-text dark:text-protocol-srt-output-text-dark">
-                {name}
-              </h4>
-              <span
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setModals((m) => ({ ...m, editTitle: true }));
-                }}
-                className="p-0.5 text-protocol-srt-output-secondary dark:text-protocol-srt-output-secondary-dark hover:text-protocol-srt-output-hover dark:hover:text-protocol-srt-output-hover-dark cursor-pointer"
-              >
-                <PencilIcon className="h-3 w-3" />
-              </span>
-            </div>
+            <CollapseButton
+              isCollapsed={isCollapsed}
+              protocol="srt"
+            />
+            <h4 className="text-xs font-medium text-protocol-srt-output-text dark:text-protocol-srt-output-text-dark">
+              {name}
+            </h4>
           </button>
-          <div className="relative">
-            <ProcessSwitch
-              processId={output.id}
-              state={output.state?.exec || "finished"}
-              lastLogLine={output.state?.last_logline}
-              onStateChange={handleStateChange}
-            />
-            <SwitchWarning 
-              isVisible={showStopWarning}
-              onConfirm={handleConfirmStop}
-              onCancel={handleCancelStop}
-            />
+          <div className="flex items-center gap-2">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setModals(m => ({ ...m, editTitle: true }));
+              }}
+              className="p-0.5 text-protocol-srt-output-secondary dark:text-protocol-srt-output-secondary-dark hover:text-protocol-srt-output-hover dark:hover:text-protocol-srt-output-hover-dark cursor-pointer"
+            >
+              <PencilIcon className="h-3 w-3" />
+            </button>
+            <div className="relative">
+              <ProcessSwitch
+                processId={output.id}
+                state={output.state?.exec || "finished"}
+                lastLogLine={output.state?.last_logline}
+                onStateChange={handleStateChange}
+              />
+              <SwitchWarning 
+                isVisible={showStopWarning}
+                onConfirm={handleConfirmStop}
+                onCancel={handleCancelStop}
+              />
+            </div>
           </div>
         </div>
 

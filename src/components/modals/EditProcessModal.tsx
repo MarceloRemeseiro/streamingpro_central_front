@@ -3,6 +3,9 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment, useState } from 'react';
 import { InputProcess } from '@/types/processTypes';
+import Input from '@/components/ui/Input';
+import Textarea from '@/components/ui/Textarea';
+import Button from '@/components/ui/Button';
 
 interface EditProcessModalProps {
   isOpen: boolean;
@@ -78,49 +81,40 @@ const EditProcessModal = ({ isOpen, onClose, process, onProcessUpdated }: EditPr
 
                 <form onSubmit={handleSubmit} className="mt-6">
                   <div className="space-y-6">
-                    <div>
-                      <label htmlFor="name" className="block text-sm font-medium text-text-muted dark:text-text-muted-dark">
-                        Nombre
-                      </label>
-                      <input
-                        type="text"
-                        id="name"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        className="mt-2 block w-full rounded-lg border border-border dark:border-border-dark bg-card-background dark:bg-card-background-dark px-3 py-2 text-text dark:text-text-dark placeholder-text-muted dark:placeholder-text-muted-dark focus:border-primary dark:focus:border-primary-dark focus:outline-none focus:ring-primary dark:focus:ring-primary-dark sm:text-sm"
-                        required
-                      />
-                    </div>
+                    <Input
+                      label="Nombre"
+                      type="text"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="Nombre del proceso"
+                      required
+                    />
 
-                    <div>
-                      <label htmlFor="description" className="block text-sm font-medium text-text-muted dark:text-text-muted-dark">
-                        Descripción
-                      </label>
-                      <textarea
-                        id="description"
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                        rows={3}
-                        className="mt-2 block w-full rounded-lg border border-border dark:border-border-dark bg-card-background dark:bg-card-background-dark px-3 py-2 text-text dark:text-text-dark placeholder-text-muted dark:placeholder-text-muted-dark focus:border-primary dark:focus:border-primary-dark focus:outline-none focus:ring-primary dark:focus:ring-primary-dark sm:text-sm"
-                      />
-                    </div>
+                    <Textarea
+                      label="Descripción"
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
+                      rows={3}
+                      placeholder="Descripción del proceso"
+                    />
                   </div>
 
                   <div className="mt-8 flex justify-end gap-3">
-                    <button
+                    <Button
                       type="button"
+                      variant="secondary"
                       onClick={onClose}
-                      className="inline-flex justify-center rounded-lg border border-border dark:border-border-dark bg-card-background dark:bg-card-background-dark px-4 py-2 text-sm font-medium text-text dark:text-text-dark hover:bg-info-background dark:hover:bg-info-background-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-primary dark:focus-visible:ring-primary-dark focus-visible:ring-offset-2"
                     >
                       Cancelar
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                       type="submit"
-                      disabled={isSubmitting}
-                      className="inline-flex justify-center rounded-lg border border-transparent bg-primary dark:bg-primary-dark px-4 py-2 text-sm font-medium text-text-light hover:bg-primary-hover dark:hover:bg-primary-hover-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-primary dark:focus-visible:ring-primary-dark focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                      variant="primary"
+                      isLoading={isSubmitting}
+                      loadingText="Guardando..."
                     >
-                      {isSubmitting ? 'Guardando...' : 'Guardar'}
-                    </button>
+                      Guardar
+                    </Button>
                   </div>
                 </form>
               </Dialog.Panel>
