@@ -35,7 +35,7 @@ const RTMPConnection: FC<RTMPConnectionProps> = ({ input }) => {
             isCollapsed={isCollapsed} 
           />
           <h3 className="text-base font-medium text-text dark:text-text-dark">
-            Información de conexión RTMP
+            RTMP Connection
           </h3>
         </button>
       </div>

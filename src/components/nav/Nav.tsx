@@ -29,7 +29,7 @@ export default function Nav() {
     {
       href: "/create",
       icon: PlusCircleIcon,
-      label: "Crear Input"
+      label: "Create Input"
     }
   ];
 

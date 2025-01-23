@@ -4,7 +4,6 @@ import { XMarkIcon } from '@heroicons/react/24/outline';
 import { classNames } from '@/utils/classNames';
 import { OutputService } from '@/services/outputService';
 import Input from '@/components/ui/Input';
-import Modal from '../ui/Modal';
 import Button from '@/components/ui/Button';
 
 interface CreateOutputModalProps {
@@ -132,7 +131,7 @@ const CreateOutputModal: FC<CreateOutputModalProps> = ({
               <Dialog.Panel className="w-full max-w-2xl transform overflow-hidden rounded-lg bg-card-background dark:bg-card-background-dark p-6 shadow-xl transition-all">
                 <div className="flex justify-between items-center mb-4">
                   <Dialog.Title className="text-lg font-medium text-text dark:text-text-dark">
-                    Crear Nuevo Output
+                    Create new Output
                   </Dialog.Title>
                   <button
                     onClick={onClose}
@@ -176,11 +175,11 @@ const CreateOutputModal: FC<CreateOutputModalProps> = ({
                     <Tab.Panel className=" ">
                       <div className="space-y-4 p-4">
                         <Input
-                          label="Nombre"
+                          label="Name"
                           type="text"
                           value={rtmpName}
                           onChange={(e) => setRtmpName(e.target.value)}
-                          placeholder="Nombre del output"
+                          placeholder="Output name"
                           protocol="rtmp"
                         />
                         <Input
@@ -188,7 +187,7 @@ const CreateOutputModal: FC<CreateOutputModalProps> = ({
                           type="text"
                           value={rtmpUrl}
                           onChange={(e) => setRtmpUrl(e.target.value)}
-                          placeholder="ejemplo.com/live o rtmp://ejemplo.com/live"
+                          placeholder="example.com/live or rtmp://example.com/live"
                           protocol="rtmp"
                         />
                         <Input
@@ -205,7 +204,7 @@ const CreateOutputModal: FC<CreateOutputModalProps> = ({
                             variant="secondary"
                             onClick={onClose}
                           >
-                            Cancelar
+                            Cancel
                           </Button>
                           <Button
                             type="button"
@@ -214,9 +213,9 @@ const CreateOutputModal: FC<CreateOutputModalProps> = ({
                             onClick={handleCreateRTMP}
                             disabled={isLoading || !rtmpName || !rtmpUrl || !rtmpStreamKey}
                             isLoading={isLoading}
-                            loadingText="Creando..."
+                            loadingText="Creating..."
                           >
-                            Crear Output RTMP
+                            Create Output RTMP
                           </Button>
                         </div>
                       </div>
@@ -225,11 +224,11 @@ const CreateOutputModal: FC<CreateOutputModalProps> = ({
                     <Tab.Panel>
                       <div className="space-y-4 p-4">
                         <Input
-                          label="Nombre"
+                          label="Name"
                           type="text"
                           value={srtName}
                           onChange={(e) => setSrtName(e.target.value)}
-                          placeholder="Nombre del output"
+                          placeholder="Output name"
                           protocol="srt"
                         />
                         <Input
@@ -237,11 +236,11 @@ const CreateOutputModal: FC<CreateOutputModalProps> = ({
                           type="text"
                           value={srtUrl}
                           onChange={(e) => setSrtUrl(e.target.value)}
-                          placeholder="ejemplo.com o srt://ejemplo.com"
+                          placeholder="example.com or srt://example.com"
                           protocol="srt"
                         />
                         <Input
-                          label="Puerto"
+                          label="Port"
                           type="text"
                           value={srtPort}
                           onChange={(e) => setSrtPort(e.target.value)}
@@ -257,7 +256,7 @@ const CreateOutputModal: FC<CreateOutputModalProps> = ({
                           protocol="srt"
                         />
                         <Input
-                          label="Stream ID (opcional)"
+                          label="Stream ID (optional)"
                           type="text"
                           value={srtStreamId}
                           onChange={(e) => setSrtStreamId(e.target.value)}
@@ -265,11 +264,11 @@ const CreateOutputModal: FC<CreateOutputModalProps> = ({
                           protocol="srt"
                         />
                         <Input
-                          label="Passphrase (opcional)"
+                          label="Passphrase (optional)"
                           type="text"
                           value={srtPassphrase}
                           onChange={(e) => setSrtPassphrase(e.target.value)}
-                          placeholder="Contraseña"
+                          placeholder="Passphrase"
                           protocol="srt"
                         />
                         <div className="flex justify-end gap-3 pt-4">
@@ -278,7 +277,7 @@ const CreateOutputModal: FC<CreateOutputModalProps> = ({
                             variant="secondary"
                             onClick={onClose}
                           >
-                            Cancelar
+                            Cancel
                           </Button>
                           <Button
                             type="button"
@@ -287,9 +286,9 @@ const CreateOutputModal: FC<CreateOutputModalProps> = ({
                             onClick={handleCreateSRT}
                             disabled={isLoading || !srtName || !srtUrl || !srtPort}
                             isLoading={isLoading}
-                            loadingText="Creando..."
+                            loadingText="Creating..."
                           >
-                            Crear Output SRT
+                            Create Output SRT
                           </Button>
                         </div>
                       </div>

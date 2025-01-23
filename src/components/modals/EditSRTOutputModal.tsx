@@ -78,17 +78,17 @@ const EditSRTOutputModal: FC<EditSRTOutputModalProps> = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-text dark:text-text-dark">
-        Editar Output SRT
+        Edit SRT Output
       </Dialog.Title>
 
       <form onSubmit={handleSubmit} className="mt-4">
         <div className="space-y-4">
           <Input
-            label="Nombre"
+            label="Name"
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Nombre del output"
+            placeholder="Output name"
             protocol="srt"
             disabled
           />
@@ -98,46 +98,46 @@ const EditSRTOutputModal: FC<EditSRTOutputModalProps> = ({
             type="text"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
-            placeholder="URL del servidor SRT"
+            placeholder="SRT server URL"
             protocol="srt"
             required
           />
 
           <Input
-            label="Puerto"
+            label="Port"
             type="text"
             value={port}
             onChange={(e) => setPort(e.target.value)}
-            placeholder="Puerto del servidor"
+            placeholder="SRT server port"
             protocol="srt"
             required
           />
 
           <Input
-            label="Latencia"
+            label="Latency"
             type="text"
             value={latency}
             onChange={(e) => setLatency(e.target.value)}
-            placeholder="Latencia en milisegundos"
+            placeholder="Latency in milliseconds"
             protocol="srt"
             required
           />
 
           <Input
-            label="Stream ID (opcional)"
+            label="Stream ID (optional)"
             type="text"
             value={srtStreamId}
             onChange={(e) => setSrtStreamId(e.target.value)}
-            placeholder="ID del stream"
+            placeholder="Stream ID"
             protocol="srt"
           />
 
           <Input
-            label="Passphrase (opcional)"
+            label="Passphrase (optional)"
             type="text"
             value={passphrase}
             onChange={(e) => setPassphrase(e.target.value)}
-            placeholder="Contraseña de conexión"
+            placeholder="Connection password"
             protocol="srt"
           />
         </div>
@@ -154,15 +154,15 @@ const EditSRTOutputModal: FC<EditSRTOutputModalProps> = ({
             variant="secondary"
             onClick={onClose}
           >
-            Cancelar
+            Cancel
           </Button>
           <Button
             type="submit"
             variant="primary"
             isLoading={isLoading}
-            loadingText="Guardando..."
+            loadingText="Saving..."
           >
-            Guardar
+            Save
           </Button>
         </div>
       </form>

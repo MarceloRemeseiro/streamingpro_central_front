@@ -55,13 +55,13 @@ export default function CreatePage() {
           className="inline-flex items-center gap-2 text-text-muted hover:text-text dark:text-text-muted-dark dark:hover:text-text-dark transition-colors"
         >
           <ArrowLeftIcon className="h-5 w-5" />
-          <span>Volver</span>
+          <span>Back</span>
         </Link>
       </div>
 
       <div className="max-w-2xl mx-auto">
         <h1 className="text-2xl font-semibold text-text dark:text-text-dark mb-6">
-          Crear nuevo Input
+          Create new Input
         </h1>
 
         <div className="mb-12">
@@ -69,7 +69,7 @@ export default function CreatePage() {
         </div>
 
         <h2 className="text-xl font-semibold text-text dark:text-text-dark mb-6">
-          Inputs creados
+          Inputs
         </h2>
 
         {isLoading ? (

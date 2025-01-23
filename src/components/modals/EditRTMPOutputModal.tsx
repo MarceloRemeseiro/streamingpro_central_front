@@ -51,17 +51,17 @@ const EditRTMPOutputModal: FC<EditRTMPOutputModalProps> = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-text dark:text-text-dark">
-        Editar Output RTMP
+        Edit RTMP Output
       </Dialog.Title>
 
       <form onSubmit={handleSubmit} className="mt-4">
         <div className="space-y-4">
           <Input
-            label="Nombre"
+            label="Name"
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Nombre del output"
+            placeholder="Output name"
             protocol="rtmp"
             disabled
           />
@@ -71,7 +71,7 @@ const EditRTMPOutputModal: FC<EditRTMPOutputModalProps> = ({
             type="text"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
-            placeholder="URL del servidor RTMP"
+            placeholder="RTMP server URL"
             protocol="rtmp"
             required
           />
@@ -81,7 +81,7 @@ const EditRTMPOutputModal: FC<EditRTMPOutputModalProps> = ({
             type="text"
             value={streamKey}
             onChange={(e) => setStreamKey(e.target.value)}
-            placeholder="Clave de transmisión"
+            placeholder="Stream key"
             protocol="rtmp"
             required
           />
@@ -99,15 +99,15 @@ const EditRTMPOutputModal: FC<EditRTMPOutputModalProps> = ({
             variant="secondary"
             onClick={onClose}
           >
-            Cancelar
+            Cancel
           </Button>
           <Button
             type="submit"
             variant="primary"
             isLoading={isLoading}
-            loadingText="Guardando..."
+            loadingText="Saving..."
           >
-            Guardar
+            Save
           </Button>
         </div>
       </form>

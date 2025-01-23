@@ -12,7 +12,7 @@ export default function StreamStats({ input }: StreamStatsProps) {
     <div className="grid grid-cols-4 bg-card-background dark:bg-card-background-dark py-2 rounded-lg justify-items-center text-xs mt-2">
       <div>
         <span className="font-medium text-text-muted dark:text-text-muted-dark">
-          Resolución
+          Resolution
         </span>
         <p className="text-text dark:text-text-dark">{stats.resolution}</p>
       </div>

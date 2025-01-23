@@ -46,11 +46,11 @@ const DeleteProcessModal = ({ isOpen, onClose, onConfirm, processName }: DeleteP
                   </div>
                   <div>
                     <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-text dark:text-text-dark">
-                      Eliminar Input
+                      Delete Input
                     </Dialog.Title>
                     <div className="mt-2">
                       <p className="text-sm text-text-muted dark:text-text-muted-dark">
-                        ¿Estás seguro que deseas eliminar {processName || "sin nombre"}? Esta acción no se puede deshacer.
+                        Are you sure you want to delete {processName || "without name"}? This action cannot be undone.
                       </p>
                     </div>
                   </div>
@@ -62,7 +62,7 @@ const DeleteProcessModal = ({ isOpen, onClose, onConfirm, processName }: DeleteP
                     variant="secondary"
                     onClick={onClose}
                   >
-                    Cancelar
+                    Cancel
                   </Button>
                   <Button
                     type="button"
@@ -72,7 +72,7 @@ const DeleteProcessModal = ({ isOpen, onClose, onConfirm, processName }: DeleteP
                       onClose();
                     }}
                   >
-                    Eliminar
+                    Delete
                   </Button>
                 </div>
               </Dialog.Panel>

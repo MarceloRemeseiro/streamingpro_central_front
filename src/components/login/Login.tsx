@@ -48,9 +48,9 @@ export const Login = () => {
       <div className="w-full max-w-md">
         <div className="bg-card-background dark:bg-card-background-dark rounded-xl shadow-lg p-8">
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold tracking-tight text-text dark:text-text-dark">Streaming Pro</h2>
+            <h2 className="text-3xl font-bold tracking-tight text-text dark:text-text-dark">StreamingPro Central</h2>
             <p className="mt-2 text-sm text-text-muted dark:text-text-muted-dark">
-              Accede a tu cuenta para gestionar tus streams
+              Access your account to manage your streams
             </p>
           </div>
 
@@ -74,13 +74,13 @@ export const Login = () => {
                   }
                   required
                   className="block w-full rounded-md border-0 py-1.5 px-3 text-text dark:text-text-dark bg-card-background dark:bg-card-background-dark ring-1 ring-inset ring-auth-input-border dark:ring-auth-input-border-dark focus:ring-2 focus:ring-inset focus:ring-auth-input-focus dark:focus:ring-auth-input-focus-dark sm:text-sm sm:leading-6"
-                  placeholder="Usuario"
+                  placeholder="Username"
                   disabled={isLoading}
                 />
               </div>
               <div className="relative">
                 <label htmlFor="password" className="sr-only">
-                  Contraseña
+                  Password
                 </label>
                 <input
                   id="password"
@@ -96,7 +96,7 @@ export const Login = () => {
                   }
                   required
                   className="block w-full rounded-md border-0 py-1.5 px-3 text-text dark:text-text-dark bg-card-background dark:bg-card-background-dark ring-1 ring-inset ring-auth-input-border dark:ring-auth-input-border-dark focus:ring-2 focus:ring-inset focus:ring-auth-input-focus dark:focus:ring-auth-input-focus-dark sm:text-sm sm:leading-6"
-                  placeholder="Contraseña"
+                  placeholder="Password"
                   disabled={isLoading}
                 />
                 <button
@@ -124,7 +124,7 @@ export const Login = () => {
               loadingText="Iniciando sesión..."
               fullWidth
             >
-              Iniciar sesión
+              Login
             </Button>
           </form>
         </div>

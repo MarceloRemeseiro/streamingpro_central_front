@@ -109,7 +109,7 @@ const VideoPlayer: FC<VideoPlayerProps> = ({
             isCollapsed={isCollapsed} 
           />
           <h3 className="text-base font-medium text-text dark:text-text-dark">
-            Video Preview
+            Preview
           </h3>
         </button>
       </div>
@@ -134,10 +134,10 @@ const VideoPlayer: FC<VideoPlayerProps> = ({
                   {isConnecting ? (
                     <div className="flex items-center space-x-2">
                       <div className="w-2 h-2 bg-primary dark:bg-primary-dark rounded-full animate-pulse"></div>
-                      <p className="text-lg">Conectando...</p>
+                      <p className="text-lg">Connecting...</p>
                     </div>
                   ) : (
-                    <p className="text-lg">NO HAY VIDEO DISPONIBLE</p>
+                    <p className="text-lg">NO VIDEO</p>
                   )}
                 </div>
               </div>

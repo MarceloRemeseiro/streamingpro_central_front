@@ -142,7 +142,7 @@ const SRTOutput: FC<SRTOutputProps> = ({ output, onDeleted, onUpdated }) => {
               </div>
               <div>
                 <span className="font-medium text-protocol-srt-output-secondary dark:text-protocol-srt-output-secondary-dark">
-                  Puerto
+                  Port
                 </span>
                 <p className="text-protocol-srt-output-text dark:text-protocol-srt-output-text-dark">{port}</p>
               </div>

@@ -52,7 +52,7 @@ const SRTConnection: FC<SRTConnectionProps> = ({ input }) => {
             isCollapsed={isCollapsed} 
           />
           <h3 className="text-base font-medium text-text dark:text-text-dark">
-            Información de conexión SRT
+            SRT Connection
           </h3>
         </button>
       </div>

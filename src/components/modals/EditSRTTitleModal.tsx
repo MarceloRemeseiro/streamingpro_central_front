@@ -43,16 +43,16 @@ const EditSRTTitleModal: FC<EditSRTTitleModalProps> = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-text dark:text-text-dark">
-        Editar Título
+        Edit Title
       </Dialog.Title>
 
       <form onSubmit={handleSubmit} className="mt-4">
         <Input
-          label="Nombre"
+          label="Name"
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="Nombre del output"
+          placeholder="Output name"
           protocol="srt"
           required
         />
@@ -69,15 +69,15 @@ const EditSRTTitleModal: FC<EditSRTTitleModalProps> = ({
             variant="secondary"
             onClick={onClose}
           >
-            Cancelar
+            Cancel
           </Button>
           <Button
             type="submit"
             variant="primary"
             isLoading={isLoading}
-            loadingText="Guardando..."
+            loadingText="Saving..."
           >
-            Guardar
+            Save
           </Button>
         </div>
       </form>

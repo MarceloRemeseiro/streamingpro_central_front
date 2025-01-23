@@ -89,7 +89,7 @@ export default function InputDetail({ id }: InputDetailProps) {
             className="inline-flex items-center gap-2 text-nav-text dark:text-nav-text-dark hover:text-nav-hover dark:hover:text-nav-hover-dark transition-colors"
           >
             <ArrowLeftIcon className="h-5 w-5" />
-            <span>Volver</span>
+            <span>Back</span>
           </Link>
         </div>
         <div className="flex items-center justify-between">

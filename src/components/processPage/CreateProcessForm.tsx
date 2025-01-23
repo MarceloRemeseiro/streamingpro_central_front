@@ -58,7 +58,7 @@ export default function CreateProcessForm({ onSuccess, onCancel }: CreateProcess
       <div className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-text-muted dark:text-text-muted-dark mb-2">
-            Tipo de Conexión
+            Connection Type
           </label>
           <div className="flex gap-4">
             <button
@@ -87,20 +87,20 @@ export default function CreateProcessForm({ onSuccess, onCancel }: CreateProcess
         </div>
 
         <Input
-          label="Nombre"
+          label="Name"
           type="text"
           value={formData.name}
           onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
-          placeholder="Nombre del proceso"
+          placeholder="Name"
           protocol={formData.type}
           required
         />
 
         <Textarea
-          label="Descripción"
+          label="Description"
           value={formData.description}
           onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
-          placeholder="Descripción del proceso"
+          placeholder="Description"
           protocol={formData.type}
         />
 
@@ -110,9 +110,9 @@ export default function CreateProcessForm({ onSuccess, onCancel }: CreateProcess
             type="submit"
             variant="primary"
             isLoading={isLoading}
-            loadingText="Creando..."
+            loadingText="Creating..."
           >
-            Crear Proceso
+            Create
           </Button>
         </div>
       </div>

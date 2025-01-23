@@ -42,7 +42,7 @@ const OutputDefault: FC<OutputDefaultProps> = ({ streamId, processId }) => {
             isCollapsed={isCollapsed} 
           />
           <h3 className="text-base font-medium text-text dark:text-text-dark">
-            Salidas por defecto
+            Outputs
           </h3>
         </button>
       </div>

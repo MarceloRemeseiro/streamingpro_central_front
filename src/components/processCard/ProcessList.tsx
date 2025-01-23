@@ -262,7 +262,7 @@ const ProcessList = () => {
           variant="danger"
           type="button"
         >
-          Intentar de nuevo
+          Try again
         </Button>
       </div>
     );
@@ -271,7 +271,7 @@ const ProcessList = () => {
   if (inputs.length === 0) {
     return (
       <div className="text-center p-8 text-text-muted dark:text-text-muted-dark">
-        No hay inputs activos
+        No inputs found
       </div>
     );
   }

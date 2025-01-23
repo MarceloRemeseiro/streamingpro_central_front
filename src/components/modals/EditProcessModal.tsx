@@ -76,26 +76,26 @@ const EditProcessModal = ({ isOpen, onClose, process, onProcessUpdated }: EditPr
             >
               <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-card-background dark:bg-card-background-dark p-6 text-left align-middle shadow-xl transition-all">
                 <Dialog.Title as="h3" className="text-xl font-semibold text-text dark:text-text-dark">
-                  Editar Proceso
+                  Edit Title
                 </Dialog.Title>
 
                 <form onSubmit={handleSubmit} className="mt-6">
                   <div className="space-y-6">
                     <Input
-                      label="Nombre"
+                      label="Name"
                       type="text"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      placeholder="Nombre del proceso"
+                      placeholder="Process name"
                       required
                     />
 
                     <Textarea
-                      label="Descripción"
+                      label="Description"
                       value={description}
                       onChange={(e) => setDescription(e.target.value)}
                       rows={3}
-                      placeholder="Descripción del proceso"
+                      placeholder="Process description"
                     />
                   </div>
 
@@ -105,15 +105,15 @@ const EditProcessModal = ({ isOpen, onClose, process, onProcessUpdated }: EditPr
                       variant="secondary"
                       onClick={onClose}
                     >
-                      Cancelar
+                      Cancel
                     </Button>
                     <Button
                       type="submit"
                       variant="primary"
                       isLoading={isSubmitting}
-                      loadingText="Guardando..."
+                      loadingText="Saving..."
                     >
-                      Guardar
+                      Save
                     </Button>
                   </div>
                 </form>
