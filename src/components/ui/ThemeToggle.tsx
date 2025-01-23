@@ -4,30 +4,50 @@ import { useEffect, useState } from 'react';
 import { SunIcon, MoonIcon } from '@heroicons/react/24/outline';
 
 export default function ThemeToggle() {
-  const [theme, setTheme] = useState<"light" | "dark">("light");
+  const [theme, setTheme] = useState<"light" | "dark">(() => {
+    // Intentar recuperar el tema guardado del localStorage
+    if (typeof window !== 'undefined') {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark' || savedTheme === 'light') {
+        return savedTheme;
+      }
+    }
+    return "light";
+  });
 
   useEffect(() => {
-    // Verificar preferencia del sistema
-    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-      setTheme("dark");
-      document.documentElement.classList.add("dark");
+    // Si no hay tema guardado, usar la preferencia del sistema
+    if (!localStorage.getItem('theme')) {
+      if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+        setTheme("dark");
+        document.documentElement.classList.add("dark");
+        localStorage.setItem('theme', 'dark');
+      }
+    } else {
+      // Aplicar el tema guardado
+      document.documentElement.classList.toggle("dark", theme === "dark");
     }
 
-    // Escuchar cambios en la preferencia del sistema
+    // Escuchar cambios en la preferencia del sistema solo si no hay tema guardado
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
     const handleChange = (e: MediaQueryListEvent) => {
-      setTheme(e.matches ? "dark" : "light");
-      document.documentElement.classList.toggle("dark", e.matches);
+      if (!localStorage.getItem('theme')) {
+        const newTheme = e.matches ? "dark" : "light";
+        setTheme(newTheme);
+        document.documentElement.classList.toggle("dark", e.matches);
+        localStorage.setItem('theme', newTheme);
+      }
     };
 
     mediaQuery.addEventListener("change", handleChange);
     return () => mediaQuery.removeEventListener("change", handleChange);
-  }, []);
+  }, [theme]);
 
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
     setTheme(newTheme);
     document.documentElement.classList.toggle("dark");
+    localStorage.setItem('theme', newTheme);
   };
 
   return (
