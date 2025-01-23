@@ -2,13 +2,12 @@
 
 import Link from "next/link";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
-import CreateProcessForm from "@/components/CreateProcessForm";
-import ProcessPill from "@/components/inputPage/ProcessPill";
+import ProcessPill from "@/components/processPage/ProcessPill";
 import { useProcesses } from "@/hooks/useProcesses";
 import { useState } from "react";
 import DeleteProcessModal from "@/components/modals/DeleteProcessModal";
 import { InputProcess } from "@/types/processTypes";
-
+import CreateProcessForm from "@/components/processPage/CreateProcessForm";
 export default function CreatePage() {
   const { inputs, isLoading, error, refresh } = useProcesses();
   const [processToDelete, setProcessToDelete] = useState<InputProcess | null>(

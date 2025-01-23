@@ -9,7 +9,7 @@ export default function StreamStats({ input }: StreamStatsProps) {
   const stats = useStreamStats(input);
 
   return (
-    <div className="grid grid-cols-4 bg-card-background dark:bg-card-background-dark pb-2 pt-1 rounded-b-lg justify-items-center text-xs">
+    <div className="grid grid-cols-4 bg-card-background dark:bg-card-background-dark py-2 rounded-lg justify-items-center text-xs mt-2">
       <div>
         <span className="font-medium text-text-muted dark:text-text-muted-dark">
           Resolución

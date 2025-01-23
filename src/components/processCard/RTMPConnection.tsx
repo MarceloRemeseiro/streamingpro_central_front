@@ -1,22 +1,27 @@
+import { FC } from "react";
+import { useCollapse } from "@/hooks/useCollapse";
 import { InputProcess } from "@/types/processTypes";
-import CopyButton from "../ui/CopyButton";
-import { useState } from "react";
 import CollapseButton from '@/components/ui/CollapseButton';
+import InfoConnection from "../ui/InfoConnection";
 
 interface RTMPConnectionProps {
   input: InputProcess;
 }
 
-export default function RTMPConnection({ input }: RTMPConnectionProps) {
-  const [isCollapsed, setIsCollapsed] = useState(true);
+const RTMPConnection: FC<RTMPConnectionProps> = ({ input }) => {
+  const [isCollapsed, setIsCollapsed] = useCollapse('rtmp-connection', input.id);
   const url = `rtmp://${process.env.NEXT_PUBLIC_RESTREAMER_BASE_URL}`;
   const streamKey = input.streamName;
-  const oneLine = `${url}/${streamKey}`;
 
   const fields = [
-    { label: "URL", value: url },
-    { label: "Stream Key", value: streamKey },
-    { label: "One-Line", value: oneLine }
+    {
+      label: "URL",
+      value: url,
+    },
+    {
+      label: "Stream Key",
+      value: streamKey,
+    },
   ];
 
   return (
@@ -26,8 +31,8 @@ export default function RTMPConnection({ input }: RTMPConnectionProps) {
           onClick={() => setIsCollapsed(!isCollapsed)}
           className="flex items-center gap-2 flex-1 group"
         >
-          <CollapseButton
-            isCollapsed={isCollapsed}
+          <CollapseButton 
+            isCollapsed={isCollapsed} 
           />
           <h3 className="text-base font-medium text-text dark:text-text-dark">
             Información de conexión RTMP
@@ -36,25 +41,10 @@ export default function RTMPConnection({ input }: RTMPConnectionProps) {
       </div>
 
       {!isCollapsed && (
-        <div className="space-y-2 text-xs">
-          {fields.map(({ label, value }) => (
-            <div
-              key={label}
-              className="flex items-start justify-between p-1 bg-info-background dark:bg-info-background-dark rounded"
-            >
-              <div className="min-w-0 flex-1 mr-2">
-                <span className="font-medium text-text-muted dark:text-text-muted-dark block mb-1">
-                  {label}
-                </span>
-                <p className="text-text dark:text-text-dark break-all">{value}</p>
-              </div>
-              <div className="flex-shrink-0">
-                <CopyButton text={value.toString()} />
-              </div>
-            </div>
-          ))}
-        </div>
+        <InfoConnection fields={fields} />
       )}
     </div>
   );
-}
+};
+
+export default RTMPConnection;

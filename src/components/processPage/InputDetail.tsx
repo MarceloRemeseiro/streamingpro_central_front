@@ -135,7 +135,7 @@ export default function InputDetail({ id }: InputDetailProps) {
             {input.inputType === "rtmp" && <RTMPConnection input={input} />}
             {input.inputType === "srt" && <SRTConnection input={input} />}
 
-            <OutputDefault streamId={input.streamName} />
+            <OutputDefault streamId={input.streamName} processId={input.id} />
           </div>
         </div>
 

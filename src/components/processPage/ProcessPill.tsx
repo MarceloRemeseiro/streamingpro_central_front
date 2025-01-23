@@ -1,10 +1,11 @@
 'use client';
 
 import { InputProcess } from "@/types/processTypes";
-import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 import EditProcessModal from "../modals/EditProcessModal";
 import Link from "next/link";
+import EditButton from '../ui/EditButton';
+import DeleteButton from '../ui/DeleteButton';
 
 const getInputTypeStyles = (type: InputProcess["inputType"]) => {
   switch (type) {
@@ -44,6 +45,7 @@ interface ProcessPillProps {
 
 export default function ProcessPill({ process, onDelete, onProcessUpdated }: ProcessPillProps) {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   return (
     <div className={`rounded-lg shadow p-3 flex flex-col border ${getInputTypeStyles(process.inputType)}`}>
@@ -62,21 +64,14 @@ export default function ProcessPill({ process, onDelete, onProcessUpdated }: Pro
             {process.metadata?.["restreamer-ui"]?.meta?.description || "Sin descripción"}
           </p>
         </div>
-        <div className="flex items-center gap-1 ml-2">
-          <button
-            onClick={() => setIsEditModalOpen(true)}
-            className="p-0.5 text-secondary dark:text-secondary-dark hover:text-secondary-hover dark:hover:text-secondary-hover-dark"
-          >
-            <PencilIcon className="h-3.5 w-3.5" />
-          </button>
-          {process.state?.exec !== "running" && (
-            <button
-              onClick={() => onDelete(process)}
-              className="p-0.5 text-error dark:text-error-dark hover:text-error-hover dark:hover:text-error-hover-dark"
-            >
-              <TrashIcon className="h-3.5 w-3.5" />
-            </button>
-          )}
+        <div className="flex items-center gap-1">
+          <EditButton 
+            onClick={() => setIsEditModalOpen(true)} 
+            protocol={process.inputType}
+          />
+          <DeleteButton
+            onClick={() => onDelete(process)}
+          />
         </div>
       </div>
       

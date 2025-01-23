@@ -14,8 +14,9 @@ import SRTOutput from "@/components/processOutputs/SRTOutput";
 import PacketLossStats from "@/components/processCard/PacketLossStats";
 import DeleteProcessModal from "@/components/modals/DeleteProcessModal";
 import EditProcessModal from "@/components/modals/EditProcessModal";
-import { TrashIcon, PencilIcon } from "@heroicons/react/24/outline";
 import Button from '@/components/ui/Button';
+import EditButton from '../ui/EditButton';
+import DeleteButton from '../ui/DeleteButton';
 
 const getInputTypeStyles = (type: InputProcess["inputType"]) => {
   switch (type) {
@@ -58,6 +59,7 @@ const InputCard = memo(
     onProcessUpdated: () => void;
   }) => {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
     const getHlsUrl = () => {
       const streamName = input.streamName.replace(".stream", "");
@@ -81,12 +83,12 @@ const InputCard = memo(
                 {input.metadata?.["restreamer-ui"]?.meta?.name ||
                   "Input sin nombre"}
               </Link>
-              <button
-                onClick={() => setIsEditModalOpen(true)}
-                className="p-1 text-secondary dark:text-secondary-dark hover:text-secondary-hover dark:hover:text-secondary-hover-dark"
-              >
-                <PencilIcon className="h-4 w-4" />
-              </button>
+              <div className="flex items-center gap-1">
+                <EditButton 
+                  onClick={() => setIsEditModalOpen(true)}
+                  protocol={input.inputType}
+                />
+              </div>
             </div>
             <p className="text-sm text-text-muted dark:text-text-muted-dark">
               {input.metadata?.["restreamer-ui"]?.meta?.description ||
@@ -109,12 +111,9 @@ const InputCard = memo(
             {input.state?.exec === "running" ? (
               <PacketLossStats input={input} />
             ) : (
-              <button
+              <DeleteButton
                 onClick={() => onDeleteClick(input)}
-                className="p-1 text-error hover:text-error-dark"
-              >
-                <TrashIcon className="h-5 w-5" />
-              </button>
+              />
             )}
           </div>
         </div>
@@ -128,7 +127,7 @@ const InputCard = memo(
         {input.inputType === "rtmp" && <RTMPConnection input={input} />}
         {input.inputType === "srt" && <SRTConnection input={input} />}
 
-        <OutputDefault streamId={input.streamName} />
+        <OutputDefault streamId={input.streamName} processId={input.id} />
 
         <CustomOutputs
           streamId={input.streamName}

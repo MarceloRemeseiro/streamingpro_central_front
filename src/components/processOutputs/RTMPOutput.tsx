@@ -1,14 +1,18 @@
 import { FC, useState } from "react";
+import { useOutputCollapse } from "@/hooks/useOutputCollapse";
 import { OutputProcess } from "@/types/processTypes";
 import ProcessSwitch from "../ui/ProcessSwitch";
 import { processCommandService } from "@/services/processCommandService";
-import { TrashIcon, PencilIcon, Cog6ToothIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
+import { Cog6ToothIcon } from "@heroicons/react/24/outline";
 import DeleteProcessModal from "../modals/DeleteProcessModal";
 import EditRTMPOutputModal from "../modals/EditRTMPOutputModal";
 import EditRTMPTitleModal from "../modals/EditRTMPTitleModal";
 import SwitchWarning from "../processCard/SwitchWarning";
 import CollapseButton from '@/components/ui/CollapseButton';
 import EditButton from '@/components/ui/EditButton';
+import DeleteButton from '../ui/DeleteButton';
+
+
 
 interface RTMPOutputProps {
   output: OutputProcess;
@@ -17,7 +21,7 @@ interface RTMPOutputProps {
 }
 
 const RTMPOutput: FC<RTMPOutputProps> = ({ output, onDeleted, onUpdated }) => {
-  const [isCollapsed, setIsCollapsed] = useState(true);
+  const [isCollapsed, setIsCollapsed] = useOutputCollapse('rtmp-output', output.id);
   const [showStopWarning, setShowStopWarning] = useState(false);
   const [modals, setModals] = useState({
     delete: false,
@@ -90,9 +94,7 @@ const RTMPOutput: FC<RTMPOutputProps> = ({ output, onDeleted, onUpdated }) => {
             onClick={() => setIsCollapsed(!isCollapsed)}
             className="flex items-center gap-2 flex-1 group"
           >
-            <CollapseButton
-              isCollapsed={isCollapsed}
-            />
+            <CollapseButton isCollapsed={isCollapsed} />
             <h4 className="text-xs font-medium text-protocol-rtmp-output-text dark:text-protocol-rtmp-output-text-dark">
               {name}
             </h4>
@@ -153,12 +155,9 @@ const RTMPOutput: FC<RTMPOutputProps> = ({ output, onDeleted, onUpdated }) => {
                 <Cog6ToothIcon className="h-4 w-4" />
               </button>
               {output.state?.exec !== 'running' && (
-                <button
+                <DeleteButton
                   onClick={() => setModals(m => ({ ...m, delete: true }))}
-                  className="p-0.5 text-error dark:text-error-dark hover:text-error-hover dark:hover:text-error-hover-dark"
-                >
-                  <TrashIcon className="h-4 w-4" />
-                </button>
+                />
               )}
             </div>
           </>
