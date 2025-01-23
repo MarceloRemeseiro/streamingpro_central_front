@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import InputDetail from '@/components/InputDetail';
+import InputDetail from '@/components/processPage/InputDetail';
 
 interface PageParams {
   id: string;

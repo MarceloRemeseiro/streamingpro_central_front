@@ -2,7 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import Nav from './Nav';
-import { useAuth } from './AuthProvider';
+import { useAuth } from '../auth/AuthProvider';
 
 export default function NavWrapper() {
   const pathname = usePathname();

@@ -1,5 +1,5 @@
 import { InputProcess } from "@/types/processTypes";
-import CopyButton from "./CopyButton";
+import CopyButton from "../ui/CopyButton";
 import { useState } from "react";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
 import CollapseButton from '@/components/ui/CollapseButton';
@@ -20,13 +20,17 @@ export default function SRTConnection({ input }: SRTConnectionProps) {
   return (
     <div className="mt-2 p-3 bg-card-background dark:bg-card-background-dark rounded-lg shadow">
       <div className="flex justify-between items-center mb-2">
-        <h3 className="text-base font-medium text-text dark:text-text-dark">
-          Información de conexión SRT
-        </h3>
-        <CollapseButton
-          isCollapsed={isCollapsed}
+        <button
           onClick={() => setIsCollapsed(!isCollapsed)}
-        />
+          className="flex items-center gap-2 flex-1 group"
+        >
+          <CollapseButton
+            isCollapsed={isCollapsed}
+          />
+          <h3 className="text-base font-medium text-text dark:text-text-dark">
+            Información de conexión SRT
+          </h3>
+        </button>
       </div>
 
       {!isCollapsed && (

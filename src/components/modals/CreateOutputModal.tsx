@@ -4,7 +4,7 @@ import { XMarkIcon } from '@heroicons/react/24/outline';
 import { classNames } from '@/utils/classNames';
 import { OutputService } from '@/services/outputService';
 import Input from '@/components/ui/Input';
-import Modal from '../Modal';
+import Modal from '../ui/Modal';
 import Button from '@/components/ui/Button';
 
 interface CreateOutputModalProps {

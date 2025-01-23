@@ -3,7 +3,7 @@
 import { InputProcess } from "@/types/processTypes";
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
-import EditProcessModal from "./modals/EditProcessModal";
+import EditProcessModal from "../modals/EditProcessModal";
 import Link from "next/link";
 
 const getInputTypeStyles = (type: InputProcess["inputType"]) => {

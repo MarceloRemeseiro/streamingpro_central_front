@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import { appAuth } from "@/services/appAuth";
-import { useAuth } from "./AuthProvider";
+import { useAuth } from "../auth/AuthProvider";
 import Button from '@/components/ui/Button';
 
 export const Login = () => {

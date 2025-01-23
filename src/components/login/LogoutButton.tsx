@@ -1,7 +1,7 @@
 'use client';
 
 import { ArrowRightOnRectangleIcon } from "@heroicons/react/24/outline";
-import { useAuth } from "./AuthProvider";
+import { useAuth } from "../auth/AuthProvider";
 
 export default function LogoutButton() {
   const { logout } = useAuth();

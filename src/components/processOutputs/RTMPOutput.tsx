@@ -1,13 +1,14 @@
 import { FC, useState } from "react";
 import { OutputProcess } from "@/types/processTypes";
-import ProcessSwitch from "./ProcessSwitch";
+import ProcessSwitch from "../ui/ProcessSwitch";
 import { processCommandService } from "@/services/processCommandService";
 import { TrashIcon, PencilIcon, Cog6ToothIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
-import DeleteProcessModal from "./modals/DeleteProcessModal";
-import EditRTMPOutputModal from "./modals/EditRTMPOutputModal";
-import EditRTMPTitleModal from "./modals/EditRTMPTitleModal";
-import SwitchWarning from "./SwitchWarning";
+import DeleteProcessModal from "../modals/DeleteProcessModal";
+import EditRTMPOutputModal from "../modals/EditRTMPOutputModal";
+import EditRTMPTitleModal from "../modals/EditRTMPTitleModal";
+import SwitchWarning from "../processCard/SwitchWarning";
 import CollapseButton from '@/components/ui/CollapseButton';
+import EditButton from '@/components/ui/EditButton';
 
 interface RTMPOutputProps {
   output: OutputProcess;
@@ -91,22 +92,16 @@ const RTMPOutput: FC<RTMPOutputProps> = ({ output, onDeleted, onUpdated }) => {
           >
             <CollapseButton
               isCollapsed={isCollapsed}
-              protocol="rtmp"
             />
             <h4 className="text-xs font-medium text-protocol-rtmp-output-text dark:text-protocol-rtmp-output-text-dark">
               {name}
             </h4>
+            <EditButton
+              onClick={() => setModals(m => ({ ...m, editTitle: true }))}
+              protocol="rtmp"
+            />
           </button>
           <div className="flex items-center gap-2">
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setModals(m => ({ ...m, editTitle: true }));
-              }}
-              className="p-0.5 text-protocol-rtmp-output-secondary dark:text-protocol-rtmp-output-secondary-dark hover:text-protocol-rtmp-output-hover dark:hover:text-protocol-rtmp-output-hover-dark cursor-pointer"
-            >
-              <PencilIcon className="h-3 w-3" />
-            </button>
             <div className="relative">
               <ProcessSwitch
                 processId={output.id}

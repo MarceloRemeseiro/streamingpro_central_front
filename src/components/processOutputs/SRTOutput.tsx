@@ -1,6 +1,6 @@
 import { FC, useState } from "react";
 import { OutputProcess } from "@/types/processTypes";
-import ProcessSwitch from "./ProcessSwitch";
+import ProcessSwitch from "../ui/ProcessSwitch";
 import { processCommandService } from "@/services/processCommandService";
 import {
   TrashIcon,
@@ -8,11 +8,12 @@ import {
   Cog6ToothIcon,
   ChevronDownIcon,
 } from "@heroicons/react/24/outline";
-import DeleteProcessModal from "./modals/DeleteProcessModal";
-import EditSRTOutputModal from "./modals/EditSRTOutputModal";
-import EditSRTTitleModal from "./modals/EditSRTTitleModal";
-import SwitchWarning from "./SwitchWarning";
+import DeleteProcessModal from "../modals/DeleteProcessModal";
+import EditSRTOutputModal from "../modals/EditSRTOutputModal";
+import EditSRTTitleModal from "../modals/EditSRTTitleModal";
+import SwitchWarning from "../processCard/SwitchWarning";
 import CollapseButton from '@/components/ui/CollapseButton';
+import EditButton from '@/components/ui/EditButton';
 
 interface SRTOutputProps {
   output: OutputProcess;
@@ -106,22 +107,16 @@ const SRTOutput: FC<SRTOutputProps> = ({ output, onDeleted, onUpdated }) => {
           >
             <CollapseButton
               isCollapsed={isCollapsed}
-              protocol="srt"
             />
             <h4 className="text-xs font-medium text-protocol-srt-output-text dark:text-protocol-srt-output-text-dark">
               {name}
             </h4>
+            <EditButton
+              onClick={() => setModals(m => ({ ...m, editTitle: true }))}
+              protocol="srt"
+            />
           </button>
           <div className="flex items-center gap-2">
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setModals(m => ({ ...m, editTitle: true }));
-              }}
-              className="p-0.5 text-protocol-srt-output-secondary dark:text-protocol-srt-output-secondary-dark hover:text-protocol-srt-output-hover dark:hover:text-protocol-srt-output-hover-dark cursor-pointer"
-            >
-              <PencilIcon className="h-3 w-3" />
-            </button>
             <div className="relative">
               <ProcessSwitch
                 processId={output.id}

@@ -1,6 +1,6 @@
 import { FC, useEffect, useRef, useState } from "react";
 import Hls from "hls.js";
-import StreamStats from "./StreamStats";
+import StreamStats from "@/components/processCard/StreamStats";
 import { InputProcess } from "@/types/processTypes";
 
 interface VideoPlayerProps {

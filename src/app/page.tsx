@@ -1,6 +1,6 @@
 'use client';
 
-import { ProcessList } from "@/components/ProcessList";
+import { ProcessList } from "@/components/processCard/ProcessList";
 
 export default function Home() {
   return (

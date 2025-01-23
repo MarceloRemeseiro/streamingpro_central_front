@@ -2,16 +2,16 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { InputProcess } from "@/types/processTypes";
-import VideoPlayer from "@/components/VideoPlayer";
-import OutputDefault from "@/components/OutputDefault";
-import RTMPConnection from "@/components/RTMPConnection";
-import SRTConnection from "@/components/SRTConnection";
-import CustomOutputs from "@/components/CustomOutputs";
-import PacketLossStats from "@/components/PacketLossStats";
+import VideoPlayer from "@/components/processCard/VideoPlayer";
+import OutputDefault from "@/components/processCard/OutputDefault";
+import RTMPConnection from "@/components/processCard/RTMPConnection";
+import SRTConnection from "@/components/processCard/SRTConnection";
+import CustomOutputs from "@/components/processCard/CustomOutputs";
+import PacketLossStats from "@/components/processCard/PacketLossStats";
 import Link from "next/link";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
-import RTMPOutput from "@/components/RTMPOutput";
-import SRTOutput from "@/components/SRTOutput";
+import RTMPOutput from "@/components/processOutputs/RTMPOutput";
+import SRTOutput from "@/components/processOutputs/SRTOutput";
 
 interface InputDetailProps {
   id: string;

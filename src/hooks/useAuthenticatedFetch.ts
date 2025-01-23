@@ -1,4 +1,4 @@
-import { useAuth } from '@/components/AuthProvider';
+import { useAuth } from '@/components/auth/AuthProvider';
 import { useEffect, useState, useCallback } from 'react';
 
 export function useAuthenticatedFetch<T>(url: string, options?: RequestInit) {

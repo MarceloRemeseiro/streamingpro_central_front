@@ -2,7 +2,7 @@ import { FC, useState } from 'react';
 import { Dialog } from '@headlessui/react';
 import { OutputProcess } from '@/types/processTypes';
 import { outputService } from '@/services/outputService';
-import Modal from '../Modal';
+import Modal from '../ui/Modal';
 import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
 

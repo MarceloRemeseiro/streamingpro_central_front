@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import CreateProcessForm from "@/components/CreateProcessForm";
-import ProcessPill from "@/components/ProcessPill";
+import ProcessPill from "@/components/inputPage/ProcessPill";
 import { useProcesses } from "@/hooks/useProcesses";
 import { useState } from "react";
 import DeleteProcessModal from "@/components/modals/DeleteProcessModal";
