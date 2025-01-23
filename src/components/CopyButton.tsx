@@ -21,7 +21,7 @@ const CopyButton: FC<CopyButtonProps> = ({ text }) => {
     <div className="relative">
       <button
         onClick={handleCopy}
-        className="ml-2 p-2 text-text-muted hover:text-text-primary"
+        className="ml-2 p-2 text-text-muted hover:text-text-primary dark:hover:text-text-primary-dark"
         title="Copiar al portapapeles"
       >
         <svg
@@ -40,7 +40,7 @@ const CopyButton: FC<CopyButtonProps> = ({ text }) => {
         </svg>
       </button>
       {showTooltip && (
-        <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-xs text-text-light bg-card-background rounded shadow-lg">
+        <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-xs text-text-primary bg-card-background rounded shadow-lg">
           Copiado
         </div>
       )}

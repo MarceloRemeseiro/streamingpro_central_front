@@ -228,7 +228,7 @@ export default {
         // Bordes y otros
         border: {
           DEFAULT: '#e5e7eb',
-          dark: '#130d44'        // dark
+          dark: '#130d66'        // dark
         },
         info: {
           background: {

@@ -1,0 +1,438 @@
+{
+    "version": 4,
+    "process": {
+        "restreamer-ui:ingest:53ea95f9-d1f5-489f-b4f5-c7800f5cba29": {
+            "id": "restreamer-ui:ingest:53ea95f9-d1f5-489f-b4f5-c7800f5cba29",
+            "reference": "53ea95f9-d1f5-489f-b4f5-c7800f5cba29",
+            "config": {
+                "id": "restreamer-ui:ingest:53ea95f9-d1f5-489f-b4f5-c7800f5cba29",
+                "reference": "53ea95f9-d1f5-489f-b4f5-c7800f5cba29",
+                "ffversion": "^6.1.1",
+                "input": [
+                    {
+                        "id": "input_0",
+                        "address": "{rtmp,name=53ea95f9-d1f5-489f-b4f5-c7800f5cba29.stream}",
+                        "options": [
+                            "-fflags",
+                            "+genpts",
+                            "-thread_queue_size",
+                            "512",
+                            "-probesize",
+                            "5000000",
+                            "-analyzeduration",
+                            "3000000",
+                            "-rtmp_enhanced_codecs",
+                            "hvc1,av01,vp09"
+                        ],
+                        "cleanup": []
+                    }
+                ],
+                "output": [
+                    {
+                        "id": "output_0",
+                        "address": "[f=hls:start_number=0:hls_time=2:hls_list_size=6:hls_flags=append_list+delete_segments+program_date_time+temp_file:hls_delete_threshold=4:hls_segment_filename={memfs^:}/53ea95f9-d1f5-489f-b4f5-c7800f5cba29_{outputid}_%04d.ts:master_pl_name=53ea95f9-d1f5-489f-b4f5-c7800f5cba29.m3u8:master_pl_publish_rate=2:method=PUT]{memfs}/53ea95f9-d1f5-489f-b4f5-c7800f5cba29_{outputid}.m3u8|[f=flv]{rtmp,name=53ea95f9-d1f5-489f-b4f5-c7800f5cba29.stream}|[f=mpegts]{srt,name=53ea95f9-d1f5-489f-b4f5-c7800f5cba29,mode=publish}",
+                        "options": [
+                            "-dn",
+                            "-sn",
+                            "-map",
+                            "0:1",
+                            "-codec:v",
+                            "copy",
+                            "-map",
+                            "0:0",
+                            "-codec:a",
+                            "copy",
+                            "-metadata",
+                            "title=https://127.0.0.1/53ea95f9-d1f5-489f-b4f5-c7800f5cba29/oembed.json",
+                            "-metadata",
+                            "service_provider=datarhei-Restreamer",
+                            "-flags",
+                            "+low_delay+global_header",
+                            "-tag:v",
+                            "7",
+                            "-tag:a",
+                            "10",
+                            "-f",
+                            "tee"
+                        ],
+                        "cleanup": [
+                            {
+                                "pattern": "memfs:/53ea95f9-d1f5-489f-b4f5-c7800f5cba29**",
+                                "max_files": 0,
+                                "max_file_age_seconds": 0,
+                                "purge_on_delete": true
+                            },
+                            {
+                                "pattern": "memfs:/53ea95f9-d1f5-489f-b4f5-c7800f5cba29_{outputid}.m3u8",
+                                "max_files": 0,
+                                "max_file_age_seconds": 24,
+                                "purge_on_delete": true
+                            },
+                            {
+                                "pattern": "memfs:/53ea95f9-d1f5-489f-b4f5-c7800f5cba29_{outputid}_**.ts",
+                                "max_files": 12,
+                                "max_file_age_seconds": 24,
+                                "purge_on_delete": true
+                            },
+                            {
+                                "pattern": "memfs:/53ea95f9-d1f5-489f-b4f5-c7800f5cba29.m3u8",
+                                "max_files": 0,
+                                "max_file_age_seconds": 24,
+                                "purge_on_delete": true
+                            }
+                        ]
+                    }
+                ],
+                "options": [
+                    "-loglevel",
+                    "level+info",
+                    "-err_detect",
+                    "ignore_err",
+                    "-y"
+                ],
+                "reconnect": true,
+                "reconnect_delay_seconds": 15,
+                "autostart": true,
+                "stale_timeout_seconds": 30,
+                "limit_cpu_usage": 0,
+                "limit_memory_bytes": 0,
+                "limit_waitfor_seconds": 5
+            },
+            "created_at": 1737541099,
+            "updated_at": 1737541099,
+            "order": "start"
+        },
+        "restreamer-ui:ingest:d9a478f9-34f8-4976-b292-d8bbd08dbcc3": {
+            "id": "restreamer-ui:ingest:d9a478f9-34f8-4976-b292-d8bbd08dbcc3",
+            "reference": "d9a478f9-34f8-4976-b292-d8bbd08dbcc3",
+            "config": {
+                "id": "restreamer-ui:ingest:d9a478f9-34f8-4976-b292-d8bbd08dbcc3",
+                "reference": "d9a478f9-34f8-4976-b292-d8bbd08dbcc3",
+                "ffversion": "^6.1.1",
+                "input": [
+                    {
+                        "id": "input_0",
+                        "address": "{srt,name=d9a478f9-34f8-4976-b292-d8bbd08dbcc3.stream,mode=request}",
+                        "options": [
+                            "-fflags",
+                            "+genpts",
+                            "-thread_queue_size",
+                            "512",
+                            "-probesize",
+                            "5000000",
+                            "-analyzeduration",
+                            "5000000"
+                        ],
+                        "cleanup": []
+                    }
+                ],
+                "output": [
+                    {
+                        "id": "output_0",
+                        "address": "[f=hls:start_number=0:hls_time=2:hls_list_size=6:hls_flags=append_list+delete_segments+program_date_time+temp_file:hls_delete_threshold=4:hls_segment_filename={memfs^:}/d9a478f9-34f8-4976-b292-d8bbd08dbcc3_{outputid}_%04d.ts:master_pl_name=d9a478f9-34f8-4976-b292-d8bbd08dbcc3.m3u8:master_pl_publish_rate=2:method=PUT]{memfs}/d9a478f9-34f8-4976-b292-d8bbd08dbcc3_{outputid}.m3u8|[f=flv]{rtmp,name=d9a478f9-34f8-4976-b292-d8bbd08dbcc3.stream}|[f=mpegts]{srt,name=d9a478f9-34f8-4976-b292-d8bbd08dbcc3,mode=publish}",
+                        "options": [
+                            "-dn",
+                            "-sn",
+                            "-map",
+                            "0:0",
+                            "-codec:v",
+                            "copy",
+                            "-map",
+                            "0:1",
+                            "-codec:a",
+                            "copy",
+                            "-metadata",
+                            "title=https://127.0.0.1/d9a478f9-34f8-4976-b292-d8bbd08dbcc3/oembed.json",
+                            "-metadata",
+                            "service_provider=datarhei-Restreamer",
+                            "-flags",
+                            "+low_delay+global_header",
+                            "-tag:v",
+                            "7",
+                            "-tag:a",
+                            "10",
+                            "-f",
+                            "tee"
+                        ],
+                        "cleanup": [
+                            {
+                                "pattern": "memfs:/d9a478f9-34f8-4976-b292-d8bbd08dbcc3**",
+                                "max_files": 0,
+                                "max_file_age_seconds": 0,
+                                "purge_on_delete": true
+                            },
+                            {
+                                "pattern": "memfs:/d9a478f9-34f8-4976-b292-d8bbd08dbcc3_{outputid}.m3u8",
+                                "max_files": 0,
+                                "max_file_age_seconds": 24,
+                                "purge_on_delete": true
+                            },
+                            {
+                                "pattern": "memfs:/d9a478f9-34f8-4976-b292-d8bbd08dbcc3_{outputid}_**.ts",
+                                "max_files": 12,
+                                "max_file_age_seconds": 24,
+                                "purge_on_delete": true
+                            },
+                            {
+                                "pattern": "memfs:/d9a478f9-34f8-4976-b292-d8bbd08dbcc3.m3u8",
+                                "max_files": 0,
+                                "max_file_age_seconds": 24,
+                                "purge_on_delete": true
+                            }
+                        ]
+                    }
+                ],
+                "options": [
+                    "-loglevel",
+                    "level+info",
+                    "-err_detect",
+                    "ignore_err",
+                    "-y"
+                ],
+                "reconnect": true,
+                "reconnect_delay_seconds": 15,
+                "autostart": true,
+                "stale_timeout_seconds": 30,
+                "limit_cpu_usage": 0,
+                "limit_memory_bytes": 0,
+                "limit_waitfor_seconds": 5
+            },
+            "created_at": 1737541224,
+            "updated_at": 1737541224,
+            "order": "start"
+        }
+    },
+    "metadata": {
+        "system": {},
+        "process": {
+            "restreamer-ui:ingest:53ea95f9-d1f5-489f-b4f5-c7800f5cba29": {
+                "restreamer-ui": {
+                    "control": {
+                        "hls": {
+                            "cleanup": true,
+                            "lhls": false,
+                            "listSize": 6,
+                            "master_playlist": true,
+                            "segmentDuration": 2,
+                            "storage": "memfs",
+                            "version": 3
+                        },
+                        "limits": {
+                            "cpu_usage": 0,
+                            "memory_mbytes": 0,
+                            "waitfor_seconds": 5
+                        },
+                        "process": {
+                            "autostart": true,
+                            "delay": 15,
+                            "low_delay": false,
+                            "reconnect": true,
+                            "staleTimeout": 30
+                        },
+                        "rtmp": {
+                            "enable": true
+                        },
+                        "snapshot": {
+                            "enable": true,
+                            "interval": 60
+                        },
+                        "srt": {
+                            "enable": true
+                        }
+                    },
+                    "license": "CC BY 4.0",
+                    "meta": {
+                        "author": {
+                            "description": "",
+                            "name": ""
+                        },
+                        "description": "Descripcion test",
+                        "name": "RTMP CON PUERTO"
+                    },
+                    "player": {},
+                    "profiles": [
+                        {
+                            "audio": {
+                                "coder": "copy",
+                                "decoder": {
+                                    "coder": "default",
+                                    "mapping": {
+                                        "filter": [],
+                                        "global": [],
+                                        "local": []
+                                    },
+                                    "settings": {}
+                                },
+                                "encoder": {
+                                    "coder": "copy",
+                                    "mapping": {
+                                        "filter": [],
+                                        "global": [],
+                                        "local": [
+                                            "-codec:a",
+                                            "copy"
+                                        ]
+                                    },
+                                    "settings": {}
+                                },
+                                "filter": {
+                                    "graph": "",
+                                    "settings": {}
+                                },
+                                "source": 0,
+                                "stream": 0
+                            },
+                            "custom": {
+                                "selected": false,
+                                "stream": 0
+                            },
+                            "video": {
+                                "decoder": {
+                                    "coder": "default",
+                                    "mapping": {
+                                        "filter": [],
+                                        "global": [],
+                                        "local": []
+                                    },
+                                    "settings": {}
+                                },
+                                "encoder": {
+                                    "coder": "copy",
+                                    "mapping": {
+                                        "filter": [],
+                                        "global": [],
+                                        "local": [
+                                            "-codec:v",
+                                            "copy"
+                                        ]
+                                    },
+                                    "settings": {}
+                                },
+                                "filter": {
+                                    "graph": "",
+                                    "settings": {}
+                                },
+                                "source": 0,
+                                "stream": 1
+                            }
+                        }
+                    ]
+                }
+            },
+            "restreamer-ui:ingest:d9a478f9-34f8-4976-b292-d8bbd08dbcc3": {
+                "restreamer-ui": {
+                    "control": {
+                        "hls": {
+                            "cleanup": true,
+                            "lhls": false,
+                            "listSize": 6,
+                            "master_playlist": true,
+                            "segmentDuration": 2,
+                            "storage": "memfs",
+                            "version": 3
+                        },
+                        "limits": {
+                            "cpu_usage": 0,
+                            "memory_mbytes": 0,
+                            "waitfor_seconds": 5
+                        },
+                        "process": {
+                            "autostart": true,
+                            "delay": 15,
+                            "low_delay": true,
+                            "reconnect": true,
+                            "staleTimeout": 30
+                        },
+                        "rtmp": {
+                            "enable": true
+                        },
+                        "snapshot": {
+                            "enable": true,
+                            "interval": 60
+                        },
+                        "srt": {
+                            "enable": true
+                        }
+                    },
+                    "license": "CC BY 4.0",
+                    "meta": {
+                        "author": {
+                            "description": "",
+                            "name": ""
+                        },
+                        "description": "srt",
+                        "name": "test"
+                    },
+                    "player": {},
+                    "profiles": [
+                        {
+                            "audio": {
+                                "coder": "copy",
+                                "decoder": {
+                                    "coder": "default",
+                                    "mapping": {
+                                        "filter": [],
+                                        "global": [],
+                                        "local": []
+                                    },
+                                    "settings": {}
+                                },
+                                "encoder": {
+                                    "coder": "copy",
+                                    "mapping": {
+                                        "filter": [],
+                                        "global": [],
+                                        "local": [
+                                            "-codec:a",
+                                            "copy"
+                                        ]
+                                    },
+                                    "settings": {}
+                                },
+                                "filter": {
+                                    "graph": "",
+                                    "settings": {}
+                                },
+                                "source": 0,
+                                "stream": 1
+                            },
+                            "custom": {
+                                "selected": false,
+                                "stream": 1
+                            },
+                            "video": {
+                                "decoder": {
+                                    "coder": "default",
+                                    "mapping": {
+                                        "filter": [],
+                                        "global": [],
+                                        "local": []
+                                    },
+                                    "settings": {}
+                                },
+                                "encoder": {
+                                    "coder": "copy",
+                                    "mapping": {
+                                        "filter": [],
+                                        "global": [],
+                                        "local": [
+                                            "-codec:v",
+                                            "copy"
+                                        ]
+                                    },
+                                    "settings": {}
+                                },
+                                "filter": {
+                                    "graph": "",
+                                    "settings": {}
+                                },
+                                "source": 0,
+                                "stream": 0
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}

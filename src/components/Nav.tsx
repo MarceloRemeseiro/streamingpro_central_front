@@ -12,6 +12,7 @@ import LogoutButton from "@/components/LogoutButton";
 import { useState } from "react";
 import { SystemMetrics } from "./SystemMetrics";
 import ThemeToggle from "./ThemeToggle";
+import Image from "next/image";
 
 
 
@@ -38,9 +39,12 @@ export default function Nav() {
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <span className="text-2xl font-bold text-primary dark:text-primary-light">
-                StreamingPro
-              </span>
+              <Link href="/" className="flex items-center gap-2">
+                <Image src="/logo.svg" alt="StreamingPro" width={40} height={40} />
+                <span className="text-2xl font-bold text-primary dark:text-primary-light">
+                  StreamingPro Central
+                </span>
+              </Link>
             </div>
          
           </div>

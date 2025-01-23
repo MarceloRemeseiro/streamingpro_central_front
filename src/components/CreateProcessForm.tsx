@@ -63,8 +63,8 @@ export default function CreateProcessForm({ onSuccess }: CreateProcessFormProps)
               onClick={() => handleTypeChange("rtmp")}
               className={`px-4 py-2 rounded-md ${
                 formData.type === "rtmp"
-                  ? "bg-protocol-rtmp-background dark:bg-protocol-rtmp-background-dark text-protocol-rtmp-text dark:text-protocol-rtmp-text"
-                  : "bg-info-background dark:bg-info-background-dark text-text-muted dark:text-text"
+                  ? "bg-protocol-rtmp-background dark:bg-protocol-rtmp-background-dark text-protocol-rtmp-text dark:text-text-light"
+                  : "bg-info-background dark:bg-info-background-dark text-text-muted dark:text-text-muted-dark  "
               }`}
             >
               RTMP
@@ -74,8 +74,8 @@ export default function CreateProcessForm({ onSuccess }: CreateProcessFormProps)
               onClick={() => handleTypeChange("srt")}
               className={`px-4 py-2 rounded-md ${
                 formData.type === "srt"
-                  ? "bg-protocol-srt-background dark:bg-protocol-srt-background-dark text-protocol-srt-text dark:text-protocol-srt-text"
-                  : "bg-info-background dark:bg-info-background-dark text-text-muted dark:text-text"
+                  ? "bg-protocol-srt-background dark:bg-protocol-srt-background-dark text-protocol-srt-text dark:text-text-light"
+                  : "bg-info-background dark:bg-info-background-dark text-text-muted dark:text-text-muted-dark  "
               }`}
             >
               SRT
