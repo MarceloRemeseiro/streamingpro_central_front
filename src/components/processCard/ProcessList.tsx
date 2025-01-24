@@ -178,7 +178,7 @@ const InputCard = memo(
             </div>
           ) : (
             <p className="text-base text-text-muted dark:text-text-muted-dark">
-              No hay outputs configurados
+              No Outputs configured
             </p>
           )}
         </div>

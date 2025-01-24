@@ -33,7 +33,7 @@ const OutputDefault: FC<OutputDefaultProps> = ({ streamId, processId }) => {
 
   return (
     <div className="mt-2 p-3 bg-card-background dark:bg-card-background-dark rounded-lg shadow">
-      <div className="flex justify-between items-center mb-2">
+      <div className="flex justify-between items-center">
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
           className="flex items-center gap-2 flex-1 group"

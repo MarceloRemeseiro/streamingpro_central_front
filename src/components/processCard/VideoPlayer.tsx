@@ -100,7 +100,7 @@ const VideoPlayer: FC<VideoPlayerProps> = ({
 
   return (
     <div className="mt-2 p-3 bg-card-background dark:bg-card-background-dark rounded-lg shadow">
-      <div className="flex justify-between items-center mb-2">
+      <div className="flex justify-between items-center">
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
           className="flex items-center gap-2 flex-1 group"
@@ -112,12 +112,13 @@ const VideoPlayer: FC<VideoPlayerProps> = ({
             Preview
           </h3>
         </button>
+
       </div>
 
       {!isCollapsed && (
         <>
           <div
-            className="video-container relative"
+            className="video-container relative mt-2"
             style={{ aspectRatio: "16 / 9" }}
           >
             <video
@@ -143,9 +144,10 @@ const VideoPlayer: FC<VideoPlayerProps> = ({
               </div>
             )}
           </div>
-          <StreamStats input={stats} />
         </>
       )}
+      <StreamStats input={stats} />
+
     </div>
   );
 };

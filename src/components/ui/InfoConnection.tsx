@@ -13,7 +13,7 @@ interface InfoConnectionProps {
 
 const InfoConnection = ({ fields, className = "" }: InfoConnectionProps) => {
   return (
-    <div className={`space-y-2 text-xs ${className}`}>
+    <div className={`space-y-2 text-xs mt-2 ${className}`}>
       {fields.map(({ label, value, grid }, index) => (
         grid ? (
           <div
