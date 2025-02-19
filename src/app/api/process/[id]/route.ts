@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { withAuth } from '@/utils/authUtils';
+import { ProcessStateService } from '@/services/processStateService';
 
 interface Process {
   id: string;
@@ -148,9 +149,10 @@ export async function DELETE(request: NextRequest) {
       const outputsToDelete = processes.filter((process: ProcessWithOutputs) => {
         return process.id.includes(':egress:') && process.reference === streamId;
       });
-      
 
-      // Eliminar todos los outputs asociados
+      const processStateService = ProcessStateService.getInstance();
+
+      // Eliminar todos los outputs asociados y sus estados
       for (const output of outputsToDelete) {
         await fetch(`http://${baseUrl}:8080/api/v3/process/${output.id}`, {
           method: 'DELETE',
@@ -159,9 +161,11 @@ export async function DELETE(request: NextRequest) {
             'Authorization': `Bearer ${token}`
           }
         });
+        // Eliminar el estado del output de la base de datos
+        await processStateService.deleteProcessState(output.id);
       }
 
-      // Finalmente, eliminar el proceso principal
+      // Eliminar el proceso principal
       const processResponse = await fetch(`http://${baseUrl}:8080/api/v3/process/${id}`, {
         method: 'DELETE',
         headers: {
@@ -174,6 +178,9 @@ export async function DELETE(request: NextRequest) {
         const errorData = await processResponse.json().catch(() => ({}));
         throw new Error(errorData.message || 'Error eliminando el proceso');
       }
+
+      // Eliminar el estado del proceso principal de la base de datos
+      await processStateService.deleteProcessState(id);
 
       return NextResponse.json({ 
         success: true,

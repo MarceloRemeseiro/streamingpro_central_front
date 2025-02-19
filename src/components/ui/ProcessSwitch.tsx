@@ -1,5 +1,6 @@
 import { FC, useState, useEffect } from 'react';
 import { Switch } from '@headlessui/react';
+import { ProcessStateService } from '@/services/processStateService';
 
 interface ProcessSwitchProps {
   processId: string;
@@ -9,17 +10,37 @@ interface ProcessSwitchProps {
 }
 
 const ProcessSwitch: FC<ProcessSwitchProps> = ({ processId, state, lastLogLine, onStateChange }) => {
+  // Estado para la posición del switch (visual)
+  const [switchPosition, setSwitchPosition] = useState(false);
+  // Estado para si el proceso está activo (lógica)
+  const [isProcessActive, setIsProcessActive] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isMovedRight, setIsMovedRight] = useState(state === 'running');
-  const [previousState, setPreviousState] = useState(state);
 
   useEffect(() => {
-    if (state !== previousState) {
-      setIsLoading(false);
-      setPreviousState(state);
-      setIsMovedRight(state === 'running');
-    }
-  }, [state, previousState]);
+    // Al montar el componente, obtenemos el estado de la API
+    const loadSavedState = async () => {
+      try {
+        const response = await fetch(`/api/process-state?processId=${processId}`);
+        if (!response.ok) throw new Error('Error loading process state');
+        const data = await response.json();
+        setSwitchPosition(data.isEnabled);
+      } catch (error) {
+        console.error('Error loading process state:', error);
+        // Si hay error, usamos el estado actual del proceso
+        const isActive = state === 'running' || state === 'connecting' || state === 'starting';
+        setSwitchPosition(isActive);
+      }
+      setIsProcessActive(state === 'running' || state === 'connecting' || state === 'starting');
+    };
+
+    loadSavedState();
+  }, [processId, state]);
+
+  useEffect(() => {
+    // Actualizamos solo el estado lógico cuando cambia el estado del proceso
+    const isActive = state === 'running' || state === 'connecting' || state === 'starting';
+    setIsProcessActive(isActive);
+  }, [state]);
 
   const isConnecting = () => {
     if (!lastLogLine) return false;
@@ -32,63 +53,60 @@ const ProcessSwitch: FC<ProcessSwitchProps> = ({ processId, state, lastLogLine, 
   };
 
   const handleChange = async (checked: boolean) => {
+    if (!checked && isProcessActive) {
+      await onStateChange(checked);
+      return;
+    }
+
     try {
+      setIsLoading(true);
+      setSwitchPosition(checked);
       
-      // Si estamos apagando y está running, solo notificamos sin mover el switch
-      if (!checked && state === 'running') {
-        await onStateChange(false);
-        return;
-      }
+      // Guardar el estado en la API
+      const response = await fetch('/api/process-state', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          processId,
+          isEnabled: checked
+        }),
+      });
 
-      // Si estamos apagando durante la conexión
-      if (!checked && isLoading) {
-        setIsMovedRight(false);
-        setIsLoading(false);
-        await onStateChange(false);
-        return;
-      }
-
-      // Si estamos encendiendo y no está en loading, procedemos normalmente
-      if (!isLoading && checked) {
-        setIsMovedRight(true);
-        setIsLoading(true);
-        await onStateChange(true);
-        return;
-      }
-
-      // Si estamos apagando y no está running ni loading, apagamos directamente
-      if (!checked && state !== 'running' && !isLoading) {
-        setIsMovedRight(false);
-        await onStateChange(false);
-      }
+      if (!response.ok) throw new Error('Error saving process state');
+      
+      await onStateChange(checked);
     } catch (error) {
       console.error('Error changing process state:', error);
-      // Si hay error al encender, regresamos el switch a su posición original
-      if (!state.includes('running')) {
-        setIsMovedRight(false);
-      }
+      setSwitchPosition(!checked);
+      // Intentar revertir el estado en la API
+      await fetch('/api/process-state', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          processId,
+          isEnabled: !checked
+        }),
+      });
+    } finally {
       setIsLoading(false);
     }
   };
 
   const getStateStyles = () => {
-    if (!isMovedRight) return 'bg-switch-off';
-    if (isLoading) return 'bg-switch-connecting';
-    if (isConnecting()) return 'bg-switch-connecting';
-    
-    switch (state) {
-      case 'running':
-        return 'bg-switch-running';
-      case 'failed':
-        return 'bg-switch-failed';
-      default:
-        return 'bg-switch-off';
-    }
+    if (!switchPosition) return 'bg-switch-off';
+    if (isConnecting() ) return 'bg-switch-connecting';
+    if (state === 'failed') return 'bg-switch-failed';
+    if (!isProcessActive) return 'bg-switch-off';
+    return 'bg-switch-running';
   };
 
   return (
     <Switch
-      checked={isMovedRight}
+      checked={switchPosition}
       onChange={handleChange}
       data-process-id={processId}
       className={`
@@ -99,12 +117,12 @@ const ProcessSwitch: FC<ProcessSwitchProps> = ({ processId, state, lastLogLine, 
       `}
     >
       <span className="sr-only">
-        {state === 'running' ? 'Detener proceso' : 'Iniciar proceso'}
+        {switchPosition ? 'Detener proceso' : 'Iniciar proceso'}
       </span>
       <span
         className={`
           switch-handle
-          ${isMovedRight ? 'translate-x-6' : 'translate-x-1'}
+          ${switchPosition ? 'translate-x-6' : 'translate-x-1'}
           inline-block h-4 w-4 transform rounded-full bg-white
           transition-transform duration-200 ease-in-out
           ${isLoading || isConnecting() ? 'animate-pulse' : ''}

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { withAuth } from '@/utils/authUtils';
+import { ProcessStateService } from '@/services/processStateService';
 
 export async function PUT(request: NextRequest) {
   try {
@@ -82,7 +83,7 @@ export async function PUT(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
-    const id = request.url.split('/').pop()?.split('?')[0];
+    const id = request.nextUrl.pathname.split('/')[4];
     if (!id) {
       return NextResponse.json({ error: 'ID no proporcionado' }, { status: 400 });
     }
@@ -90,19 +91,6 @@ export async function DELETE(request: NextRequest) {
     const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_BASE_URL;
 
     return await withAuth(async (token) => {
-      // Primero obtenemos todos los procesos para encontrar los outputs asociados
-      const processesResponse = await fetch(`http://${baseUrl}:8080/api/v3/process`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        }
-      });
-
-      if (!processesResponse.ok) {
-        throw new Error('Error obteniendo los procesos');
-      }
-     
       const processResponse = await fetch(`http://${baseUrl}:8080/api/v3/process/${id}`, {
         method: 'DELETE',
         headers: {
@@ -116,9 +104,11 @@ export async function DELETE(request: NextRequest) {
         throw new Error(errorData.message || 'Error eliminando el proceso');
       }
 
-      return NextResponse.json({ 
-        success: true,
-      });
+      // Eliminar el estado de la base de datos
+      const processStateService = ProcessStateService.getInstance();
+      await processStateService.deleteProcessState(id);
+
+      return NextResponse.json({ success: true });
     });
   } catch (error) {
     console.error('Error deleting process:', error);
