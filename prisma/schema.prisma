@@ -11,4 +11,18 @@ model ProcessState {
   id            String   @id
   isEnabled     Boolean  @default(false)
   lastUpdated   DateTime @default(now())
+}
+
+model UserPreferences {
+  id    Int     @id @default(1)
+  theme String  @default("light")
+}
+
+model CollapseState {
+  id        String  @id
+  isCollapsed Boolean @default(false)
+  processId  String
+  type      String
+
+  @@unique([processId, type])
 } 

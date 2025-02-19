@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { withAuth } from '@/utils/authUtils';
 import { ProcessStateService } from '@/services/processStateService';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 interface Process {
   id: string;
@@ -150,10 +153,20 @@ export async function DELETE(request: NextRequest) {
         return process.id.includes(':egress:') && process.reference === streamId;
       });
 
-      const processStateService = ProcessStateService.getInstance();
-
-      // Eliminar todos los outputs asociados y sus estados
+      // Eliminar los estados de colapso y switches de todos los outputs asociados
       for (const output of outputsToDelete) {
+        // Eliminar estados de colapso del output
+        await prisma.collapseState.deleteMany({
+          where: {
+            processId: output.id
+          }
+        });
+
+        // Eliminar estado del switch del output
+        const processStateService = ProcessStateService.getInstance();
+        await processStateService.deleteProcessState(output.id);
+
+        // Eliminar el output en Restreamer
         await fetch(`http://${baseUrl}:8080/api/v3/process/${output.id}`, {
           method: 'DELETE',
           headers: {
@@ -161,11 +174,20 @@ export async function DELETE(request: NextRequest) {
             'Authorization': `Bearer ${token}`
           }
         });
-        // Eliminar el estado del output de la base de datos
-        await processStateService.deleteProcessState(output.id);
       }
 
-      // Eliminar el proceso principal
+      // Eliminar el estado de colapso del input
+      await prisma.collapseState.deleteMany({
+        where: {
+          processId: id
+        }
+      });
+
+      // Eliminar el estado del switch del input
+      const processStateService = ProcessStateService.getInstance();
+      await processStateService.deleteProcessState(id);
+
+      // Finalmente eliminamos el proceso principal en Restreamer
       const processResponse = await fetch(`http://${baseUrl}:8080/api/v3/process/${id}`, {
         method: 'DELETE',
         headers: {
@@ -178,9 +200,6 @@ export async function DELETE(request: NextRequest) {
         const errorData = await processResponse.json().catch(() => ({}));
         throw new Error(errorData.message || 'Error eliminando el proceso');
       }
-
-      // Eliminar el estado del proceso principal de la base de datos
-      await processStateService.deleteProcessState(id);
 
       return NextResponse.json({ 
         success: true,

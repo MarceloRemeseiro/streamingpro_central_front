@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { withAuth } from '@/utils/authUtils';
 import { ProcessStateService } from '@/services/processStateService';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 export async function PUT(request: NextRequest) {
   try {
@@ -107,6 +110,13 @@ export async function DELETE(request: NextRequest) {
       // Eliminar el estado de la base de datos
       const processStateService = ProcessStateService.getInstance();
       await processStateService.deleteProcessState(id);
+
+      // Eliminar todos los estados de colapso relacionados con este processId
+      await prisma.collapseState.deleteMany({
+        where: {
+          processId: id
+        }
+      });
 
       return NextResponse.json({ success: true });
     });
