@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { InputProcess, VideoInput } from '@/types/processTypes';
+import { InputProcess, VideoInput, ProgressVideoInput } from '@/types/restreamer';
 import { getProcess } from '@/services/process';
 
 interface StreamStats {
@@ -42,7 +42,7 @@ export const useStreamStats = (input: InputProcess) => {
           return;
         }
 
-        if (!process.progress.inputs) {
+        if (!process.progress?.inputs) {
           setStats(initialStats);
           return;
         }
@@ -57,7 +57,7 @@ export const useStreamStats = (input: InputProcess) => {
           : '0.00';
 
         if (input.inputType === 'rtmp') {
-          const videoInput = progress.inputs.find((input: VideoInput) => input.type === 'video');
+          const videoInput = progress?.inputs?.find((input: VideoInput) => input.type === 'video');
           
           if (videoInput) {
             const newStats = {
@@ -70,7 +70,7 @@ export const useStreamStats = (input: InputProcess) => {
             setStats(newStats);
           }
         } else if (input.inputType === 'srt') {
-          const videoInput = progress.inputs.find((input: VideoInput) => input.type === 'video');
+          const videoInput = progress?.inputs?.find((item: ProgressVideoInput) => item.type === 'video');
           
           if (videoInput) {
             const newStats = {

@@ -1,7 +1,7 @@
 import { CreateProcessInput, ProcessConfig } from '@/types/createProcessTypes';
 import { v4 as uuidv4 } from 'uuid';
 
-class SRTService {
+export class SRTService {
   private baseUrl: string;
   
   constructor() {
@@ -254,6 +254,4 @@ class SRTService {
       throw error;
     }
   }
-}
-
-export const srtService = new SRTService(); 
+} 

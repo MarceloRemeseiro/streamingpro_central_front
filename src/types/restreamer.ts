@@ -41,6 +41,15 @@ export interface ProcessStateExtras {
   cpu_usage?: number;
 }
 
+export interface ProgressVideoInput {
+  type: string;
+  width?: number;
+  height?: number;
+  fps?: number;
+  bitrate_kbit?: number;
+  codec?: string;
+}
+
 export interface Process {
   id: string;
   type: string;
@@ -52,6 +61,19 @@ export interface Process {
   } & ProcessStateExtras;
   metadata?: ProcessMetadata;
   config: ProcessConfig;
+  progress?: {
+    inputs?: ProgressVideoInput[];
+    packet?: number;
+    drop?: number;
+  };
+}
+
+export interface InputProcess extends Process {
+  outputs: OutputProcess[];
+}
+
+export interface OutputProcess extends Process {
+  streamKey?: string;
 }
 
 export interface InputInfo {
@@ -88,4 +110,13 @@ export interface AuthConfig {
   port: string;
   username: string;
   password: string;
+}
+
+export interface VideoInput {
+  type: string;
+  width?: number;
+  height?: number;
+  fps?: number;
+  bitrate_kbit?: number;
+  codec?: string;
 } 

@@ -1,7 +1,7 @@
 import { CreateProcessInput, ProcessConfig } from '@/types/createProcessTypes';
 import { v4 as uuidv4 } from 'uuid';
 
-class RTMPService {
+export class RTMPService {
   private baseUrl: string;
   
   constructor() {
