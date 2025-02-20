@@ -14,7 +14,7 @@ interface Recording {
 export async function GET() {
   return await withAuth(async (token) => {
     try {
-      const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_API_URL;
+      const baseUrl = process.env.RESTREAMER_INTERNAL_API_URL;
       console.log('Fetching recordings from:', `${baseUrl}/api/v3/fs/disk?sort=lastmod&order=desc`);
 
       const response = await fetch(`${baseUrl}/api/v3/fs/disk?sort=lastmod&order=desc`, {
@@ -76,7 +76,7 @@ export async function DELETE(request: Request) {
   return await withAuth(async (token) => {
     try {
       const { filename } = await request.json();
-      const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_API_URL;
+      const baseUrl = process.env.RESTREAMER_INTERNAL_API_URL;
       
       // Aseguramos que el nombre del archivo tenga el formato correcto
       const formattedFilename = filename.startsWith('/') ? filename : `/${filename}`;

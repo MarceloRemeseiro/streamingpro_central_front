@@ -4,7 +4,7 @@ import { withAuth } from '@/utils/authUtils';
 export async function GET() {
   return await withAuth(async (token) => {
     try {
-      const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_API_URL;
+      const baseUrl = process.env.RESTREAMER_INTERNAL_API_URL;
       
       const response = await fetch(`${baseUrl}/api/v3/config`, {
         headers: {

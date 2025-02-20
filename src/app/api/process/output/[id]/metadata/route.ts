@@ -3,7 +3,7 @@ import { withAuth } from '@/utils/authUtils';
 
 export async function PUT(request: NextRequest) {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_API_URL;
+    const baseUrl = process.env.RESTREAMER_INTERNAL_API_URL;
     const body = await request.json();
     const { name } = body;
     const id = request.nextUrl.pathname.split('/')[4]; // /api/process/output/[id]/metadata

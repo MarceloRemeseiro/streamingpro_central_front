@@ -4,7 +4,7 @@ import { CreateProcessPayload } from '@/types/createProcessTypes';
 
 export async function POST(request: Request) {
     try {
-        const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_API_URL;
+        const baseUrl = process.env.RESTREAMER_INTERNAL_API_URL;
         const input: CreateProcessPayload = await request.json();
 
         return await withAuth(async (token) => {

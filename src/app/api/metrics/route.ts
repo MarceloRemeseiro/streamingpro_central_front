@@ -34,7 +34,7 @@ interface SessionMap {
 export async function GET() {
   try {
     return await withAuth(async (token) => {
-      const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_API_URL;
+      const baseUrl = process.env.RESTREAMER_INTERNAL_API_URL;
       
       // Obtener datos de los tres endpoints
       const [processesResponse, metricsResponse, sessionsResponse] = await Promise.all([

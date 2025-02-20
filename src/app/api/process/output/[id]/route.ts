@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 
 export async function PUT(request: NextRequest) {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_API_URL;
+    const baseUrl = process.env.RESTREAMER_INTERNAL_API_URL;
     const payload = await request.json();
     const id = request.nextUrl.pathname.split('/')[4]; // /api/process/output/[id]
 
@@ -91,7 +91,7 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: 'ID no proporcionado' }, { status: 400 });
     }
 
-    const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_API_URL;
+    const baseUrl = process.env.RESTREAMER_INTERNAL_API_URL;
 
     return await withAuth(async (token) => {
       const processResponse = await fetch(`${baseUrl}/api/v3/process/${id}`, {

@@ -19,7 +19,7 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_API_URL;
+    const baseUrl = process.env.RESTREAMER_INTERNAL_API_URL;
     const apiUrl = `${baseUrl}/api/v3/process/${id}/command`;
 
     return await withAuth(async (token) => {

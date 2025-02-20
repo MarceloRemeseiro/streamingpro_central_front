@@ -29,7 +29,7 @@ export async function GET(
 
     return await withAuth(async (token) => {
       try {
-        const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_API_URL;
+        const baseUrl = process.env.RESTREAMER_INTERNAL_API_URL;
         
         // Obtener todos los procesos
         const processResponse = await fetch(`${baseUrl}/api/v3/process`, {

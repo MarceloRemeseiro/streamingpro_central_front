@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'ID no proporcionado' }, { status: 400 });
     }
 
-    const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_API_URL;
+    const baseUrl = process.env.RESTREAMER_INTERNAL_API_URL;
     const authHeader = request.headers.get('authorization');
 
     if (!authHeader) {
@@ -80,7 +80,7 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: 'ID no proporcionado' }, { status: 400 });
     }
 
-    const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_API_URL;
+    const baseUrl = process.env.RESTREAMER_INTERNAL_API_URL;
     const input = await request.json();
 
     return await withAuth(async (token) => {
@@ -122,7 +122,7 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: 'ID no proporcionado' }, { status: 400 });
     }
 
-    const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_API_URL;
+    const baseUrl = process.env.RESTREAMER_INTERNAL_API_URL;
 
     return await withAuth(async (token) => {
       // Primero obtenemos todos los procesos para encontrar los outputs asociados

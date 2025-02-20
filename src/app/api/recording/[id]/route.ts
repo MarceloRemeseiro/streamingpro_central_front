@@ -40,7 +40,7 @@ export async function PUT(request: NextRequest) {
       }
 
       const { isRecording } = await request.json();
-      const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_API_URL;
+      const baseUrl = process.env.RESTREAMER_INTERNAL_API_URL;
       const shortId = id.split(':').pop();
       const processId = `restreamer-ui:record:${shortId}`;
 
@@ -70,7 +70,7 @@ export async function PUT(request: NextRequest) {
           .replace('T', '_')
           .split('.')[0];
         
-        const processResponse = await fetch(`http://${baseUrl}/api/v3/process/${id}`, {
+        const processResponse = await fetch(`${baseUrl}/api/v3/process/${id}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
