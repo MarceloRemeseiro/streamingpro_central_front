@@ -25,4 +25,11 @@ model CollapseState {
   type      String
 
   @@unique([processId, type])
+}
+
+model RecordingState {
+  id            String   @id
+  isRecording   Boolean  @default(false)
+  lastUpdated   DateTime @default(now())
+  processId     String   @unique
 } 

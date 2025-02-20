@@ -187,6 +187,32 @@ export async function DELETE(request: NextRequest) {
       const processStateService = ProcessStateService.getInstance();
       await processStateService.deleteProcessState(id);
 
+      // Eliminar el estado de grabación
+      await prisma.recordingState.deleteMany({
+        where: {
+          processId: id
+        }
+      });
+
+      // Eliminar el proceso de grabación si existe
+      const shortId = id.split(':').pop();
+      const recordingProcessId = `restreamer-ui:record:${shortId}`;
+      const checkRecordingResponse = await fetch(`http://${baseUrl}:8080/api/v3/process/${recordingProcessId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (checkRecordingResponse.ok) {
+        await fetch(`http://${baseUrl}:8080/api/v3/process/${recordingProcessId}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }
+        });
+      }
+
       // Finalmente eliminamos el proceso principal en Restreamer
       const processResponse = await fetch(`http://${baseUrl}:8080/api/v3/process/${id}`, {
         method: 'DELETE',

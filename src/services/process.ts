@@ -74,7 +74,8 @@ export class ProcessService {
       if (
         process.type === 'ffmpeg' &&
         process.id.includes(':ingest:') &&
-        !process.id.includes('_snapshot')
+        !process.id.includes('_snapshot') &&
+        !process.id.includes(':record:')
       ) {
         const streamId = process.reference;
         const inputAddress = process.config.input[0].address;

@@ -17,6 +17,7 @@ import EditProcessModal from "@/components/modals/EditProcessModal";
 import Button from '@/components/ui/Button';
 import EditButton from '../ui/EditButton';
 import DeleteButton from '../ui/DeleteButton';
+import RecordingSwitch from '@/components/ui/RecordingSwitch';
 
 const getInputTypeStyles = (type: InputProcess["inputType"]) => {
   switch (type) {
@@ -96,18 +97,21 @@ const InputCard = memo(
             </p>
           </div>
           <div className="flex flex-col items-end gap-2">
-            <span
-              className={`
-            px-2 py-1 text-xs rounded-full
-            ${
-              input.state?.exec === "running"
-                ? "bg-success-light text-success-dark"
-                : "bg-error-light text-error-dark"
-            }
-          `}
-            >
-              {input.state?.exec || "Desconocido"}
-            </span>
+            <div className="flex items-center gap-3">
+              
+              <span
+                className={`
+                px-2 py-1 text-xs rounded-full
+                ${
+                  input.state?.exec === "running"
+                    ? "bg-success-light text-success-dark"
+                    : "bg-error-light text-error-dark"
+                }
+              `}
+              >
+                {input.state?.exec || "Desconocido"}
+              </span>
+            </div>
             {input.state?.exec === "running" ? (
               <PacketLossStats input={input} />
             ) : (

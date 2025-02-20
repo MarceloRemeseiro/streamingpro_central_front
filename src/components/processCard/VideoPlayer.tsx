@@ -4,6 +4,8 @@ import StreamStats from "@/components/processCard/StreamStats";
 import { InputProcess } from "@/types/processTypes";
 import CollapseButton from "@/components/ui/CollapseButton";
 import { useCollapse } from "@/hooks/useCollapse";
+import RecordingSwitch from "@/components/ui/RecordingSwitch";
+import { useRecordingState } from "@/hooks/useRecordingState";
 
 interface VideoPlayerProps {
   url: string;
@@ -24,6 +26,20 @@ const VideoPlayer: FC<VideoPlayerProps> = ({
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [isConnecting, setIsConnecting] = useState<boolean>(false);
   const [isCollapsed, setIsCollapsed] = useCollapse('video-preview', stats.id);
+  const { isRecording, stopRecording } = useRecordingState(stats.id);
+  const lastRunningState = useRef(isRunning);
+
+  // Efecto para manejar el estado de grabación cuando el proceso cambia
+  useEffect(() => {
+   
+
+    if (lastRunningState.current && !isRunning && isRecording) {
+      console.log('Process stopped, stopping recording');
+      stopRecording();
+    }
+
+    lastRunningState.current = isRunning;
+  }, [isRunning, isRecording, stopRecording]);
 
   useEffect(() => {
     let hls = hlsRef.current;
@@ -112,7 +128,12 @@ const VideoPlayer: FC<VideoPlayerProps> = ({
             Preview
           </h3>
         </button>
-
+        {isRunning && (
+          <RecordingSwitch
+            processId={stats.id}
+            isProcessRunning={isRunning}
+          />
+        )}
       </div>
 
       {!isCollapsed && (
@@ -147,7 +168,6 @@ const VideoPlayer: FC<VideoPlayerProps> = ({
         </>
       )}
       <StreamStats input={stats} />
-
     </div>
   );
 };
