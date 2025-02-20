@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 
 export async function authenticateRestreamer() {
   const authService = AuthService.getInstance();
-  const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_API_URL;
+  const baseUrl = process.env.RESTREAMER_INTERNAL_API_URL;
 
   try {
     const loginResponse = await fetch(`${baseUrl}/api/login`, {
