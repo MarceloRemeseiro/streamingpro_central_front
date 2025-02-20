@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { 
-  /* DevicePhoneMobileIcon, */ 
+  VideoCameraIcon,
   PlusCircleIcon,
   Bars3Icon,
   XMarkIcon
@@ -21,16 +21,17 @@ export default function Nav() {
   const pathname = usePathname();
 
   const menuItems = [
-   /*  {
-      href: "/devices",
-      icon: DevicePhoneMobileIcon,
-      label: "Dispositivos"
-    }, */
     {
       href: "/create",
       icon: PlusCircleIcon,
-      label: "Create Input"
+      label: "Create"
+    },
+    {
+      href: "/recordings",
+      icon: VideoCameraIcon,
+      label: "Media"
     }
+    
   ];
 
   return (
@@ -50,16 +51,16 @@ export default function Nav() {
           </div>
 
           {/* Desktop menu */}
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-1">
             <SystemMetrics />
             {menuItems.map((item) => (
               <Link
               key={item.href}
               href={item.href}
-              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-nav-text dark:text-nav-text-dark hover:text-nav-hover dark:hover:text-nav-hover-dark transition-colors"
+              className="inline-flex items-center gap-1 py-2 text-sm font-medium text-nav-text dark:text-nav-text-dark hover:text-nav-hover dark:hover:text-nav-hover-dark transition-colors"
               >
                 <item.icon className="h-5 w-5" />
-                <span>{item.label}</span>
+                <span className="px-1">{item.label}</span>
               </Link>
             ))}
             <LogoutButton />
@@ -87,25 +88,35 @@ export default function Nav() {
         className={`
           md:hidden
           transition-all duration-300 ease-in-out
-          ${isOpen ? "max-h-64 opacity-100" : "max-h-0 opacity-0"}
-          overflow-hidden
+          ${isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}
+          overflow-hidden bg-nav-background dark:bg-nav-background-dark
         `}
       >
-        <div className="px-4 pt-2 pb-3 space-y-1 border-t border-nav-border dark:border-nav-border-dark">
-          {menuItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="flex items-center gap-2 px-4 py-2 text-base font-medium text-nav-text dark:text-nav-text-dark hover:text-nav-hover dark:hover:text-nav-hover-dark transition-colors rounded-md"
-              onClick={() => setIsOpen(false)}
-            >
-              <item.icon className="h-5 w-5" />
-              <span>{item.label}</span>
-            </Link>
-          ))}
-          <div className="px-4 py-2">
-            <SystemMetrics />
-            <div className="flex items-center gap-2 mt-2">
+        <div className="px-4 py-2 border-t border-nav-border dark:border-nav-border-dark">
+          <div className="flex flex-col items-stretch space-y-2">
+            {/* System Metrics en una línea */}
+            <div className="flex justify-center">
+              <SystemMetrics />
+            </div>
+
+            {/* Links del menú */}
+            {menuItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="flex items-center justify-center gap-2 py-2 text-base font-medium text-nav-text dark:text-nav-text-dark hover:text-nav-hover dark:hover:text-nav-hover-dark transition-colors rounded-md"
+                onClick={() => setIsOpen(false)}
+              >
+                <item.icon className="h-5 w-5" />
+                <span>{item.label}</span>
+              </Link>
+            ))}
+
+            {/* Línea divisoria */}
+            <div className="border-t border-nav-border dark:border-nav-border-dark"></div>
+
+            {/* Botones de tema y logout */}
+            <div className="flex justify-center items-center gap-4">
               <ThemeToggle />
               <LogoutButton />
             </div>
