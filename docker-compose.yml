@@ -10,29 +10,65 @@ services:
     ports:
       - "3002:3002"
     environment:
+      # Configuración de la aplicación
       - NODE_ENV=production
-      - NEXT_PUBLIC_RESTREAMER_BASE_URL=${NEXT_PUBLIC_RESTREAMER_BASE_URL}
+      - PORT=3002
+      - HOSTNAME=0.0.0.0
+      # URL del servidor Restreamer (usando nombre del contenedor)
+      - NEXT_PUBLIC_RESTREAMER_API_URL=http://streamingpro-backend
+      # Credenciales Restreamer
+      - NEXT_PUBLIC_RESTREAMER_USERNAME=admin
+      - NEXT_PUBLIC_RESTREAMER_PASSWORD=sincros2808
+      # Credenciales StreamingPro
+      - NEXT_PUBLIC_STREAMINGPRO_USERNAME=admin
+      - NEXT_PUBLIC_STREAMINGPRO_PASSWORD=sincros2808
+      # URLs para HLS y otros servicios
+      - NEXT_PUBLIC_RESTREAMER_BASE_URL=core.streamingpro.com
+      - NEXT_PUBLIC_RESTREAMER_PORT=6000
+      # Base de datos
+      - DATABASE_URL=file:/app/prisma/dev.db
+    volumes:
+      - ./prisma:/app/prisma
+    command: sh -c "npx prisma migrate deploy && node server.js"
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:3002/api/health"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 40s
-    deploy:
-      resources:
-        limits:
-          cpus: '1.0'
-          memory: 1G
-        reservations:
-          cpus: '0.25'
-          memory: 256M
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
     networks:
       - streaming_network
+    depends_on:
+      - streamingpro-backend
+
+  streamingpro-backend:
+    image: datarhei/core:latest
+    container_name: streamingpro-backend
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+      - "1935:1935"
+      - "6000:6000/udp"
+    environment:
+      - CORE_API_AUTH_ENABLE=true
+      - CORE_API_AUTH_USERNAME=admin
+      - CORE_API_AUTH_PASSWORD=sincros2808
+      - CORE_RTMP_ENABLE=true
+      - CORE_RTMP_ADDRESS=:1935
+      - CORE_SRT_ENABLE=true
+      - CORE_SRT_ADDRESS=:6000
+      - CORE_METRICS_ENABLE=true
+      - CORE_SESSIONS_ENABLE=true
+      - CORE_SESSIONS_PERSIST=true
+    volumes:
+      - core_config:/core/config
+      - core_data:/core/data
+    networks:
+      - streaming_network
+
+volumes:
+  core_config:
+  core_data:
 
 networks:
   streaming_network:
