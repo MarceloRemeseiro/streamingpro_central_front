@@ -47,7 +47,7 @@ export const useRecordingState = (processId: string) => {
     } finally {
       setIsLoading(false);
     }
-  }, [processId]);
+  }, [processId, isRecording]);
 
   const fetchState = useCallback(async () => {
     try {

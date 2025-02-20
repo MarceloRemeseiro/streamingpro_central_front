@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { InputProcess, VideoInput, ProgressVideoInput } from '@/types/restreamer';
+import { VideoInput, ProgressVideoInput } from '@/types/restreamer';
+import { InputProcess } from '@/types/processTypes';
 import { getProcess } from '@/services/process';
 
 interface StreamStats {

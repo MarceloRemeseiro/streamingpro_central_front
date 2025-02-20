@@ -45,7 +45,6 @@ interface ProcessPillProps {
 
 export default function ProcessPill({ process, onDelete, onProcessUpdated }: ProcessPillProps) {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   return (
     <div className={`rounded-lg shadow p-3 flex flex-col border ${getInputTypeStyles(process.inputType)}`}>

@@ -67,6 +67,7 @@ export async function GET(
           outputs: [],
           inputType: type,
           streamName,
+          created_at: Date.now(),
         };
 
         // Encontrar y procesar los outputs

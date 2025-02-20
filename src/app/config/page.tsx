@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { RestreamerConfig } from '@/types/configTypes';
-import { baseUrl } from '@/lib/api';
 
 function ConfigSection({ title, children }: { title: string; children: React.ReactNode }) {
   return (

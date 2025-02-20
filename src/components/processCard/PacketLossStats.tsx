@@ -1,5 +1,5 @@
-import { InputProcess } from "@/types/processTypes";
-import { useStreamStats } from "@/hooks/useStreamStats";
+import { useStreamStats } from '@/hooks/useStreamStats';
+import { InputProcess } from '@/types/processTypes';
 
 interface PacketLossStatsProps {
   input: InputProcess;

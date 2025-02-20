@@ -65,7 +65,7 @@ export default function CreatePage() {
         </h1>
 
         <div className="mb-12">
-          <CreateProcessForm onSuccess={handleSuccess} />
+          <CreateProcessForm onSubmit={handleSuccess} />
         </div>
 
         <h2 className="text-xl font-semibold text-text dark:text-text-dark mb-6">

@@ -1,6 +1,5 @@
 import { FC, useState, useEffect } from 'react';
 import { Switch } from '@headlessui/react';
-import { ProcessStateService } from '@/services/processStateService';
 
 interface ProcessSwitchProps {
   processId: string;

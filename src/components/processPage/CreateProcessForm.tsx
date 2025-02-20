@@ -11,11 +11,10 @@ import Textarea from "@/components/ui/Textarea";
 import Button from '@/components/ui/Button';
 
 interface CreateProcessFormProps {
-  onSuccess?: () => void;
-  onCancel?: () => void;
+  onSubmit: (data: CreateProcessInput) => void;
 }
 
-export default function CreateProcessForm({ onSuccess, onCancel }: CreateProcessFormProps) {
+export default function CreateProcessForm({ onSubmit }: CreateProcessFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState<CreateProcessInput>({
@@ -38,7 +37,7 @@ export default function CreateProcessForm({ onSuccess, onCancel }: CreateProcess
 
     try {
       await processService.createProcess(formData);
-      onSuccess?.();
+      onSubmit(formData);
     } catch (error) {
       console.error("Error creating process:", error);
       setError(error instanceof Error ? error.message : "Error al crear el proceso");

@@ -1,7 +1,6 @@
 'use client';
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { 
   VideoCameraIcon,
   PlusCircleIcon,
@@ -18,7 +17,6 @@ import Image from "next/image";
 
 export default function Nav() {
   const [isOpen, setIsOpen] = useState(false);
-  const pathname = usePathname();
 
   const menuItems = [
     {

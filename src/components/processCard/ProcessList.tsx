@@ -17,7 +17,6 @@ import EditProcessModal from "@/components/modals/EditProcessModal";
 import Button from '@/components/ui/Button';
 import EditButton from '../ui/EditButton';
 import DeleteButton from '../ui/DeleteButton';
-import RecordingSwitch from '@/components/ui/RecordingSwitch';
 
 const getInputTypeStyles = (type: InputProcess["inputType"]) => {
   switch (type) {
@@ -60,7 +59,6 @@ const InputCard = memo(
     onProcessUpdated: () => void;
   }) => {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
     const getHlsUrl = () => {
       const streamName = input.streamName.replace(".stream", "");

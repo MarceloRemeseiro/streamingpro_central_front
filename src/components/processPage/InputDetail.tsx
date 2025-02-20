@@ -12,7 +12,6 @@ import Link from "next/link";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import RTMPOutput from "@/components/processOutputs/RTMPOutput";
 import SRTOutput from "@/components/processOutputs/SRTOutput";
-import RecordingSwitch from "@/components/ui/RecordingSwitch";
 
 interface InputDetailProps {
   id: string;

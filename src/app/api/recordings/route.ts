@@ -41,7 +41,7 @@ export async function GET() {
 
       // Creamos un mapa de nombre de archivo -> thumbnail
       const thumbnailMap = new Map(
-        thumbnails.map(thumbnail => [
+        thumbnails.map((thumbnail: { recordingFile: string; thumbnailFile: string }) => [
           thumbnail.recordingFile,
           thumbnail.thumbnailFile
         ])

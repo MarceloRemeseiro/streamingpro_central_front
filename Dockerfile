@@ -9,14 +9,25 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
 
+# Copiar archivos de Prisma y generar el cliente
+COPY prisma ./prisma
+RUN npx prisma generate
+
 # Builder
 FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/node_modules/.prisma ./node_modules/.prisma
 COPY . .
+COPY .env.production .env.production
+
+# Verificar TypeScript y ESLint antes de construir
+ENV NEXT_TELEMETRY_DISABLED 1
+ENV NODE_ENV production
+RUN npm run ts && \
+    npm run lint || exit 1
 
 # Construir la aplicación
-ENV NEXT_TELEMETRY_DISABLED 1
 RUN npm run build
 
 # Runner
@@ -26,10 +37,20 @@ WORKDIR /app
 ENV NODE_ENV production
 ENV NEXT_TELEMETRY_DISABLED 1
 
+# Instalar Prisma CLI globalmente
+RUN npm install -g prisma@6.4.0
+
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
+# Crear y asignar permisos al directorio .npm
+RUN mkdir -p /home/nextjs/.npm && chown -R nextjs:nodejs /home/nextjs
+
 COPY --from=builder /app/public ./public
+COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/pre-build.sh ./pre-build.sh
+COPY --from=builder /app/.env.production ./.env.production
+RUN chmod +x /app/pre-build.sh
 
 # Configurar permisos para el directorio standalone
 RUN mkdir .next
@@ -38,6 +59,7 @@ RUN chown nextjs:nodejs .next
 # Copiar archivos necesarios
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/.prisma ./node_modules/.prisma
 
 USER nextjs
 

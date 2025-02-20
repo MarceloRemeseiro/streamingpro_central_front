@@ -1,4 +1,4 @@
-import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
+// Eliminar las importaciones de ChevronDownIcon y ChevronUpIcon si no se usan
 
 interface CollapseButtonProps {
   isCollapsed: boolean;

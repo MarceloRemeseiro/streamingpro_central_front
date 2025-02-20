@@ -83,6 +83,7 @@ export interface InputProcess extends Process {
   outputs: OutputProcess[];
   inputType: InputType;
   streamName: string;
+  created_at: number;
   order?: string;
   exec?: string;
   runtime_seconds?: number;

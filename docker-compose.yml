@@ -10,22 +10,9 @@ services:
     ports:
       - "3002:3002"
     environment:
-      # Configuración de la aplicación
       - NODE_ENV=production
       - PORT=3002
       - HOSTNAME=0.0.0.0
-      # URL del servidor Restreamer (usando nombre del contenedor)
-      - NEXT_PUBLIC_RESTREAMER_API_URL=http://streamingpro-backend
-      # Credenciales Restreamer
-      - NEXT_PUBLIC_RESTREAMER_USERNAME=admin
-      - NEXT_PUBLIC_RESTREAMER_PASSWORD=sincros2808
-      # Credenciales StreamingPro
-      - NEXT_PUBLIC_STREAMINGPRO_USERNAME=admin
-      - NEXT_PUBLIC_STREAMINGPRO_PASSWORD=sincros2808
-      # URLs para HLS y otros servicios
-      - NEXT_PUBLIC_RESTREAMER_BASE_URL=core.streamingpro.com
-      - NEXT_PUBLIC_RESTREAMER_PORT=6000
-      # Base de datos
       - DATABASE_URL=file:/app/prisma/dev.db
     volumes:
       - ./prisma:/app/prisma
