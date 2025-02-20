@@ -11,10 +11,17 @@ interface Recording {
   thumbnail: string | null;
 }
 
+type SortType = 'date' | 'name';
+
+const ITEMS_PER_PAGE = 24;
+
 export default function RecordingsPage() {
   const [recordings, setRecordings] = useState<Recording[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  const [sortType, setSortType] = useState<SortType>('date');
 
   const fetchRecordings = async () => {
     try {
@@ -23,7 +30,32 @@ export default function RecordingsPage() {
         throw new Error('Error al obtener las grabaciones');
       }
       const data = await response.json();
-      setRecordings(data);
+      
+      // Ordenar según el criterio seleccionado
+      const sortedData = [...data].sort((a: Recording, b: Recording) => {
+        if (sortType === 'date') {
+          return sortOrder === 'desc' 
+            ? b.last_modified - a.last_modified 
+            : a.last_modified - b.last_modified;
+        } else {
+          // Ordenar por nombre y luego por fecha
+          const nameA = a.name.replace('recordings/', '').toLowerCase();
+          const nameB = b.name.replace('recordings/', '').toLowerCase();
+          const nameCompare = sortOrder === 'desc' 
+            ? nameB.localeCompare(nameA)
+            : nameA.localeCompare(nameB);
+          
+          // Si los nombres son iguales, ordenar por fecha
+          if (nameCompare === 0) {
+            return sortOrder === 'desc' 
+              ? b.last_modified - a.last_modified 
+              : a.last_modified - b.last_modified;
+          }
+          return nameCompare;
+        }
+      });
+
+      setRecordings(sortedData);
       setError(null);
     } catch (error) {
       setError(error instanceof Error ? error.message : 'Error desconocido');
@@ -34,7 +66,7 @@ export default function RecordingsPage() {
 
   useEffect(() => {
     fetchRecordings();
-  }, []);
+  }, [sortOrder, sortType]);
 
   const handleDelete = async (filename: string) => {
     if (!confirm('¿Estás seguro de que deseas eliminar esta grabación?')) {
@@ -64,8 +96,6 @@ export default function RecordingsPage() {
     try {
       const cleanFilename = filename.replace(/^recordings\//, '');
       const downloadUrl = `/api/download/disk/recordings/${cleanFilename}`;
-      
-      console.log('Attempting to download from:', downloadUrl);
       
       const response = await fetch(downloadUrl);
       
@@ -106,6 +136,12 @@ export default function RecordingsPage() {
     return new Date(timestamp * 1000).toLocaleString();
   };
 
+  // Calcular paginación
+  const totalPages = Math.ceil(recordings.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const currentRecordings = recordings.slice(startIndex, endIndex);
+
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -124,61 +160,120 @@ export default function RecordingsPage() {
 
   return (
     <div className="container mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-6 text-text dark:text-text-dark">Grabaciones</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold text-text dark:text-text-dark">Grabaciones</h1>
+        <div className="flex items-center gap-2">
+          <div className="relative">
+            <select
+              value={sortType}
+              onChange={(e) => setSortType(e.target.value as SortType)}
+              className="appearance-none bg-white/5 backdrop-blur-sm text-text dark:text-text-dark border border-white/10 rounded-lg px-4 py-2 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 hover:bg-white/10 transition-colors cursor-pointer"
+            >
+              <option value="date" className="bg-card-dark text-text-dark">Ordenar por fecha</option>
+              <option value="name" className="bg-card-dark text-text-dark">Ordenar por nombre</option>
+            </select>
+            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-text-dark">
+              <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/>
+              </svg>
+            </div>
+          </div>
+          <button
+            onClick={() => setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc')}
+            className="bg-white/5 backdrop-blur-sm text-text dark:text-text-dark px-4 py-2 rounded-lg text-sm hover:bg-white/10 transition-colors border border-white/10 focus:outline-none focus:ring-2 focus:ring-primary/50"
+          >
+            {sortOrder === 'desc' ? '↓ Descendente' : '↑ Ascendente'}
+          </button>
+        </div>
+      </div>
       
       {recordings.length === 0 ? (
         <p className="text-text-muted dark:text-text-muted-dark">No hay grabaciones disponibles.</p>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {recordings.map((recording) => (
-            <div 
-              key={recording.name}
-              className="bg-card dark:bg-card-dark rounded-lg shadow overflow-hidden"
-            >
-              <div className="aspect-video relative bg-black">
-                {recording.thumbnail ? (
-                  <Image
-                    src={`/api/download/disk/thumbnail/${recording.thumbnail}`}
-                    alt={recording.name}
-                    fill
-                    className="object-contain"
-                  />
-                ) : (
-                  <div className="absolute inset-0 flex items-center justify-center text-text-muted dark:text-text-muted-dark">
-                    No thumbnail
-                  </div>
-                )}
-              </div>
-              
-              <div className="p-4">
-                <h3 className="font-medium text-text dark:text-text-dark mb-2">
-                  {recording.name.replace('recordings/', '')}
-                </h3>
-                <div className="text-sm text-text-muted dark:text-text-muted-dark space-y-1">
-                  <p>Tamaño: {formatFileSize(recording.size_bytes)}</p>
-                  <p>Fecha: {formatDate(recording.last_modified)}</p>
+        <>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+            {currentRecordings.map((recording) => (
+              <div 
+                key={recording.name}
+                className="bg-card dark:bg-card-dark rounded-lg shadow overflow-hidden"
+              >
+                <div className="aspect-video relative bg-black">
+                  {recording.thumbnail ? (
+                    <Image
+                      src={`/api/download/disk/thumbnail/${recording.thumbnail}`}
+                      alt={recording.name}
+                      fill
+                      className="object-contain"
+                      sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 16vw"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 flex items-center justify-center text-text-muted dark:text-text-muted-dark">
+                      No thumbnail
+                    </div>
+                  )}
                 </div>
                 
-                <div className="mt-4 flex justify-end gap-2">
-                  <button
-                    onClick={() => handleDownload(recording.name)}
-                    className="text-primary hover:text-primary-dark dark:text-primary-light dark:hover:text-primary p-2 rounded-full hover:bg-primary/10 dark:hover:bg-primary-dark/20"
-                    title="Descargar"
-                  >
-                    <ArrowDownTrayIcon className="h-5 w-5" />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(recording.name)}
-                    className="text-error hover:text-error-dark dark:text-error-light dark:hover:text-error p-2 rounded-full hover:bg-error/10 dark:hover:bg-error-dark/20"
-                    title="Eliminar"
-                  >
-                    <TrashIcon className="h-5 w-5" />
-                  </button>
+                <div className="p-2">
+                  <h3 className="font-medium text-sm text-text dark:text-text-dark mb-1 truncate">
+                    {recording.name.replace('recordings/', '')}
+                  </h3>
+                  <div className="text-xs text-text-muted dark:text-text-muted-dark space-y-0.5">
+                    <p className="truncate">{formatFileSize(recording.size_bytes)}</p>
+                    <p className="truncate">{formatDate(recording.last_modified)}</p>
+                  </div>
+                  
+                  <div className="mt-2 flex justify-end gap-1">
+                    <button
+                      onClick={() => handleDownload(recording.name)}
+                      className="text-primary hover:text-primary-dark dark:text-primary-light dark:hover:text-primary p-1 rounded-full hover:bg-primary/10 dark:hover:bg-primary-dark/20"
+                      title="Descargar"
+                    >
+                      <ArrowDownTrayIcon className="h-4 w-4" />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(recording.name)}
+                      className="text-error hover:text-error-dark dark:text-error-light dark:hover:text-error p-1 rounded-full hover:bg-error/10 dark:hover:bg-error-dark/20"
+                      title="Eliminar"
+                    >
+                      <TrashIcon className="h-4 w-4" />
+                    </button>
+                  </div>
                 </div>
               </div>
+            ))}
+          </div>
+
+          {/* Paginación */}
+          {totalPages > 1 && (
+            <div className="mt-6 flex justify-center gap-2">
+              <button
+                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+                className={`px-3 py-1 rounded ${
+                  currentPage === 1
+                    ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                    : 'bg-primary text-white hover:bg-primary-dark'
+                }`}
+              >
+                Anterior
+              </button>
+              <span className="px-3 py-1 text-text-muted dark:text-text-muted-dark">
+                Página {currentPage} de {totalPages}
+              </span>
+              <button
+                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                disabled={currentPage === totalPages}
+                className={`px-3 py-1 rounded ${
+                  currentPage === totalPages
+                    ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                    : 'bg-primary text-white hover:bg-primary-dark'
+                }`}
+              >
+                Siguiente
+              </button>
             </div>
-          ))}
-        </div>
+          )}
+        </>
       )}
     </div>
   );
