@@ -1,10 +1,14 @@
 import { NextResponse } from 'next/server';
 import { withAuth } from '@/utils/authUtils';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 interface Recording {
   name: string;
   size_bytes: number;
   last_modified: number;
+  thumbnail?: string | null;
 }
 
 export async function GET() {
@@ -32,12 +36,30 @@ export async function GET() {
       const recordings = allFiles.filter(file => file.name.startsWith('/recordings/'));
       console.log('Filtered recordings:', recordings);
 
-      // Transformamos los nombres para quitar la barra inicial
-      const processedRecordings = recordings.map(recording => ({
-        ...recording,
-        name: recording.name.substring(1) // Quitamos el / inicial
-      }));
-      console.log('Processed recordings:', processedRecordings);
+      // Obtenemos todas las miniaturas
+      const thumbnails = await prisma.recordingThumbnail.findMany();
+
+      // Creamos un mapa de nombre de archivo -> thumbnail
+      const thumbnailMap = new Map(
+        thumbnails.map(thumbnail => [
+          thumbnail.recordingFile,
+          thumbnail.thumbnailFile
+        ])
+      );
+
+      // Transformamos los nombres y agregamos las miniaturas
+      const processedRecordings = recordings.map(recording => {
+        const fileName = recording.name.substring(1); // Quitamos el / inicial
+        const baseName = fileName.replace('recordings/', '');
+        
+        return {
+          ...recording,
+          name: fileName,
+          thumbnail: thumbnailMap.get(baseName) || null
+        };
+      });
+
+      console.log('Processed recordings with thumbnails:', processedRecordings);
 
       return NextResponse.json(processedRecordings);
     } catch (error) {
@@ -58,25 +80,54 @@ export async function DELETE(request: Request) {
       
       // Aseguramos que el nombre del archivo tenga el formato correcto
       const formattedFilename = filename.startsWith('/') ? filename : `/${filename}`;
+      const cleanFilename = filename.replace(/^recordings\//, '');
       
       console.log('Attempting to delete file:', formattedFilename);
-      console.log('Delete URL:', `http://${baseUrl}:8080/api/v3/fs/disk${formattedFilename}`);
 
-      const response = await fetch(`http://${baseUrl}:8080/api/v3/fs/disk${formattedFilename}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`
+      try {
+        // Primero buscamos si tiene una miniatura asociada
+        const thumbnail = await prisma.recordingThumbnail.findUnique({
+          where: { recordingFile: cleanFilename }
+        });
+
+        if (thumbnail) {
+          // Si tiene miniatura, la eliminamos del sistema de archivos
+          console.log('Deleting thumbnail file:', thumbnail.thumbnailFile);
+          await fetch(`http://${baseUrl}:8080/api/v3/fs/disk/thumbnail/${thumbnail.thumbnailFile}`, {
+            method: 'DELETE',
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
+
+          // Eliminamos la referencia en la base de datos
+          console.log('Deleting thumbnail reference from database');
+          await prisma.recordingThumbnail.delete({
+            where: { recordingFile: cleanFilename }
+          });
         }
-      });
 
-      if (!response.ok && response.status !== 404) {
-        const errorText = await response.text();
-        console.error('Delete Error Response:', errorText);
-        throw new Error(`Error al eliminar la grabación: ${errorText}`);
+        // Finalmente eliminamos el archivo de video
+        console.log('Deleting video file:', formattedFilename);
+        const response = await fetch(`http://${baseUrl}:8080/api/v3/fs/disk${formattedFilename}`, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (!response.ok && response.status !== 404) {
+          const errorText = await response.text();
+          console.error('Delete Error Response:', errorText);
+          throw new Error(`Error al eliminar la grabación: ${errorText}`);
+        }
+
+        console.log('Files deleted successfully');
+        return NextResponse.json({ success: true });
+      } catch (error) {
+        console.error('Error during deletion:', error);
+        throw error;
       }
-
-      console.log('File deleted successfully');
-      return NextResponse.json({ success: true });
     } catch (error) {
       console.error('Error deleting recording:', error);
       return NextResponse.json(

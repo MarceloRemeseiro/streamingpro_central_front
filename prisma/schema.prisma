@@ -29,7 +29,15 @@ model CollapseState {
 
 model RecordingState {
   id            String   @id
+  processId     String   @unique
   isRecording   Boolean  @default(false)
   lastUpdated   DateTime @default(now())
-  processId     String   @unique
+  lastRecordingFile String?
+}
+
+model RecordingThumbnail {
+  id            String   @id @default(cuid())
+  recordingFile String   @unique
+  thumbnailFile String
+  createdAt     DateTime @default(now())
 } 

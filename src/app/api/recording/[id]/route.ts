@@ -44,218 +44,298 @@ export async function PUT(request: NextRequest) {
       const shortId = id.split(':').pop();
       const processId = `restreamer-ui:record:${shortId}`;
 
-      try {
-        // Verificar el estado del proceso de entrada
-        const inputProcessResponse = await fetch(`http://${baseUrl}:8080/api/v3/process/${id}`, {
+      if (isRecording) {
+        // Verificamos si existe el proceso de grabación
+        const checkResponse = await fetch(`http://${baseUrl}:8080/api/v3/process/${processId}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
         });
 
-        if (!inputProcessResponse.ok) {
-          throw new Error('Error al obtener información del proceso de input');
-        }
-
-        const inputProcess = await inputProcessResponse.json();
-        const isProcessRunning = inputProcess.state?.exec === "running";
-
-        // Si el proceso no está corriendo, detenemos la grabación y actualizamos el estado
-        if (!isProcessRunning) {
-          // Verificamos si existe el proceso de grabación
-          const checkResponse = await fetch(`http://${baseUrl}:8080/api/v3/process/${processId}`, {
-            headers: {
-              'Authorization': `Bearer ${token}`
-            }
-          });
-
-          // Si existe el proceso de grabación, lo eliminamos
-          if (checkResponse.ok) {
-            const response = await fetch(`http://${baseUrl}:8080/api/v3/process/${processId}`, {
-              method: 'DELETE',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-              }
-            });
-
-            if (!response.ok) {
-              const errorText = await response.text();
-              throw new Error(`Error al detener la grabación: ${errorText}`);
-            }
-          }
-
-          // Actualizamos el estado en la base de datos a false
-          const recordingState = await prisma.recordingState.upsert({
-            where: { processId: id },
-            update: {
-              isRecording: false,
-              lastUpdated: new Date()
-            },
-            create: {
-              id: `recording-${id}`,
-              processId: id,
-              isRecording: false,
-              lastUpdated: new Date()
-            }
-          });
-
-          return NextResponse.json(recordingState);
-        }
-
-        // Si el proceso está corriendo, continuamos con la lógica normal
-        if (isRecording) {
-          const processName = inputProcess.metadata?.['restreamer-ui']?.meta?.name || 'unnamed';
-          
-          // Verificamos si existe el proceso de grabación
-          const checkResponse = await fetch(`http://${baseUrl}:8080/api/v3/process/${processId}`, {
-            headers: {
-              'Authorization': `Bearer ${token}`
-            }
-          });
-
-          // Si existe, lo eliminamos primero
-          if (checkResponse.ok) {
-            await fetch(`http://${baseUrl}:8080/api/v3/process/${processId}`, {
-              method: 'DELETE',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-              }
-            });
-          }
-
-          // Generamos el nombre del archivo con fecha y hora
-          const now = new Date();
-          const dateStr = now.toISOString()
-            .replace(/[:\-]/g, '')
-            .replace('T', '_')
-            .split('.')[0];
-          
-          const sanitizedProcessName = processName
-            .toLowerCase()
-            .replace(/[^a-z0-9]/g, '_');
-
-          const filename = `${sanitizedProcessName}_${dateStr}.mp4`;
-
-          // Creamos el archivo de video
-          const initialContent = 'init';
-          const encoder = new TextEncoder();
-          const data = encoder.encode(initialContent);
-
-          const createFileResponse = await fetch(`http://${baseUrl}:8080/api/v3/fs/disk/recordings/${filename}`, {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/data',
-              'Authorization': `Bearer ${token}`
-            },
-            body: data
-          });
-
-          if (!createFileResponse.ok) {
-            const errorText = await createFileResponse.text();
-            throw new Error(`Error al crear el archivo: ${errorText}`);
-          }
-          
-          // Configuración del proceso de grabación
-          const recordingConfig = {
-            id: processId,
-            type: 'ffmpeg',
-            reference: shortId,
-            input: [
-              {
-                id: 'input_0',
-                address: '{memfs}/' + shortId + '.m3u8',
-                options: [
-                  '-re'
-                ]
-              }
-            ],
-            output: [
-              {
-                id: 'output_0',
-                address: `/core/data/recordings/${filename}`,
-                options: [
-                  '-c:v',
-                  'copy',
-                  '-c:a',
-                  'copy',
-                  '-f',
-                  'mp4',
-                  '-movflags',
-                  '+faststart'
-                ]
-              }
-            ],
-            options: [
-              '-y',
-              '-stats',
-              '-loglevel',
-              'debug'
-            ],
-            reconnect: true,
-            reconnect_delay_seconds: 15,
-            autostart: true,
-            stale_timeout_seconds: 30,
-            metadata: {
-              'restreamer-ui': {
-                hideFromUI: true,
-                type: 'recording',
-                meta: {
-                  name: `Recording: ${processName}`,
-                  description: 'Proceso de grabación - No mostrar en UI'
-                }
-              }
-            }
-          };
-
-          // Creamos el nuevo proceso
-          const createProcessResponse = await fetch(`http://${baseUrl}:8080/api/v3/process`, {
-            method: 'POST',
+        // Si existe, lo eliminamos primero
+        if (checkResponse.ok) {
+          await fetch(`http://${baseUrl}:8080/api/v3/process/${processId}`, {
+            method: 'DELETE',
             headers: {
               'Content-Type': 'application/json',
               'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify(recordingConfig)
+            }
           });
+        }
 
-          if (!createProcessResponse.ok) {
-            const errorText = await createProcessResponse.text();
-            throw new Error(`Error al iniciar la grabación: ${errorText}`);
+        // Generamos el nombre del archivo con fecha y hora
+        const now = new Date();
+        const dateStr = now.toISOString()
+          .replace(/[:\-]/g, '')
+          .replace('T', '_')
+          .split('.')[0];
+        
+        const processResponse = await fetch(`http://${baseUrl}:8080/api/v3/process/${id}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
           }
+        });
 
-          // Verificamos que el proceso se haya iniciado correctamente
-          const verifyProcessResponse = await fetch(`http://${baseUrl}:8080/api/v3/process/${processId}`, {
+        if (!processResponse.ok) {
+          throw new Error('Error al obtener información del proceso');
+        }
+
+        const processData = await processResponse.json();
+        const processName = processData.metadata?.['restreamer-ui']?.meta?.name || 'unnamed';
+        const sanitizedProcessName = processName
+          .toLowerCase()
+          .replace(/[^a-z0-9]/g, '_');
+
+        const filename = `${sanitizedProcessName}_${dateStr}.mp4`;
+
+        // Creamos el archivo de video
+        const initialContent = 'init';
+        const encoder = new TextEncoder();
+        const data = encoder.encode(initialContent);
+
+        const createFileResponse = await fetch(`http://${baseUrl}:8080/api/v3/fs/disk/recordings/${filename}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/data',
+            'Authorization': `Bearer ${token}`
+          },
+          body: data
+        });
+
+        if (!createFileResponse.ok) {
+          const errorText = await createFileResponse.text();
+          throw new Error(`Error al crear el archivo: ${errorText}`);
+        }
+        
+        // Configuración del proceso de grabación
+        const recordingConfig = {
+          id: processId,
+          type: 'ffmpeg',
+          reference: shortId,
+          input: [
+            {
+              id: 'input_0',
+              address: '{memfs}/' + shortId + '.m3u8',
+              options: [
+                '-re'
+              ]
+            }
+          ],
+          output: [
+            {
+              id: 'output_0',
+              address: `/core/data/recordings/${filename}`,
+              options: [
+                '-c:v',
+                'copy',
+                '-c:a',
+                'copy',
+                '-f',
+                'mp4',
+                '-movflags',
+                '+faststart'
+              ]
+            }
+          ],
+          options: [
+            '-y',
+            '-stats',
+            '-loglevel',
+            'debug'
+          ],
+          reconnect: true,
+          reconnect_delay_seconds: 15,
+          autostart: true,
+          stale_timeout_seconds: 30,
+          metadata: {
+            'restreamer-ui': {
+              hideFromUI: true,
+              type: 'recording',
+              meta: {
+                name: `Recording: ${processName}`,
+                description: 'Proceso de grabación - No mostrar en UI'
+              }
+            }
+          }
+        };
+
+        // Creamos el nuevo proceso
+        const createProcessResponse = await fetch(`http://${baseUrl}:8080/api/v3/process`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(recordingConfig)
+        });
+
+        if (!createProcessResponse.ok) {
+          const errorText = await createProcessResponse.text();
+          throw new Error(`Error al iniciar la grabación: ${errorText}`);
+        }
+
+        // Actualizamos el estado en la base de datos con el nombre del archivo
+        const recordingState = await prisma.recordingState.upsert({
+          where: { processId: id },
+          update: {
+            isRecording: true,
+            lastUpdated: new Date(),
+            lastRecordingFile: filename
+          },
+          create: {
+            id: `recording-${id}`,
+            processId: id,
+            isRecording: true,
+            lastUpdated: new Date(),
+            lastRecordingFile: filename
+          }
+        });
+
+        return NextResponse.json(recordingState);
+      } else {
+        // Si queremos detener la grabación
+        const checkResponse = await fetch(`http://${baseUrl}:8080/api/v3/process/${processId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (checkResponse.ok) {
+          const response = await fetch(`http://${baseUrl}:8080/api/v3/process/${processId}`, {
+            method: 'DELETE',
             headers: {
+              'Content-Type': 'application/json',
               'Authorization': `Bearer ${token}`
             }
           });
 
-          if (!verifyProcessResponse.ok) {
-            throw new Error('El proceso de grabación no se inició correctamente');
+          if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Error al detener la grabación: ${errorText}`);
           }
 
-          const processData = await verifyProcessResponse.json();
-          console.log('Estado del proceso de grabación:', processData);
-        } else {
-          // Si queremos detener la grabación
-          const checkResponse = await fetch(`http://${baseUrl}:8080/api/v3/process/${processId}`, {
-            headers: {
-              'Authorization': `Bearer ${token}`
-            }
+          // Esperamos que el archivo se cierre
+          await new Promise(resolve => setTimeout(resolve, 2000));
+
+          // Obtenemos el estado actual para saber el nombre del archivo
+          const currentState = await prisma.recordingState.findUnique({
+            where: { processId: id }
           });
 
-          if (checkResponse.ok) {
-            const response = await fetch(`http://${baseUrl}:8080/api/v3/process/${processId}`, {
-              method: 'DELETE',
+          if (currentState?.lastRecordingFile) {
+            console.log('Generando thumbnail para:', currentState.lastRecordingFile);
+
+            // Creamos el directorio thumbnail usando el endpoint correcto
+            console.log('Creando directorio thumbnail...');
+            const createDirResponse = await fetch(`http://${baseUrl}:8080/api/v3/fs/disk`, {
+              method: 'PUT',
+              headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                path: '/thumbnail',
+                type: 'directory'
+              })
+            });
+
+            if (!createDirResponse.ok) {
+              const errorText = await createDirResponse.text();
+              console.error('Error al crear directorio thumbnail:', errorText);
+              // No lanzamos error, continuamos aunque falle (podría existir ya)
+              console.log('Continuando aunque el directorio pudiera existir...');
+            } else {
+              console.log('Directorio thumbnail creado correctamente');
+            }
+
+            // Creamos un archivo inicial para la miniatura
+            const thumbnailPath = `thumbnail/${currentState.lastRecordingFile.replace('.mp4', '.jpg')}`;
+            const initialContent = 'init';
+            const encoder = new TextEncoder();
+            const data = encoder.encode(initialContent);
+
+            console.log('Creando archivo inicial para thumbnail:', thumbnailPath);
+            const createFileResponse = await fetch(`http://${baseUrl}:8080/api/v3/fs/disk/${thumbnailPath}`, {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/data',
+                'Authorization': `Bearer ${token}`
+              },
+              body: data
+            });
+
+            if (!createFileResponse.ok) {
+              console.error('Error al crear archivo thumbnail:', await createFileResponse.text());
+              throw new Error('Error al crear archivo thumbnail');
+            }
+
+            // Configuración para generar el thumbnail
+            const thumbnailConfig = {
+              id: `thumbnail-${Date.now()}`,
+              type: 'ffmpeg',
+              input: [
+                {
+                  id: 'input_0',
+                  address: `/core/data/recordings/${currentState.lastRecordingFile}`,
+                  options: [
+                    '-ss',
+                    '00:00:01'
+                  ]
+                }
+              ],
+              output: [
+                {
+                  id: 'output_0',
+                  address: `/core/data/thumbnail/${currentState.lastRecordingFile.replace('.mp4', '.jpg')}`,
+                  options: [
+                    '-vframes',
+                    '1',
+                    '-vf',
+                    'scale=320:-1'
+                  ]
+                }
+              ],
+              options: [
+                '-y'
+              ],
+              autostart: true
+            };
+
+            console.log('Creando thumbnail con config:', thumbnailConfig);
+
+            const thumbnailResponse = await fetch(`http://${baseUrl}:8080/api/v3/process`, {
+              method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
-              }
+              },
+              body: JSON.stringify(thumbnailConfig)
             });
 
-            if (!response.ok) {
-              const errorText = await response.text();
-              throw new Error(`Error al detener la grabación: ${errorText}`);
+            if (!thumbnailResponse.ok) {
+              console.error('Error al crear proceso de thumbnail:', await thumbnailResponse.text());
+            } else {
+              // Esperamos que se genere
+              await new Promise(resolve => setTimeout(resolve, 2000));
+
+              // Eliminamos el proceso
+              await fetch(`http://${baseUrl}:8080/api/v3/process/${thumbnailConfig.id}`, {
+                method: 'DELETE',
+                headers: {
+                  'Authorization': `Bearer ${token}`
+                }
+              });
+
+              // Actualizamos el estado con el nombre del thumbnail
+              const thumbnailFile = currentState.lastRecordingFile.replace('.mp4', '.jpg');
+              await prisma.recordingThumbnail.create({
+                data: {
+                  recordingFile: currentState.lastRecordingFile,
+                  thumbnailFile: thumbnailFile
+                }
+              });
+
+              console.log('Thumbnail generado y registrado correctamente:', thumbnailFile);
             }
           }
         }
@@ -264,24 +344,21 @@ export async function PUT(request: NextRequest) {
         const recordingState = await prisma.recordingState.upsert({
           where: { processId: id },
           update: {
-            isRecording: isRecording,
+            isRecording: false,
             lastUpdated: new Date()
           },
           create: {
             id: `recording-${id}`,
             processId: id,
-            isRecording: isRecording,
+            isRecording: false,
             lastUpdated: new Date()
           }
         });
 
         return NextResponse.json(recordingState);
-      } catch (error) {
-        console.error('Error updating recording state:', error);
-        throw error;
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Error updating recording state:', error);
       return NextResponse.json(
         { error: error instanceof Error ? error.message : 'Error interno del servidor' },
         { status: 500 }

@@ -2,11 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import { TrashIcon, ArrowDownTrayIcon } from '@heroicons/react/24/outline';
+import Image from 'next/image';
 
 interface Recording {
   name: string;
   size_bytes: number;
   last_modified: number;
+  thumbnail: string | null;
 }
 
 export default function RecordingsPage() {
@@ -60,8 +62,6 @@ export default function RecordingsPage() {
 
   const handleDownload = async (filename: string) => {
     try {
-      // Construimos la URL de descarga usando nuestro endpoint proxy
-      // Quitamos 'recordings/' del inicio del nombre del archivo si existe
       const cleanFilename = filename.replace(/^recordings\//, '');
       const downloadUrl = `/api/download/disk/recordings/${cleanFilename}`;
       
@@ -74,18 +74,13 @@ export default function RecordingsPage() {
         throw new Error(error.message || 'Error al descargar el archivo');
       }
       
-      // Creamos un blob con la respuesta
       const blob = await response.blob();
-      // Creamos una URL para el blob
       const url = window.URL.createObjectURL(blob);
-      // Creamos un elemento <a> temporal
       const a = document.createElement('a');
       a.href = url;
-      a.download = cleanFilename; // Usamos el nombre limpio del archivo
-      // Añadimos el elemento al DOM y simulamos el clic
+      a.download = cleanFilename;
       document.body.appendChild(a);
       a.click();
-      // Limpiamos
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
     } catch (error) {
@@ -134,58 +129,55 @@ export default function RecordingsPage() {
       {recordings.length === 0 ? (
         <p className="text-text-muted dark:text-text-muted-dark">No hay grabaciones disponibles.</p>
       ) : (
-        <div className="bg-card dark:bg-card-dark rounded-lg shadow overflow-hidden">
-          <table className="min-w-full divide-y divide-border dark:divide-border-dark">
-            <thead className="bg-card-header dark:bg-card-header-dark">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-text-muted dark:text-text-muted-dark uppercase tracking-wider">
-                  Nombre
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-text-muted dark:text-text-muted-dark uppercase tracking-wider">
-                  Tamaño
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-text-muted dark:text-text-muted-dark uppercase tracking-wider">
-                  Fecha de modificación
-                </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-text-muted dark:text-text-muted-dark uppercase tracking-wider">
-                  Acciones
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border dark:divide-border-dark">
-              {recordings.map((recording) => (
-                <tr key={recording.name} className="hover:bg-card-hover dark:hover:bg-card-hover-dark">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-text dark:text-text-dark">
-                    {recording.name.replace('recordings/', '')}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-text dark:text-text-dark">
-                    {formatFileSize(recording.size_bytes)}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-text dark:text-text-dark">
-                    {formatDate(recording.last_modified)}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <div className="flex justify-end gap-2">
-                      <button
-                        onClick={() => handleDownload(recording.name)}
-                        className="text-primary hover:text-primary-dark dark:text-primary-light dark:hover:text-primary p-2 rounded-full hover:bg-primary/10 dark:hover:bg-primary-dark/20"
-                        title="Descargar"
-                      >
-                        <ArrowDownTrayIcon className="h-5 w-5" />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(recording.name)}
-                        className="text-error hover:text-error-dark dark:text-error-light dark:hover:text-error p-2 rounded-full hover:bg-error/10 dark:hover:bg-error-dark/20"
-                        title="Eliminar"
-                      >
-                        <TrashIcon className="h-5 w-5" />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {recordings.map((recording) => (
+            <div 
+              key={recording.name}
+              className="bg-card dark:bg-card-dark rounded-lg shadow overflow-hidden"
+            >
+              <div className="aspect-video relative bg-black">
+                {recording.thumbnail ? (
+                  <Image
+                    src={`/api/download/disk/thumbnail/${recording.thumbnail}`}
+                    alt={recording.name}
+                    fill
+                    className="object-contain"
+                  />
+                ) : (
+                  <div className="absolute inset-0 flex items-center justify-center text-text-muted dark:text-text-muted-dark">
+                    No thumbnail
+                  </div>
+                )}
+              </div>
+              
+              <div className="p-4">
+                <h3 className="font-medium text-text dark:text-text-dark mb-2">
+                  {recording.name.replace('recordings/', '')}
+                </h3>
+                <div className="text-sm text-text-muted dark:text-text-muted-dark space-y-1">
+                  <p>Tamaño: {formatFileSize(recording.size_bytes)}</p>
+                  <p>Fecha: {formatDate(recording.last_modified)}</p>
+                </div>
+                
+                <div className="mt-4 flex justify-end gap-2">
+                  <button
+                    onClick={() => handleDownload(recording.name)}
+                    className="text-primary hover:text-primary-dark dark:text-primary-light dark:hover:text-primary p-2 rounded-full hover:bg-primary/10 dark:hover:bg-primary-dark/20"
+                    title="Descargar"
+                  >
+                    <ArrowDownTrayIcon className="h-5 w-5" />
+                  </button>
+                  <button
+                    onClick={() => handleDelete(recording.name)}
+                    className="text-error hover:text-error-dark dark:text-error-light dark:hover:text-error p-2 rounded-full hover:bg-error/10 dark:hover:bg-error-dark/20"
+                    title="Eliminar"
+                  >
+                    <TrashIcon className="h-5 w-5" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       )}
     </div>
