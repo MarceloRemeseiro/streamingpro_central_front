@@ -14,10 +14,10 @@ interface Recording {
 export async function GET() {
   return await withAuth(async (token) => {
     try {
-      const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_BASE_URL;
-      console.log('Fetching recordings from:', `http://${baseUrl}:8080/api/v3/fs/disk?sort=lastmod&order=desc`);
+      const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_API_URL;
+      console.log('Fetching recordings from:', `${baseUrl}/api/v3/fs/disk?sort=lastmod&order=desc`);
 
-      const response = await fetch(`http://${baseUrl}:8080/api/v3/fs/disk?sort=lastmod&order=desc`, {
+      const response = await fetch(`${baseUrl}/api/v3/fs/disk?sort=lastmod&order=desc`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -76,7 +76,7 @@ export async function DELETE(request: Request) {
   return await withAuth(async (token) => {
     try {
       const { filename } = await request.json();
-      const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_BASE_URL;
+      const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_API_URL;
       
       // Aseguramos que el nombre del archivo tenga el formato correcto
       const formattedFilename = filename.startsWith('/') ? filename : `/${filename}`;
@@ -93,7 +93,7 @@ export async function DELETE(request: Request) {
         if (thumbnail) {
           // Si tiene miniatura, la eliminamos del sistema de archivos
           console.log('Deleting thumbnail file:', thumbnail.thumbnailFile);
-          await fetch(`http://${baseUrl}:8080/api/v3/fs/disk/thumbnail/${thumbnail.thumbnailFile}`, {
+          await fetch(`${baseUrl}/api/v3/fs/disk/thumbnail/${thumbnail.thumbnailFile}`, {
             method: 'DELETE',
             headers: {
               'Authorization': `Bearer ${token}`
@@ -109,7 +109,7 @@ export async function DELETE(request: Request) {
 
         // Finalmente eliminamos el archivo de video
         console.log('Deleting video file:', formattedFilename);
-        const response = await fetch(`http://${baseUrl}:8080/api/v3/fs/disk${formattedFilename}`, {
+        const response = await fetch(`${baseUrl}/api/v3/fs/disk${formattedFilename}`, {
           method: 'DELETE',
           headers: {
             'Authorization': `Bearer ${token}`

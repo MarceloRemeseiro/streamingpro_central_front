@@ -48,6 +48,14 @@ RUN mkdir -p /home/nextjs/.npm && chown -R nextjs:nodejs /home/nextjs
 
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/prisma ./prisma
+
+# Asignar permisos al directorio prisma y crear la base de datos con permisos
+RUN mkdir -p /app/prisma \
+    && touch /app/prisma/dev.db \
+    && chown -R nextjs:nodejs /app/prisma \
+    && chmod 777 /app/prisma \
+    && chmod 666 /app/prisma/dev.db
+
 COPY --from=builder /app/pre-build.sh ./pre-build.sh
 COPY --from=builder /app/.env.production ./.env.production
 RUN chmod +x /app/pre-build.sh

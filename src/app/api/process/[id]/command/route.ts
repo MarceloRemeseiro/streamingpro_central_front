@@ -19,8 +19,8 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_BASE_URL;
-    const apiUrl = `http://${baseUrl}:8080/api/v3/process/${id}/command`;
+    const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_API_URL;
+    const apiUrl = `${baseUrl}/api/v3/process/${id}/command`;
 
     return await withAuth(async (token) => {
       try {

@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 
 export async function PUT(request: NextRequest) {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_BASE_URL;
+    const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_API_URL;
     const payload = await request.json();
     const id = request.nextUrl.pathname.split('/')[4]; // /api/process/output/[id]
 
@@ -21,7 +21,7 @@ export async function PUT(request: NextRequest) {
     return await withAuth(async (token) => {
       try {
         // Actualizar el proceso
-        const processResponse = await fetch(`http://${baseUrl}:8080/api/v3/process/${id}`, {
+        const processResponse = await fetch(`${baseUrl}/api/v3/process/${id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -44,7 +44,7 @@ export async function PUT(request: NextRequest) {
         }
 
         // Actualizar los metadatos
-        const metadataResponse = await fetch(`http://${baseUrl}:8080/api/v3/process/${id}/metadata/restreamer-ui`, {
+        const metadataResponse = await fetch(`${baseUrl}/api/v3/process/${id}/metadata/restreamer-ui`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -91,10 +91,10 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: 'ID no proporcionado' }, { status: 400 });
     }
 
-    const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_BASE_URL;
+    const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_API_URL;
 
     return await withAuth(async (token) => {
-      const processResponse = await fetch(`http://${baseUrl}:8080/api/v3/process/${id}`, {
+      const processResponse = await fetch(`${baseUrl}/api/v3/process/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

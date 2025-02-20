@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'ID no proporcionado' }, { status: 400 });
     }
 
-    const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_BASE_URL;
+    const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_API_URL;
     const authHeader = request.headers.get('authorization');
 
     if (!authHeader) {
@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
 
     return await withAuth(async (token) => {
       try {
-        const processResponse = await fetch(`http://${baseUrl}:8080/api/v3/process/${id}`, {
+        const processResponse = await fetch(`${baseUrl}/api/v3/process/${id}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -80,12 +80,12 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: 'ID no proporcionado' }, { status: 400 });
     }
 
-    const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_BASE_URL;
+    const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_API_URL;
     const input = await request.json();
 
     return await withAuth(async (token) => {
       // Actualizar los metadatos
-      const metadataResponse = await fetch(`http://${baseUrl}:8080/api/v3/process/${id}/metadata/restreamer-ui`, {
+      const metadataResponse = await fetch(`${baseUrl}/api/v3/process/${id}/metadata/restreamer-ui`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -122,11 +122,11 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: 'ID no proporcionado' }, { status: 400 });
     }
 
-    const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_BASE_URL;
+    const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_API_URL;
 
     return await withAuth(async (token) => {
       // Primero obtenemos todos los procesos para encontrar los outputs asociados
-      const processesResponse = await fetch(`http://${baseUrl}:8080/api/v3/process`, {
+      const processesResponse = await fetch(`${baseUrl}/api/v3/process`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -167,7 +167,7 @@ export async function DELETE(request: NextRequest) {
         await processStateService.deleteProcessState(output.id);
 
         // Eliminar el output en Restreamer
-        await fetch(`http://${baseUrl}:8080/api/v3/process/${output.id}`, {
+        await fetch(`${baseUrl}/api/v3/process/${output.id}`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
@@ -197,14 +197,14 @@ export async function DELETE(request: NextRequest) {
       // Eliminar el proceso de grabación si existe
       const shortId = id.split(':').pop();
       const recordingProcessId = `restreamer-ui:record:${shortId}`;
-      const checkRecordingResponse = await fetch(`http://${baseUrl}:8080/api/v3/process/${recordingProcessId}`, {
+      const checkRecordingResponse = await fetch(`${baseUrl}/api/v3/process/${recordingProcessId}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
 
       if (checkRecordingResponse.ok) {
-        await fetch(`http://${baseUrl}:8080/api/v3/process/${recordingProcessId}`, {
+        await fetch(`${baseUrl}/api/v3/process/${recordingProcessId}`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
@@ -214,7 +214,7 @@ export async function DELETE(request: NextRequest) {
       }
 
       // Finalmente eliminamos el proceso principal en Restreamer
-      const processResponse = await fetch(`http://${baseUrl}:8080/api/v3/process/${id}`, {
+      const processResponse = await fetch(`${baseUrl}/api/v3/process/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

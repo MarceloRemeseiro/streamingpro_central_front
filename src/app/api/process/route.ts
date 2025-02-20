@@ -4,12 +4,12 @@ import { CreateProcessPayload } from '@/types/createProcessTypes';
 
 export async function POST(request: Request) {
     try {
-        const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_BASE_URL;
+        const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_API_URL;
         const input: CreateProcessPayload = await request.json();
 
         return await withAuth(async (token) => {
             // Crear el proceso
-            const processResponse = await fetch(`http://${baseUrl}:8080/api/v3/process`, {
+            const processResponse = await fetch(`${baseUrl}/api/v3/process`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -24,7 +24,7 @@ export async function POST(request: Request) {
             }
 
             // Crear los metadatos
-            const metadataResponse = await fetch(`http://${baseUrl}:8080/api/v3/process/${input.config.id}/metadata/restreamer-ui`, {
+            const metadataResponse = await fetch(`${baseUrl}/api/v3/process/${input.config.id}/metadata/restreamer-ui`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

@@ -4,9 +4,9 @@ import { withAuth } from '@/utils/authUtils';
 export async function GET() {
   return await withAuth(async (token) => {
     try {
-      const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_BASE_URL;
+      const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_API_URL;
       
-      const response = await fetch(`http://${baseUrl}:8080/api/v3/config`, {
+      const response = await fetch(`${baseUrl}/api/v3/config`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }

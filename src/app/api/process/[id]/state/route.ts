@@ -7,10 +7,10 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_BASE_URL;
+    const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_API_URL;
 
     return await withAuth(async (token) => {
-      const processResponse = await fetch(`http://${baseUrl}:8080/api/v3/process/${id}/state`, {
+      const processResponse = await fetch(`${baseUrl}/api/v3/process/${id}/state`, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`

@@ -9,9 +9,9 @@ export async function GET(request: NextRequest) {
       // Eliminamos el prefijo "/api/download/disk" para obtener la ruta deseada
       const filePath = pathname.replace('/api/download/disk', '');
       
-      const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_BASE_URL;
+      const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_API_URL;
       // Construimos la URL destino para acceder al archivo
-      const targetUrl = `http://${baseUrl}:8080/api/v3/fs/disk${filePath}`;
+      const targetUrl = `${baseUrl}/api/v3/fs/disk${filePath}`;
       
       console.log('Downloading file from:', targetUrl);
       

@@ -1,21 +1,22 @@
-
 services:
   streamingpro:
     build: 
       context: .
       dockerfile: Dockerfile
-    container_name: streamingpro
+      target: deps # Solo construimos hasta la etapa de deps para desarrollo
+    container_name: streamingpro-dev
     restart: unless-stopped
     ports:
       - "3002:3002"
     environment:
-      - NODE_ENV=production
-      - PORT=3002
-      - HOSTNAME=0.0.0.0
-      - DATABASE_URL=file:/app/prisma/dev.db
+      - NODE_ENV=development
+    env_file:
+      - .env.local
     volumes:
-      - prisma_data:/app/prisma
-    command: sh -c "npx prisma migrate deploy && node server.js"
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    command: sh -c "npm run dev"
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:3002/api/health"]
       interval: 30s
@@ -29,10 +30,11 @@ services:
 
   streamingpro-backend:
     image: datarhei/core:latest
-    container_name: streamingpro-backend
+    container_name: streamingpro-backend-dev
     restart: unless-stopped
     ports:
       - "8080:8080"
+      - "8081:8081"
       - "1935:1935"
       - "6000:6000/udp"
     environment:
@@ -47,17 +49,16 @@ services:
       - CORE_SESSIONS_ENABLE=true
       - CORE_SESSIONS_PERSIST=true
     volumes:
-      - core_config:/core/config
-      - core_data:/core/data
+      - core_config_dev:/core/config
+      - core_data_dev:/core/data
     networks:
       - streaming_network
 
 volumes:
-  prisma_data:
-  core_config:
-  core_data:
+  core_config_dev:
+  core_data_dev:
 
 networks:
   streaming_network:
-    name: streaming_network
+    name: streaming_network_dev
     driver: bridge 

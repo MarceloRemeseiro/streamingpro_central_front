@@ -3,10 +3,10 @@ import { NextResponse } from 'next/server';
 
 export async function authenticateRestreamer() {
   const authService = AuthService.getInstance();
-  const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_BASE_URL;
+  const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_API_URL;
 
   try {
-    const loginResponse = await fetch(`http://${baseUrl}:8080/api/login`, {
+    const loginResponse = await fetch(`${baseUrl}/api/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

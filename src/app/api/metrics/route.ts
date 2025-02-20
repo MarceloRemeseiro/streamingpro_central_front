@@ -34,23 +34,23 @@ interface SessionMap {
 export async function GET() {
   try {
     return await withAuth(async (token) => {
-      const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_BASE_URL;
+      const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_API_URL;
       
       // Obtener datos de los tres endpoints
       const [processesResponse, metricsResponse, sessionsResponse] = await Promise.all([
-        fetch(`http://${baseUrl}:8080/api/v3/process`, {
+        fetch(`${baseUrl}/api/v3/process`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
           }
         }),
-        fetch(`http://${baseUrl}:8080/api/v3/metrics`, {
+        fetch(`${baseUrl}/api/v3/metrics`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
           }
         }),
-        fetch(`http://${baseUrl}:8080/api/v3/session/active?collectors=rtmp,hls,srt`, {
+        fetch(`${baseUrl}/api/v3/session/active?collectors=rtmp,hls,srt`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'

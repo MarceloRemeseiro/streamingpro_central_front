@@ -40,13 +40,13 @@ export async function PUT(request: NextRequest) {
       }
 
       const { isRecording } = await request.json();
-      const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_BASE_URL;
+      const baseUrl = process.env.NEXT_PUBLIC_RESTREAMER_API_URL;
       const shortId = id.split(':').pop();
       const processId = `restreamer-ui:record:${shortId}`;
 
       if (isRecording) {
         // Verificamos si existe el proceso de grabación
-        const checkResponse = await fetch(`http://${baseUrl}:8080/api/v3/process/${processId}`, {
+        const checkResponse = await fetch(`${baseUrl}/api/v3/process/${processId}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -54,7 +54,7 @@ export async function PUT(request: NextRequest) {
 
         // Si existe, lo eliminamos primero
         if (checkResponse.ok) {
-          await fetch(`http://${baseUrl}:8080/api/v3/process/${processId}`, {
+          await fetch(`${baseUrl}/api/v3/process/${processId}`, {
             method: 'DELETE',
             headers: {
               'Content-Type': 'application/json',
@@ -70,7 +70,7 @@ export async function PUT(request: NextRequest) {
           .replace('T', '_')
           .split('.')[0];
         
-        const processResponse = await fetch(`http://${baseUrl}:8080/api/v3/process/${id}`, {
+        const processResponse = await fetch(`http://${baseUrl}/api/v3/process/${id}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -93,7 +93,7 @@ export async function PUT(request: NextRequest) {
         const encoder = new TextEncoder();
         const data = encoder.encode(initialContent);
 
-        const createFileResponse = await fetch(`http://${baseUrl}:8080/api/v3/fs/disk/recordings/${filename}`, {
+        const createFileResponse = await fetch(`${baseUrl}/api/v3/fs/disk/recordings/${filename}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/data',
@@ -160,7 +160,7 @@ export async function PUT(request: NextRequest) {
         };
 
         // Creamos el nuevo proceso
-        const createProcessResponse = await fetch(`http://${baseUrl}:8080/api/v3/process`, {
+        const createProcessResponse = await fetch(`${baseUrl}/api/v3/process`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -194,14 +194,14 @@ export async function PUT(request: NextRequest) {
         return NextResponse.json(recordingState);
       } else {
         // Si queremos detener la grabación
-        const checkResponse = await fetch(`http://${baseUrl}:8080/api/v3/process/${processId}`, {
+        const checkResponse = await fetch(`${baseUrl}/api/v3/process/${processId}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
         });
 
         if (checkResponse.ok) {
-          const response = await fetch(`http://${baseUrl}:8080/api/v3/process/${processId}`, {
+          const response = await fetch(`${baseUrl}/api/v3/process/${processId}`, {
             method: 'DELETE',
             headers: {
               'Content-Type': 'application/json',
@@ -227,7 +227,7 @@ export async function PUT(request: NextRequest) {
 
             // Creamos el directorio thumbnail usando el endpoint correcto
             console.log('Creando directorio thumbnail...');
-            const createDirResponse = await fetch(`http://${baseUrl}:8080/api/v3/fs/disk`, {
+            const createDirResponse = await fetch(`${baseUrl}/api/v3/fs/disk`, {
               method: 'PUT',
               headers: {
                 'Authorization': `Bearer ${token}`,
@@ -255,7 +255,7 @@ export async function PUT(request: NextRequest) {
             const data = encoder.encode(initialContent);
 
             console.log('Creando archivo inicial para thumbnail:', thumbnailPath);
-            const createFileResponse = await fetch(`http://${baseUrl}:8080/api/v3/fs/disk/${thumbnailPath}`, {
+            const createFileResponse = await fetch(`${baseUrl}/api/v3/fs/disk/${thumbnailPath}`, {
               method: 'PUT',
               headers: {
                 'Content-Type': 'application/data',
@@ -303,7 +303,7 @@ export async function PUT(request: NextRequest) {
 
             console.log('Creando thumbnail con config:', thumbnailConfig);
 
-            const thumbnailResponse = await fetch(`http://${baseUrl}:8080/api/v3/process`, {
+            const thumbnailResponse = await fetch(`${baseUrl}/api/v3/process`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -319,7 +319,7 @@ export async function PUT(request: NextRequest) {
               await new Promise(resolve => setTimeout(resolve, 2000));
 
               // Eliminamos el proceso
-              await fetch(`http://${baseUrl}:8080/api/v3/process/${thumbnailConfig.id}`, {
+              await fetch(`${baseUrl}/api/v3/process/${thumbnailConfig.id}`, {
                 method: 'DELETE',
                 headers: {
                   'Authorization': `Bearer ${token}`
