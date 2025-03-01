@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { TrashIcon, ArrowDownTrayIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 
@@ -23,50 +23,27 @@ export default function RecordingsPage() {
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const [sortType, setSortType] = useState<SortType>('date');
 
-  const fetchRecordings = async () => {
+  const fetchRecordings = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+
     try {
-      const response = await fetch('/api/recordings');
+      const response = await fetch(`/api/recordings?sort=${sortType}&order=${sortOrder}`);
       if (!response.ok) {
-        throw new Error('Error al obtener las grabaciones');
+        throw new Error(`Error: ${response.status}`);
       }
       const data = await response.json();
-      
-      // Ordenar según el criterio seleccionado
-      const sortedData = [...data].sort((a: Recording, b: Recording) => {
-        if (sortType === 'date') {
-          return sortOrder === 'desc' 
-            ? b.last_modified - a.last_modified 
-            : a.last_modified - b.last_modified;
-        } else {
-          // Ordenar por nombre y luego por fecha
-          const nameA = a.name.replace('recordings/', '').toLowerCase();
-          const nameB = b.name.replace('recordings/', '').toLowerCase();
-          const nameCompare = sortOrder === 'desc' 
-            ? nameB.localeCompare(nameA)
-            : nameA.localeCompare(nameB);
-          
-          // Si los nombres son iguales, ordenar por fecha
-          if (nameCompare === 0) {
-            return sortOrder === 'desc' 
-              ? b.last_modified - a.last_modified 
-              : a.last_modified - b.last_modified;
-          }
-          return nameCompare;
-        }
-      });
-
-      setRecordings(sortedData);
-      setError(null);
+      setRecordings(data);
     } catch (error) {
       setError(error instanceof Error ? error.message : 'Error desconocido');
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [sortOrder, sortType]);
 
   useEffect(() => {
     fetchRecordings();
-  }, [sortOrder, sortType]);
+  }, [fetchRecordings]);
 
   const handleDelete = async (filename: string) => {
     if (!confirm('¿Estás seguro de que deseas eliminar esta grabación?')) {

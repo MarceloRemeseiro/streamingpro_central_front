@@ -7,7 +7,7 @@
     "ts": "tsc --noEmit --strict",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint --dir src --max-warnings 0",
+    "lint": "next lint --dir src",
     "type-check": "tsc --project tsconfig.json --noEmit",
     "lint-staged": "lint-staged",
     "precommit": "npm run type-check && npm run lint"

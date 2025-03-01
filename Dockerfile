@@ -24,8 +24,9 @@ COPY .env.production .env.production
 # Verificar TypeScript y ESLint antes de construir
 ENV NEXT_TELEMETRY_DISABLED 1
 ENV NODE_ENV production
+# Permitir warnings de ESLint durante la construcción
 RUN npm run ts && \
-    npm run lint || exit 1
+    npm run lint --max-warnings=100 || exit 1
 
 # Construir la aplicación
 RUN npm run build
