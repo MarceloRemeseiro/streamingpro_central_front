@@ -2,7 +2,7 @@ FROM node:20-alpine AS base
 
 # Instalar dependencias necesarias
 FROM base AS deps
-RUN apk add --no-cache libc6-compat
+RUN apk add --no-cache libc6-compat wget
 WORKDIR /app
 
 # Copiar archivos de dependencias
@@ -37,8 +37,9 @@ WORKDIR /app
 ENV NODE_ENV production
 ENV NEXT_TELEMETRY_DISABLED 1
 
-# Instalar Prisma CLI globalmente
-RUN npm install -g prisma@6.4.0
+# Instalar Prisma CLI globalmente y wget para health checks
+RUN npm install -g prisma@6.4.0 && \
+    apk add --no-cache wget
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs

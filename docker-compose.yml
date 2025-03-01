@@ -1,4 +1,3 @@
-
 services:
   streamingpro:
     build: 
@@ -17,7 +16,7 @@ services:
       - prisma_data:/app/prisma
     command: sh -c "npx prisma migrate deploy && node server.js"
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3002/api/health"]
+      test: ["CMD-SHELL", "wget --spider -q http://localhost:3002/api/health || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3

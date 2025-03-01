@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  failover:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: streamingpro-failover-dev
+    restart: unless-stopped
+    ports:
+      - "7001:7001/udp"  # SRT Main Input
+      - "7002:7002/udp"  # SRT Backup Input
+    volumes:
+      - .:/app  # Montar el código fuente para desarrollo
+      - go-pkg:/go/pkg  # Cache de paquetes de Go
+    working_dir: /app
+    networks:
+      - streaming_network
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://streamingpro:3002/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  streaming_network:
+    external: true
+
+volumes:
+  go-pkg: # Volumen para cachear paquetes de Go 
