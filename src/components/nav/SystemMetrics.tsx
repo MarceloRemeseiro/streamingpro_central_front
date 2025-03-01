@@ -160,7 +160,7 @@ export function SystemMetrics() {
         <UserGroupIcon className="h-4 w-4 text-primary dark:text-primary-light" />
         <div className="flex flex-col">
           <span className="text-text dark:text-text-dark">
-            {metrics.sessions.active} Viewer{metrics.sessions.active !== 1 ? 's' : ''}
+            {metrics.sessions.active > 0 ? metrics.sessions.active - 1 : 0} Viewer{metrics.sessions.active !== 2 ? 's' : ''}
           </span>
         </div>
       </div>
