@@ -27,7 +27,7 @@ services:
       - streamingpro-backend
 
   streamingpro-backend:
-    image: datarhei/core:latest
+    image: datarhei/restreamer:vaapi-latest
     container_name: streamingpro-backend
     restart: unless-stopped
     ports:
